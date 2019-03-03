@@ -1,0 +1,1031 @@
+\chapter{Recapitulare algebră}
+
+
+Amintim noțiunile esențiale de algebră comutativă ce vor fi necesare
+pe parcursul acestui curs. Începem cu structurile algebrice și cîteva dintre
+proprietățile lor fundamentale.
+
+\section{Grupuri. Grupuri de permutări}
+
+\begin{definition}\label{def:grup} \index{grup}
+  Fie $ G $ o mulțime nevidă și $ \cdot : G \times G \to G $ o operație binară.
+
+  Perechea $ (G, \cdot) $ se numește \emph{grup} dacă au loc:
+  \begin{enumerate}[(G1)]
+  \item $ \forall x, y \in G, x \cdot y \in G $ (operația este \emph{internă});
+  \item $ \forall x, y, z \in G, x \cdot (y \cdot z) = (x \cdot y) \cdot z $
+    (operația este \emph{asociativă});
+  \item $ \exists 1 \in G $ un element distins astfel încît $ 1 \cdot x = x \cdot 1 = x $,
+    pentru orice $ x \in G $ (operația admite \emph{element neutru (unitate)});
+  \item $ \forall x \in G, \exists y \in G $ cu $ x \cdot y = y \cdot x = 1 $
+    (orice element din $ G $ este \emph{inversabil} --- în acest caz, $ x $
+    este inversul lui $ y $ și reciproc).
+  \end{enumerate}
+
+  Dacă, în plus, $ x \cdot y = y \cdot x, \forall x, y \in G $, grupul se
+  numește \emph{comutativ} sau \emph{abelian}.
+\end{definition}
+
+Ne interesează în mod particular \emph{grupuri de permutări}. Le putem defini
+într-un sens foarte general, astfel:
+\begin{definition}\label{def:grp-perm} \index{grup!permutări}
+  Fie $ A $ o mulțime oarecare (nevidă). Definim:
+  \[
+    S(A) = \{ f : A \to A \mid f \text{ bijecție } \}.
+  \]
+  Se poate vedea imediat că $ S(A) $ are, de fapt, o structură de grup, cu
+  compunerea funcțiilor. Numim $ S(A) $ \emph{grupul simetric} al mulțimii $ A $.
+  În particular, dacă $ A = \{ 1, 2, \dots, n \} $, obținem \emph{grupul permutărilor %
+    de $ n $ elemente}, notat, de obicei, cu $ S_n $.
+\end{definition}
+
+Amintim, din noțiunile elementare de combinatorică, faptul că $ |S_n| = n! $.
+De asemenea, următoarea teoremă este fundamentală.
+\begin{theorem}[Lagrange]\label{thm:lagrange-gr} \index{grup!teoremă!Lagrange}
+  Fie $ H \seq G $ un subgrup. Atunci $ \# H \mid \# G $, unde $ \# $ notează
+  \emph{ordinul grupului}, i.e.\ cardinalul mulțimii subiacente.
+
+  În particular, $ H $ \emph{partiționează} $ G $, adică:
+  \[
+    G = \bigcup_{b \in G} bH,
+  \]
+  reuniunea fiind disjunctă ($ b_1 H \cap b_2 H \neq \vid \Leftrightarrow b_1 = b_2 $).
+\end{theorem}
+
+O altă teoremă importantă, legată de grupuri simetrice de data aceasta, este:
+\begin{theorem}[Cayley]\label{thm:cayley} \index{grup!teoremă!Cayley}
+  Pentru orice grup $ G $, avem $ G \leq S(G) $.
+\end{theorem}
+\begin{proof}
+  Fie $ g \in G $ un element arbitrar. Atunci putem defini:
+  \[
+    f_g : G \to G, \quad f_g(x) = gx, \forall x \in G.
+  \]
+  Se pot verifica imediat proprietățile:
+  \begin{itemize}
+  \item $ f $ bijectivă, pentru orice $ g \in G $;
+  \item $ f_1 = \dr{Id}_G $, unde $ 1 \in G $ este elementul neutru, iar
+    $ \dr{Id}_G $ este aplicația identitate a lui $ G $, $ x \mapsto x $;
+  \item $ f_g \circ f_h = f_{gh}, \forall g, h \in G $;
+  \item $ f_g = f_h \Leftrightarrow g = h $.
+  \end{itemize}
+  
+  Definind acum $ \varphi : G \to S(G), \varphi(g) = f_g $
+  obținem un morfism injectiv, adică $ G \simeq \varphi(G) \leq S(G) $.
+\end{proof}
+
+Amintim acum construcția grupului factor. Fie $ H $ un subgrup al lui $ G $.
+Pentru $ a \in G $ fixat, folosim notația $ aH = \{ ah \mid h \in H \} $,
+mulțimi pe care le numim \emph{clase de echivalență la stînga modulo $ H $}
+(eng.\ \emph{left cosets}). Motivul denumirii este că putem defini relația
+pe $ G $:
+\[
+  a \sim b \Leftrightarrow a \in bH,
+\]
+care este o echivalență (reflexivă, simetrică, tranzitivă), iar clasa de
+echivalență a elementului $ a $ este $ \widehat{a} = aH $.
+
+Avem nevoie de:
+\begin{definition}\label{def:subgr-normal} \index{grup!subgrup!normal}
+  Fie $ H \leq G $ un subgrup.
+
+  $ H $ se numește \emph{subgrup normal} al lui $ G $, notat $ H \ideal G $
+  dacă $ \forall g \in G, gHg^{-1} = G $. Echivalent, $ gH = Hg $, adică
+  clasele de echivalență la stînga generate de $ g $ coincid cu cele la dreapta.
+\end{definition}
+
+\begin{remark}\label{rk:normal-com}
+  Evident, dacă grupul $ G $ este comutativ, orice subgrup al său este normal.
+\end{remark}
+
+Cu acestea, ajungem la:
+\begin{definition}\label{def:gr-factor} \index{grup!factor}
+  Fie $ H \ideal G $. Pe mulțimea factor $ G/H $ avem o structură de
+  grup, numit \emph{grupul factor} al lui $ G $ modulo $ H $.
+\end{definition}
+
+Un exemplu la îndemînă este următorul: fie $ \ZZ $ grupul întregilor.
+Fie $ n \in \ZZ $. Atunci $ n\ZZ $ este subgrup normal, deoarece $ \ZZ $
+este comutativ și se poate observa că $ \ZZ/n\ZZ \simeq \ZZ_n $, grupul
+claselor de resturi modulo $ n $.
+
+Pentru următorul exemplu fundamental, avem nevoie de:
+\begin{definition}\label{def:morfism} \index{grup!morfism}
+  Fie $ f : G \to H $ o funcție. Ea se numește \emph{morfism} (unitar)
+  (eng.\ \emph{homomorphism}) dacă:
+  \begin{itemize}
+  \item $ f(1_G) = 1_H $;
+  \item $ f(xy) = f(x) f(y), \forall x, y \in G $.
+  \end{itemize}
+\end{definition}
+
+Dat un astfel de morfism, definim:
+\[
+  \dr{Ker}f = \{ x \in G \mid f(x) = 1_H \} = f^{-1}(1_G),
+\]
+numit \emph{nucleul} (eng.\ \emph{kernel}) morfismului. \index{grup!morfism!nucleu}
+
+De asemenea, amintim:
+\[
+  \dr{Im}f = \{ y \in H \mid \exists x \in G \text{ a.î. } f(x) = y \} = f(G),
+\]
+pe care o numim \emph{imaginea} morfismului. \index{grup!morfism!imagine}
+
+Cu acestea, avem:
+\begin{theorem}[Teorema fundamentală de izomorfism (TFI)]
+  \label{thm:tfi} \index{grup!teoremă!TFI}
+  Fie $ f : G \to H $ un morfism de grupuri.
+
+  Atunci $ \dr{Ker} f \ideal G $ și $ G/\dr{Ker}f \simeq \dr{Im}f \leq G $.
+\end{theorem}
+
+\begin{proof}
+  (Schiță:) Demonstrația se bazează pe asocierea:
+  \[
+    \psi : G/\dr{Ker}f \to \dr{Im}f, \quad \psi(\widehat{g}) = f(g).
+  \]
+\end{proof}
+
+Un exemplu simplu de aplicare a teoremei este izomorfismul $ \ZZ/n\ZZ \simeq \ZZ_n $
+menționat mai sus. Definim:
+\[
+  f : \ZZ \to \ZZ, \quad f(x) = x \text{ mod } n.
+\]
+Atunci se poate verifica imediat faptul că $ \dr{Ker}f = n\ZZ $, iar
+$ \dr{Im}f = \ZZ_n $. TFI ne oferă izomorfismul căutat.
+
+Următoarea noțiune introduce un nou tip de grupuri.
+
+\begin{definition}\label{def:subgr-gen} \index{grup!subgrup generat}
+  Fie $ G $ un grup și $ A \seq G $ o submulțime. Definim:
+  \[
+    \langle A \rangle = \bigcap_{A \seq H \leq G} H,
+  \]
+  numit \emph{subgrupul generat de $ A $}. Altfel spus, este cel mai mic
+  subgrup care conține $ A $ ca submulțime.
+
+  În particular, pentru $ A = \{ a \} $, obținem $ \langle a \rangle $,
+  (sub)grup numit \emph{ciclic}, generat de $ a $ și care conține toți
+  multiplii elementului $ a $.
+\end{definition}
+
+Un exemplu tipic este $ \ZZ = \langle 1 \rangle $, deoarece orice număr întreg
+se poate scrie pornind cu $ 1 $ și adunări succesive.
+
+Acum putem caracteriza ordinul elementului cu ajutorul ordinului grupului:
+\begin{proposition}\label{pr:ord-fin}
+  Elementul $ a $ al grupului $ G $ are ordin finit dacă și numai dacă
+  subgrupul ciclic generat de $ a $, $ \langle a \rangle $ este finit.
+\end{proposition}
+
+O proprietate la fel de importantă ne arată că grupurile ciclice sînt, în
+esență, clasificate de grupurile de clase de resturi.
+
+\begin{theorem}\label{thm:ciclic-zn}
+  În contextul și cu notațiile de mai sus, avem
+  \[
+    \langle a \rangle \simeq \ZZ/n\ZZ,
+  \]
+  unde $ n = \dr{ord}(a) $, adică cel mai mic $ n $ cu proprietatea
+  că $ a^n = 1 $.
+\end{theorem}
+
+Cu aceasta, se poate demonstra ușor că subgrupurile lui $ \ZZ/n\ZZ $ au
+următoarea formă particulară.
+
+\begin{theorem}\label{thm:subgr-zn}
+  Fie $ H $ un subgrup al lui $ \ZZ/n\ZZ $. Atunci există $ m \in \ZZ $,
+  cu proprietatea că $ m \mid n $, astfel încît $ H \simeq \ZZ/m\ZZ $.
+\end{theorem}
+\index{grup!permutări!semn} \index{grup!permutări!grup altern}
+Amintim acum cîteva proprietăți specifice grupurilor de permutări.
+Lucrînd în $ S_n $, cu $ n $ arbitrar, avem \emph{morfismul semn}:
+\[
+  \varepsilon : S_n \to (\{ \pm 1 \}, \cdot).
+\]
+Pentru acesta, $ \dr{Ker}\varepsilon = A_n $, care se numește
+\emph{grupul altern} de ordin $ n $ și conține toate permutările pare.
+
+Deoarece orice permutare este fie pară, fie impară, avem $\#(S_n/A_n) = 2$
+și spunem că $ A_n $ este un \emph{subgrup de indice 2} în $ S_n $, notat
+uneori $ [S_n : A_n] = 2 $.
+
+Descompunerea permutărilor se face conform rezultatelor cunoscute:
+\begin{itemize}
+\item Orice permutare se scrie ca un produs de transpoziții;
+\item Orice permutare se scrie ca un produs de cicluri disjuncte.
+\end{itemize}
+
+În general, avem:
+\begin{align*}
+  (k \ k+1) &= (1 \ 2 \dots n)^{k-1}(1 \ 2)(1 \ 2 \dots n)^{1-k} \\
+  (i \ j) &= (j-1 \ j)(j-2 \ j-1) \dots (i+1 \ i+2) (i \ i+1) (i+1 \ i+2) \cdots %
+            (j-2 \ j-1)(j-1 \ j), i < j \\
+  (a_1 \ a_2 \dots a_k) &= (a_1 \ a_2)(a_2 \ a_3) \cdots (a_{k-1} \ a_k)
+\end{align*}
+
+Rezultă din aceste descompuneri că:
+\begin{itemize}
+\item Transpozițiile de forma $ (k \ k+1) $ generează $ S_n $ ($ k < n $);
+\item Cele două elemente $ (1 \ 2) $ și $ (1 \ 2 \ \dots \ n ) $ generează $ S_n $.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\section{Inele și proprietăți aritmetice}
+
+Celelalte structuri algebrice care vor fi foarte importante în acest curs
+sînt \emph{inelele}. Amintim definiția:
+\begin{definition}\label{def:inel} \index{inel}
+  Tripletul $(R, +, \cdot)$ se numește \emph{inel} dacă:
+  \begin{itemize}
+  \item $ (R, +) $ este un grup comutativ;
+  \item $ (R, \cdot) $ este un \emph{monoid}, adică nu orice element este inversabil;
+  \item Are loc proprietatea de \emph{distributivitate} a celei de-a doua operații
+    (\qq{înmulțirea}) față de prima (\qq{adunarea}), adică:
+    \begin{align*}
+      x \cdot (y + z) &= x \cdot y + x \cdot z \\
+      (y + z) \cdot x &= y\cdot x + z \cdot x,
+    \end{align*}
+    pentru orice $ x, y, z \in R $.
+  \end{itemize}
+  Dacă monoidul $ (R, \cdot) $ este comutativ, inelul se numește \emph{comutativ}.
+\end{definition}
+
+În plus, amintim faptul că un inel are două elemente neutre, notate, în general,
+cu $ 0 $ (elementul neutru al grupului aditiv) și $ 1 $ (pentru monoidul
+multiplicativ).
+
+Principalul exemplu de inel este inelul numerelor întregi, $ \ZZ $. În plus,
+pentru aplicațiile aritmetice, vom folosi și inele de clase de resturi,
+adică de forma $ (\ZZ_n, +, \cdot) $.
+
+O substructură a inelelor care va fi mai utilă în aplicații decît cea de
+subinel este structura de \emph{ideal}, pe care o definim mai jos:
+\begin{definition}\label{def:ideal} \index{inel!ideal}
+  Fie $ R $ un inel și $ I \seq R $ o submulțime.
+
+  $ I $ se numește \emph{ideal} dacă:
+  \begin{itemize}
+  \item $ (I, +) $ este subgrup al $ (R, +) $;
+  \item $ \forall r \in R, x \in I, rx \in I $.
+  \end{itemize}
+\end{definition}
+
+Notația pentru ideal este $ I \ideal R $, care nu este întîmplătoare.
+$ (I, +) $ este chiar \emph{subgrup normal} al lui $ R $, deoarece
+$ (R, +) $ este comutativ, deci putem considera grupul factor $(R/I, +) $.
+Acest grup devine chiar inel, cu operația:
+\[
+  \widehat{x} \cdot \widehat{y} = \widehat{x \cdot y}, \quad %
+  \forall x, y \in R.
+\]
+Rezultă că obținem chiar \emph{inelul factor} $ R/I $.
+
+\begin{remark}\label{rk:inel-factor}
+  Atenție: deoarece $ I $ este subgrup normal în grupul \emph{aditiv} al inelului,
+  rezultă că $ \widehat{x} = x + I $ și atunci operația pe inelul factor
+  se scrie detaliat:
+  \[
+    (x + I) \cdot (y + I) = xy + I.
+  \]
+\end{remark}
+
+Morfismele de inele sînt definite mai jos:
+\begin{definition}\label{def:morf-in} \index{inel!morfism}
+  Fie $R, S$ două inele și o funcție $ f : R \to S $.
+
+  Funcția se numește \emph{morfism} dacă \qq{respectă ambele operații},
+  adică:
+  \begin{itemize}
+  \item $ f $ este \emph{aditivă}, $ f(x + y) = f(x) + f(y), \forall x, y \in R $;
+  \item $ f $ este \emph{multiplicativă}, $ f(xy) = f(x)f(y), \forall x, y \in R $.
+  \end{itemize}
+
+  În plus, cerem ca morfismul să fie \emph{unitar}, adică $ f(1_R) = 1_S $
+  și $ f(0_R) = 0_S $.
+\end{definition}
+
+Ca în cazul grupurilor, dat un morfism ca mai sus, definim:
+\[
+  \dr{Ker}f = \{ x \in R \mid f(x) = 0_S \}.
+\]
+
+Avem imediat:
+\begin{theorem}[Teorema fundamentală de izomorfism pentru inele]
+  \label{thm:tfi-inele}\index{inel!TFI}
+  În contextul și cu notațiile de mai sus, $ \dr{Ker}f \ideal R $
+  și $ R/\dr{Ker}f \simeq \dr{Im}f \leq R_2 $ (subinel).
+\end{theorem}
+
+\textbf{Exemplul esențial} care ne va fi de folos este detaliat mai jos.
+
+Pentru inelul $ \ZZ $, orice ideal este de forma $ n\ZZ $, pentru un anumit
+$ n \in \ZZ $. Într-adevăr, faptul că $ n\ZZ $ este ideal este clar, iar pentru
+reciprocă, fie $ I $ un ideal al lui $ \ZZ $. Se poate arăta că, dacă $ n $
+este cel mai mic element pozitiv din $ I $, atunci $ I = n\ZZ $.
+
+Dacă $ I $ și $ J $ sînt două ideale arbitrare, definim \emph{suma} lor prin:
+\[
+  I + J = \{ a + b \mid a \in I, b \in J \}.
+\]
+
+Pentru cazul idealelor inelului de întregi, un exercițiu simplu arată că:
+\begin{itemize}
+\item $ n \ZZ + m \ZZ = \dr{gcd}(m, n)\ZZ $;
+\item $ n\ZZ \cap m \ZZ = \dr{lcm}(m, n) \ZZ $.
+\end{itemize}
+
+Pentru orice inel $ R $, definim :
+\[
+  R^\times = U(R) = \{ x \in R \mid \exists y \in R, xy = 1 \}
+\]
+și-l numim \emph{grupul unităților} lui $ R $ (deoarece formează un
+grup față de operația de înmulțire din inel).
+
+În general, se poate arăta folosind algoritmul lui Euclid că:
+\begin{proposition}\label{pr:unit-zn}
+  $ x \in \big(\ZZ/n\ZZ\big)^\times \Leftrightarrow \dr{gcd}(x, n) = 1 $.
+\end{proposition}
+
+Demonstrația se bazează pe faptul că, din algoritmul lui Euclid, cel mai
+mare divizor comun al două numere se poate scrie ca o combinație liniară
+a celor două. Adică:
+\[
+  \dr{gcd}(a, b) = d \Rightarrow \exists \alpha, \beta \in \ZZ, %
+  \alpha a + \beta b = d.
+\]
+
+Pentru inelele de clase de resturi, următorul rezultat este fundamental:
+\begin{theorem}[Lema chineză a resturilor]\label{thm:chineza}
+  \index{inel!lema chineză}
+  Fie descompunerea lui $ n $ în factori primi ca
+  $ n = p_1^{\alpha_1} \cdots p_k^{\alpha_k} $.
+
+  Atunci are loc izomorfismul de inele:
+  \[
+    \ZZ/n\ZZ \simeq \ZZ/p_1^{\alpha_1}\ZZ \times \cdots \ZZ/p_k^{\alpha_k}\ZZ.
+  \]
+\end{theorem}
+
+În particular, avem că, dacă $ m $ și $ n $ sînt relativ prime, atunci:
+\[
+  \ZZ_{mn} \simeq \ZZ_m \times \ZZ_n,
+\]
+izomorfism de inele. Justificarea este simplă, folosind teorema de izomorfism.
+Definim:
+\[
+  \ZZ \xrar{p} \ZZ_n \times \ZZ_m, \quad %
+  p(a) = (a \text{ mod } n, a \text{ mod } m).
+\]
+Atunci $ \dr{Ker}p = mn\ZZ $ și avem rezultatul.
+
+O funcție aritmetică importantă este \emph{indicatorul lui Euler}.
+\index{funcții!indicatorul lui Euler}
+\begin{definition}\label{def:ind-euler}
+  Se definește funcția $ \varphi: \NN \to \NN $, numită \emph{indicatorul lui Euler}
+  (eng.\ \emph{Euler's totient function}) prin:
+  \begin{itemize}
+  \item $ \varphi(0) = 0, \varphi(1) = 1 $;
+  \item $ \varphi(n) = \# \{ k \mid k < n, \dr{gcd}(k, n) = 1 \} $,
+  \end{itemize}
+  adică numărul de numere mai mici decît $ n $, coprime cu $ n $.
+\end{definition}
+
+Din propoziția \ref{pr:unit-zn}, observăm că $ \varphi(n) = \# \ZZ_n^\times $.
+
+De asemenea, folosind cazul particular al lemei chineze, avem:
+\begin{lemma}\label{le:phi-mn}
+  Dacă $ m $ și $ n $ sînt coprime, atunci $ \varphi(mn) = \varphi(m) \varphi(n) $.
+\end{lemma}
+
+Cazul general este următorul:
+\begin{theorem}\label{thm:phi-pk}
+  Dacă avem descompunerea în factori primi $ n = p_1^{\alpha_1} \cdots p_k^{\alpha_k} $,
+  atunci:
+  \[
+    \varphi(n) = n \Big( 1 - \frac{1}{p_1}\Big) \cdots \Big(1 - \frac{1}{p_k}\Big).    
+  \]
+\end{theorem}
+
+\begin{proof}
+  Chiar din definiția funcției lui Euler, avem:
+  \begin{align*}
+    \varphi(n) &= \varphi(p_1^{\alpha_1}) \cdots \varphi(p_k^{\alpha_k}) \\
+               &= \big( p_1^{\alpha_1} - p_1^{\alpha_1 - 1}\big) \cdots %
+                 \big( p_k^{\alpha_k} - p_k^{\alpha_k - 1}\big) \\
+               &= p_1^{\alpha_1} \cdots p_k^{\alpha_k} \cdot \Big(1 - \frac{1}{p_1} \Big) %
+                 \cdots \Big(1 - \frac{1}{p_k}\Big) \\
+               &= n \cdot \Big(1 - \frac{1}{p_1} \Big) \cdots \Big(1 - \frac{1}{p_k}\Big).
+  \end{align*}
+\end{proof}
+
+Această funcție apare și în următorul rezultat:
+\begin{theorem}[Euler]\label{thm:phi-euler}
+  \index{funcții!indicatorul lui Euler!teorema Euler}
+  Fie $ a, n > 0 $ astfel încît $ \dr{gcd}(a, n) = 1 $.
+
+  Atunci $ a^{\varphi(n)} \equiv 1 \text{ mod } n $.
+\end{theorem}
+
+\begin{proof}
+  Putem da o demonstrație elegantă folosind inele. Cum $ \# \ZZ_n^\times = \varphi(n) $,
+  fie $ a \in \ZZ_n^\ast $. Atunci, conform teoremei lui Lagrange pentru grupuri
+  (\ref{thm:lagrange-gr}), aplicată subgrupului generat de $ a $, avem că
+  $ \dr{ord}(a) \mid \# \ZZ_n^\times $. Astfel, dacă $ \varphi(n) = f $, iar
+  $ \dr{ord}(a) = o \mid f $, rezultă că $ f = ox $, pentru un $ x \in \ZZ $.
+  Atunci:
+  \[
+    a^f = a^{ox} = (a^o)^x = 1^x = 1,
+  \]
+  din definiția ordinului. Cu alte cuvinte, $ \widehat{a^f} = \widehat{1} $
+  în $ \ZZ_n^\times $, adică $ a^{\varphi(n)} \equiv 1 \text{ mod } n $.
+\end{proof}
+
+Un caz particular este:
+\begin{theorem}[Fermat]\label{thm:fermat} \index{funcții!indicatorul lui Euler!teorema Fermat}
+  Dacă $ p $ este un număr prim și $ a $ e astfel încît $ p \nmid a $, atunci:
+  \[
+    a^{p-1} \equiv 1 \text{ mod } p.
+  \]
+\end{theorem}
+
+Inelul $ \ZZ $ mai are o proprietate care îl face potrivit pentru aritmetică.
+El este \emph{inel euclidian}, adică putem aplica teorema împărțirii cu rest
+și algoritmul lui Euclid. În simboluri,
+\[
+  \forall a, b \in \ZZ, \exists! r,q \in \ZZ, q > 0, 0 \leq r < |b| %
+  a = bq + r.
+\]
+\index{inel!euclidian}
+
+Amintim \emph{algoritmul lui Euclid} pentru cel mai mare divizor comun,
+pe un exemplu. \index{inel!algoritmul lui Euclid}
+
+Fie $ a = 100, b = 17 $. Aplicăm succesiv teorema împărțirii cu rest:
+\begin{align*}
+  a = 100 &= 5 \cdot 17 + 15 \\
+  17 &= 1 \cdot 15 + 2 \\
+  15 &= 7 \cdot 2 + 1.
+\end{align*}
+Recuperăm acum expresia:
+\[
+  1 = 15 - 7 \cdot 2 = 15 - 7(17 - 15) = 8 \cdot 15 - 7 \cdot 17 = %
+  8 \cdot (100 - 5 \cdot 17) - 7 \cdot 17 = 8 \cdot 100 - 47 \cdot 17.
+\]
+
+Deci $ 1 = \dr{gcd}(100, 17) = 8 \cdot 100 - 47 \cdot 17 $.
+
+În particular, rezultă
+\[
+  1 \equiv -47 \cdot 17 \text{ mod } 100 \equiv 53 \cdot 17 \text{ mod } 100,
+\]
+adică $ \widehat{17}^{-1} = \widehat{53} $ în $ \ZZ/100\ZZ $.
+
+De asemenea, mai putem calcula:
+\[
+  \# \ZZ_{100}^\times = \varphi(100) = %
+  100 \cdot \Big(1 - \frac{1}{2}\Big) \cdot \Big( 1 - \frac{1}{5} \Big) = 40.
+\]
+
+În plus, $ \ZZ_{100}^\times = \ZZ_4^\times \times \ZZ_{25}^\times $, fiecare
+dintre inele conținînd doar elementele coprime cu, respectiv, 100, 4 și 25.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\section{Corpuri. Corpuri finite}
+
+\index{corp}
+Pentru definiția corpurilor, putem, cel mai ușor, să pornim de la definiția
+inelelor. Astfel, inelul $ (K, +, \cdot) $ se numește \emph{corp} dacă,
+în plus, $ (K - \{0\}, \cdot) $ este grup. Dacă, mai mult, grupul multiplicativ
+este comutativ, corpul se numește \emph{comutativ}.
+
+Exemplele tipice și utile pentru aritmetică sînt $ \QQ $ și $ \ZZ_p $, cu $ p $
+număr prim.
+
+Vom folosi o notație specială pentru corpuri finite: $ \mathbb{F}_n $ va
+nota corpul finit cu $ n $ elemente. De asemenea, amintim:
+\begin{definition}\label{def:caracteristica}
+  \index{corp!caracteristică}
+  Fie $ K $ un corp. Se numește \emph{caracteristica lui $ K $} ordinul
+  elementului $ 1 $ față de adunare. Adică, cel mai mic $ t $ astfel încît
+  $ 1 + 1 + \dots + 1 = 0 $, adunarea avînd exact $ t $ termeni.
+\end{definition}
+
+Cîteva proprietăți fundamentale pentru corpuri urmează.
+
+\begin{theorem}[Wedderburn]\label{thm:wedd} \index{corp!teorema!Wedderburn}
+  Orice corp finit este comutativ.  
+\end{theorem}
+
+De asemenea, avem și:
+\begin{theorem}\label{thm:corp-fin}
+  Orice corp finit are caracteristică $ p $, un număr prim.
+
+  Mai mult, corpurile finite au $ p^k $ elemente, cu $ p $ un număr prim
+  și au o structură de spațiu vectorial peste $ \ZZ_p $.
+\end{theorem}
+
+În plus:
+\begin{theorem}\label{thm:corp-fin-iso}
+  Două corpuri finite cu același număr de elemente sînt izomorfe.
+
+  De asemenea, avem și că $ \mathbb{F}_{p^2} \seq \mathbb{F}_{p^r} $
+  dacă și numai dacă $ s \mid r $.
+\end{theorem}
+
+De exemplu, să studiem corpul $ \FF_4 $. Pornim de la polinomul $ X^2 + X + 1 $,
+care este ireductibil peste $ \FF_2 = \ZZ_2 $ (putem testa elementele).
+Atunci, fie $ \omega \in \CC $ cu $ \omega^2 + \omega + 1 = 0 $, adică rădăcinile
+strict complexe de ordinul 3 ale unității (obs.\ $ \omega^3 = 1 $).
+Definim:
+\[
+  \FF_4 = \FF_2[\omega] = \{ 0, 1, \omega, \omega + 1 \}
+\]
+și observăm că am obținut o structură de corp, unde $ \FF_4^{\times} \simeq \ZZ_3 $,
+care este ciclic, $ \FF_4 $ fiind generat de $ \omega $, adică:
+\[
+  \FF_4^{\times} = \{ 1 = \omega^3, \omega, \omega^2 \}.
+\]
+
+Avem următorul rezultat:
+\begin{theorem}\label{thm:gr-cic-corp}
+  Fie $ K $ un corp comutativ și $ G $ un grup finit, care este subgrup
+  al grupului multiplicativ $ (K - \{0\}, \cdot) $.
+
+  Atunci $ G $ este grup ciclic.
+\end{theorem}
+
+\begin{proof}
+  Presupunem $ \# G = h $. Vrem să arătăm că $ G $ conține un element de
+  ordin $ h $. Descompunem în factori primi $ h = p_1^{r_1} \cdots p_k^{r_k} $.
+
+  Facem observația că, pentru orice $ i = 1, \dots, k $, există elemente
+  $ x_i $ din $ G $ cu $ x_i^{\dfrac{h}{p_i}} \neq 1 $, altfel, polinomul
+  $ X^{\dfrac{h}{p_i}} - 1 $ ar avea un număr de rădăcini mai mare decît gradul.
+
+  Demonstrăm acum că, dacă $ y_i = x_i^{\dfrac{h}{p_i^{r_i}}} $, atunci $ y_i $
+  este un element de ordin $ p_i^{r_i} $.
+
+  Evident, $ y_i^{p_i^{r_i}} = x_i^h = 1 $. Dacă $ y_i $ ar avea ordinul
+  $ p_i^s $, cu $ s < r_i $, atunci:
+  \[
+    y_i^{p_i^{r_i - 1}} = x^{\dfrac{h}{p_i}} = 1,
+  \]
+  ceea ce contrazice faptul că ordinul $ y_i $ ar fi $ p_i^{r_i} $.
+
+  Fie acum $ y = y_1 \cdots y_k $; ordinul fiecărui factor fiind coprim
+  cu celelalte, rezultă că $ \dr{ord}y = h $ și atunci $ G = \langle y \rangle $,
+  adică este grup ciclic.
+\end{proof}
+
+De exemplu: $ \ZZ_7^\times = \{ 1, 2, 3, 4, 5, 6 \} = \langle 3 \rangle $.
+
+Un alt caz particular de corp finit pe care îl putem folosi și pentru
+logică este $ \ZZ_2 = \FF_2 = \{ 0, 1 \} $. Din tablele pentru adunare
+și înmulțire, observăm o similitudine cu tabelele de adevăr pentru
+conjuncții și disjuncții:
+\begin{center}
+  \begin{tabular}{l|ll}
+    +/$\lor$ & 0 & 1 \\
+    \hline
+    0 & 0 & 1 \\
+    1 & 1 & 0
+  \end{tabular}
+  \qquad
+  \begin{tabular}{l|ll}
+    $\cdot/\land$ & 0 & 1 \\
+    \hline
+    0 & 0 & 0 \\
+    1 & 0 & 1
+  \end{tabular}
+\end{center}
+
+Astfel, putem identifica $ x\cdot y $ cu $ x \land y $ sau $ \min(x, y) $, iar
+$ x + y = x \lor y = \max{x, y} $.
+
+Mai mult, avem următoarea teoremă care caracterizează \emph{funcțiile booleene}:
+\index{funcții!booleene}
+\begin{theorem}\label{thm:functie-sau-si}
+  Orice funcție $ f : \{ 0, 1 \}^k \to \{0, 1\} $ se poate exprima
+  folosind $ \land, \lor, \lnot $.
+\end{theorem}
+
+\begin{proof}
+  Definim direct:
+  \[
+    f = \bigvee_{\stackrel{(\varepsilon_1, \dots, %
+        \varepsilon_k)}{f(\varepsilon_1, \dots, \varepsilon_k)=1}} %
+    x_1^{\varepsilon_1} \land \dots \land x_n^{\varepsilon_k},
+  \]
+  unde $ x_i^0 = \lnot x_i $ și $ x_i^1 = x_i $.
+\end{proof}
+
+De exemplu, luăm expresia $ x + y $, gîndită funcția sumă
+\[
+  f = + : \{ 0, 1\}^2 \to \{0, 1\}.
+\]
+Deoarece există două posibilități ca $ f $ să dea 1, adică $ f(0, 1) = f(1, 0) = 1 $,
+avem descompunerea:
+\[
+  f(x, y) = x + y = x^0 y^1 \lor x^1y^0.
+\]
+Folosind teorema, obținem mai departe $ (x \land \lnot y) \lor (\lnot x \land y) $.
+
+De fapt, folosind o observație logică simplă, avem:
+\begin{remark}\label{rk:not-lor-land}
+  Cum $ x \land y = \lnot (\lnot x \lor \lnot y) $, rezultă că $ \lnot $ și $ \lor $
+  vor fi suficiente pentru expresii logice, conjuncția rezultînd din ele.
+\end{remark}
+
+Putem introduce un nou operator, numit \emph{Sheffer's stroke}\footnotemark
+sau, în teoria porților logice, NAND, notat $ x \mid y $, cu tabelul:
+\[
+  \begin{tabular}{l|ll}
+    $\mid$ & 0 & 1 \\
+    \hline
+    0 & 1 & 1 \\
+    1 & 1 & 0
+  \end{tabular}
+\]
+\footnotetext{\href{https://en.wikipedia.org/wiki/Sheffer\_stroke}{wiki}}
+Acest operator poate fi definit ca \emph{negația conjuncției} (exprimat în limbaj
+natural prin \qq{nu amîndouă}) și avem:
+\begin{align*}
+  \lnot x &= x \mid x \\
+  x \lor y &= (x \mid x) \mid (y \mid y).
+\end{align*}
+
+Rezultă, folosind și observația anterioară, că Sheffer's stroke generează termeni
+care reprezintă toate funcțiile booleene.
+
+Mai general, pentru corpuri finite cu $ n $ elemente, avem:
+\begin{theorem}\label{thm:fn-functie}
+  Fie $ \FF $ un corp finit cu $ n $ elemente.
+
+  Atunci orice funcție $ f : \FF^k \to \FF $ este dată de un polinom.
+\end{theorem}
+
+\begin{proof}
+  Fără a intra în detalii, demonstrația este imediată, folosind
+  \emph{polinomul de interpolare Lagrange}.\footnotemark
+  \index{corp!finit!polinomul Lagrange}
+
+  Alternativ, putem da o demonstrație folosind observația:
+  \[
+    \forall x \in \FF, x^{n-1} =
+    \begin{cases}
+      1, & x \neq 0 \\
+      0, & x = 0
+    \end{cases}
+  \]
+  în cazul în care $ \# \FF = n $. (Aceasta implică faptul că $ \# \FF^\times = n - 1 $
+  și putem folosi un argument de tip Teorema lui Lagrange, \ref{thm:lagrange-gr}).
+
+  Rezultă că putem defini polinomul:
+  \[
+    P(X_1, \dots, X_k) = \sum_{(\varepsilon_1, \dots, \varepsilon_k) \in \FF^k} %
+    (1 - (X_1 - \varepsilon_1)^{n-1}) \cdots (1 - (X_k - \varepsilon_k)^{n-1}) \cdot %
+    f(\varepsilon_1, \dots, \varepsilon_k),
+  \]
+  pentru funcția $ f : \FF^k \to \FF $ ca în enunț.
+\end{proof}
+\footnotetext{Polinomul de interpolare Lagrange poate fi folosit pentru a aproxima
+  cu un polinom o funcție dată. Mai precis, pentru a genera cea mai potrivită curbă
+  de tip polinomial care mediază între valori date.
+  Detalii, împreună cu legătura cu corpurile finite și criptografie, se pot găsi
+  \href{https://en.wikipedia.org/wiki/Lagrange\_polynomial\#Finite\_fields}{aici}
+  sau în discuția de \href{https://math.stackexchange.com/questions/31688/every-function-in-a-finite-field-is-a-polynomial-function}{aici}.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{SEMINAR}
+
+Definim $ \FF_q = \FF_p[X]/f(X) $ pentru $ f $ un polinom ireductibil, astfel încît
+$ p^{\dr{deg}f} = q $. Atunci putem privi $ \FF_q $ ca mulțimea polinoamelor
+de grad mai mic decît gradul lui $ f $ într-o rădăcină a lui $ f $. Adică, dacă
+$ \alpha $ este o rădăcină a lui $ f $, definim:
+\[
+  \FF_q = \Big\{ \sum_{i=0}^{\dr{deg}f - 1} a_i \alpha^i \mid a_i \in \FF_p \Big\},
+\]
+adunarea și înmulțirea fiind făcute modulo $ p $, împreună cu relația $ f(\alpha) = 0 $.
+
+Atunci putem descrie corpul $ \FF_8 $ ca:
+\[
+  \FF_8 = \FF_2[X]/(X^3 + X + 1) = \FF_2[\omega],
+\]
+unde $ \omega $ este o rădăcină a polinomului $ X^3 + X + 1 $, adică
+$ \omega^3 = \omega + 1 $ (lucrînd peste $ \FF_2 $ unde $ -1 = 1 $).
+Așadar:
+\[
+  \FF_2[\omega] = \{ a_0 + a_1 \omega + a_2 \omega^2 \mid a_0, a_1, a_2 \in \FF_2 \}.
+\]
+
+Conform Teoremei \ref{thm:gr-cic-corp}, $ \FF_2[\omega] - \{ 0 \} $ este grup ciclic.
+Căutăm un generator și observăm că $ \FF_2[\omega] \simeq \langle \omega \rangle $,
+grup ciclic de ordin 7 (verificați).
+
+Avem nevoie de următoarea:
+
+\begin{theorem}\label{thm:corp-p-alpha}
+  Pentru orice $ \alpha > 1 $, există un unic corp finit cu $ p^\alpha $ elemente.
+\end{theorem}
+
+Atenție, însă! $ \FF_{p^\alpha} \not\simeq \ZZ_{p^\alpha} $, deoarece
+$ \ZZ_{p^\alpha} $ are divizori ai lui zero (e.g.\ $ p \cdot p^{\alpha - 1} = 0 $).
+Singurul caz particular cînd izomorfismul are loc este cu $ \alpha = 1 $, unde
+$ \FF_p \simeq \ZZ_p $.
+
+De fapt, cazurile cînd $ \ZZ_n^\times $ produc grupuri ciclice sînt date în:
+
+\begin{theorem}\label{thm:zp-ciclic}
+  Mulțimea $ \{ n \in \NN \mid n > 1, \ZZ_n^\times \text{ ciclic } \} $ coincide
+  cu mulțimea $ \{ 2, 4, p^\alpha, 2p^\alpha \mid p \text{ prim impar }, \alpha \geq 1 \} $.
+\end{theorem}
+
+De exemplu, știm că $ \# \ZZ_9^\times = \varphi(9) = 6 $ și trebuie să
+fie grup ciclic. Deci căutăm un generator și vom avea izomorfismul:
+\[
+  (\ZZ_9^\times, \cdot, 1) \simeq (\ZZ_6, +, 0).
+\]
+
+Avem $ \ZZ_9^\times = \langle 2 \rangle $, iar $ \ZZ_6 = \langle 1 \rangle = \langle 5 \rangle $
+(generatorii sînt coprimi cu 6). Pentru a stabili izomorfismul, este suficient
+să găsim o corespondență între generatori. Definim:
+\[
+  \gamma : \ZZ_9^\times \to \ZZ_6, \quad \gamma(2) = 5,
+\]
+care se poate extinde folosind operațiile grupurilor.
+
+Deoarece avem proprietatea de morfism, $ \gamma(a \cdot b) = \gamma(a) + \gamma(b) $,
+pentru orice $ a, b \in \ZZ_9^\times $, rezultă că $ \gamma $ se comportă ca un
+\emph{logaritm discret}. \index{logaritm discret}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{center}
+  {\large $\bigstar\bigstar\bigstar$}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Fie $ \kal{A}_{26} \simeq \ZZ_{26} $ alfabetul cu 26 de litere.
+Introducem o codificare pe digrame:
+\begin{align*}
+  y_1 &= 6x_1 + x_2 \text{ mod } 26 \\
+  y_2 &= 5x_1 + x_2 \text{ mod } 26.
+\end{align*}
+Astfel, din cuvîntul $ y_1y_2 $ trecem în cuvîntul $ x_1x_2 $.
+Care este regula de decriptare?
+
+Scriind sistemul în formă matriceală, obținem \emph{regula de criptare}:
+\[
+  \begin{pmatrix}
+    y_1 \\ y_2
+  \end{pmatrix} = %
+  \begin{pmatrix}
+    6 & 1 \\ 5 & 1
+  \end{pmatrix} \cdot %
+  \begin{pmatrix}
+    x_1 \\ x_2 
+  \end{pmatrix}
+\]
+
+Decriptarea se face prin înmulțire cu $ A^{-1} $ la stînga, unde:
+\[
+  A^{-1} = %
+  \begin{pmatrix}
+    1 & -1 \\ -5 & 6
+  \end{pmatrix} = %
+  \begin{pmatrix}
+    1 & 25 \\ 21 & 6
+  \end{pmatrix} \text{ mod } 26.
+\]
+
+Acest exemplu conduce la întrebarea generală: Fie $ A \in M_n(\FF_2) $.
+Care este probabilitatea de a alege $ A $ cu determinant nenul?
+
+Cum elementele lui $ A $ sînt din $ \FF_2 $, rezultă că determinant
+nenul înseamnă determinant 1. Atunci putem calcula direct:
+\begin{itemize}
+\item Cazurile posibile (totalitatea matricelor din $ M_n(\FF_2) $)
+  înseamnă $ 2^{n^2} $ elemente;
+\item Pentru cazurile favorabile, alegem liniile una cîte una:
+  \begin{itemize}
+  \item prima linie poate fi aleasă în $ 2^n $ moduri, din care scădem 1 (linia nulă);
+  \item a doua linie nu poate fi prima sau un multiplu al ei (cu cît 0 sau 1), deci
+    poate fi aleasă în $ 2^n - 2 $ moduri;
+  \item a treia linie nu poate fi de forma $ \alpha L_1 \pm \beta L_2 $, unde $ L_1 $
+    este prima linie, $ L_2 $ este a doua, iar $ \alpha, \beta \in \FF_2 $. Deci poate
+    fi aleasă în $ 2^n - 4 $ moduri.
+  \end{itemize}
+\end{itemize}
+
+În final, se obține:
+\begin{align*}
+  P(\det A = 1) &= \frac{(2^n - 1)(2^n - 2)(2^n - 4) \cdots (2^n - 2^{n-1})}{2^{n^2}} \\
+                &= \Big( 1 - \frac{1}{2^n} \Big) \Big( 1 - \frac{1}{2^{n-1}} \Big) \cdots %
+                  \Big( 1 - \frac{1}{2} \Big).
+\end{align*}
+Se poate arăta, folosind analiză, că $ P(\det A = 1) > 0,4 $, pentru orice $ n $.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{center}
+  {\large $\bigstar\bigstar\bigstar$}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Fie $ C $ regula de criptare, $ D $ regula de decriptare, peste alfabetul
+$ \kal{A}_{26} $. Presupunem că pentru orice mesaj $ m \in \kal{A}_{26}^n $
+și orice $ n \geq 1 $, există o unică permutare $ \sigma \in S_n $,
+astfel încît $ C(m) = \sigma(m) $ (mesajul este criptat cu permutarea $ \sigma $).
+
+Pentru decriptare, dacă $ c $ este un mesaj de lungime $ n $, $D(c) = \sigma^{-1}(c) = m $,
+mesajul inițial.
+
+Oscar are un exemplar din mașina $ C $, dar nu are $ D $ și interceptează un mesaj
+de lungime $ n $. Cum îl poate decripta?
+
+Presupunem $ n $ fixat. Atunci, putem obține valorile permutării folosind mesaje
+prestabilite, astfel:
+\begin{itemize}
+\item Din $ C(ABC\dots YZZZ \dots Z) $, obținem $ \sigma(1), \dots, \sigma(25) $,
+  observînd cum sînt permutate primele 25 de litere;
+\item Din $ C(ZZ \dots ZABC \dots YZZ \dots) $, unde la început punem 25 de litere $ Z $,
+  putem obține $ \sigma(26) $ pînă la $ \sigma(50) $.
+\item Continuînd, putem obține $ \sigma $ în $ \Big[ \dfrac{n}{25} \Big] $ pași, apoi
+  putem calcula $ \sigma^{-1} $ și decriptăm.
+\end{itemize}
+
+Alternativ, putem recripta ceea ce rezultă, deoarece $ C(C(m)) $ va folosi $ \sigma^2 $
+și, într-un număr de maxim $ n! $ pași, putem obține mesajul inițial, de unde
+deducem ordinul lui $ \sigma $.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{center}
+  {\large $\bigstar\bigstar\bigstar$}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Shamir's No Key Protocol:} Presupunem că Alice și Bob au fiecare
+cîte un lacăt și o cheie unică, pe care o au doar ei, pentru propriul lacăt.
+Folosind o cutie căreia i se poate atașa un lacăt sau mai multe, cum poate trimite
+Alice un mesaj lui Bob, care să nu poată fi deschis de nimeni altcineva?
+\index{Shamir No Key Protocol}
+
+\emph{Soluție:}
+\begin{enumerate}[(1)]
+\item Alice pune mesajul în cutie și pune lacătul ei, apoi trimite cutia lui Bob;
+\item Bob adaugă propriul lacăt cutiei și trimite înapoi lui Alice;
+\item Alice scoate lacătul ei și trimite lui Bob cutia (pe care a mai rămas doar lacătul lui);
+\item Bob deschide lacătul și citește mesajul.
+\end{enumerate}
+
+Această problemă poate fi modelată astfel.
+
+Folosind \textbf{One Time Pads}, cu chei de lungimea mesajului.
+\index{One Time Pad} Astfel, dacă notăm cu $ m $ mesajul, cu $ K_A $
+cheia lui Alice și cu $ K_B $ cheia lui Bob, iar $ \oplus $ este suma
+binară, schimbul de mesaje poate fi modelat prin:
+\begin{align*}
+  \text{ Alice } &\xrar{m \oplus K_A \Rightarrow M_1} \text{ Bob } \\
+                 &\xleftarrow{m \oplus K_A \oplus K_B \Rightarrow M_2 } \\
+                 &\xrar{m \oplus K_B \Rightarrow M_3} \oplus K_B \Rightarrow m,
+\end{align*}
+deoarece fiecare cheie acționează ca un element de ordin 2.
+
+Dar atunci, Oscar poate calcula, dacă interceptează toate mesajele:
+\[
+  K_B = M_1 \oplus M_2 \Rightarrow m = M_3 \oplus K_B,
+\]
+deci procedura este total nesigură.
+
+Alternativ, fie $ p $ un număr prim foarte mare și $ m \in \{ 0, 1 \}^\ast $
+un mesaj binar, deci putem privi $ m \in \FF_p^\times $. Luăm $ 0 < K_A < p - 1 $
+și $ 0 < K_B < p - 1 $, cu $ K_A, K_B \in \ZZ_{p-1}^\times $. Schimbul de mesaje devine:
+\begin{align*}
+  \text{ Alice } &\xrar{m^{K_A}} \text{ Bob } \\
+                 &\xleftarrow{(m^{K_A})^{K_B}} \\
+                 &\xrar{(m^{K_AK_B})^{K_A^{-1}}} \\
+\end{align*}
+La final, Bob aplică $ (m^{K_AK_BK_A^{-1}})^{K_B^{-1}} = m $.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{center}
+  {\large $\bigstar\bigstar\bigstar$}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+Conceptul de \emph{unicity distance} (notată $ n_0 $)
+\index{chei!false!distanța de unicitate} înseamnă
+cea mai mică lungime de text cifrat pentru care numărul de chei false
+este aproximativ 0.
+
+Pentru One Time Pads, avem că $ n_0 = \infty $, deoarece din orice două mesaje
+putem obține o cheie aplicînd XOR, așadar avem o regulă de criptare ce se poate
+obține din orice mesaj.
+
+Faptul că $ n_0 = \infty $ este un alt mod de a exprima că One Time Pads oferă
+securitate totală.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{center}
+  {\large $\bigstar\bigstar\bigstar$}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Următoarea problemă se va rezolva folosind lema chineză.
+
+Presupunem că vrem să aflăm vîrsta unei persoane și știm că:
+\begin{itemize}
+\item Acum un an, vîrsta era multiplu de 3;
+\item Peste 2 ani, vîrsta va fi multiplu de 5;
+\item Peste 4 ani, vîrsta va fi multiplu de 7.
+\end{itemize}
+
+Fie $ x $ vîrsta actuală. Avem sistemul de congruențe:
+\begin{align*}
+  x &\equiv 1 \text{ mod } 3 \\
+  x &\equiv 3 \text{ mod } 5 \\
+  x &\equiv 3 \text{ mod } 7.
+\end{align*}
+
+Folosind \emph{varianta efectivă} a lemei chineze (v. \S \ref{sec:apl-mod}) calculăm:
+\begin{align*}
+  {\color{blue} 35}^{-1} &= (5 \cdot 7)^{-1} \text{ mod } 3 = {\color{purple} 2} \\
+  21^{-1} &= (3 \cdot 7)^{-1} \text{ mod } 5 - 1 \\
+  15^{-1} &= (3 \cdot 5)^{-1} \text{ mod } 7 = {\color{green} 1}           
+\end{align*}
+
+Rezultă că:
+\[
+  x = ({\color{green} 1} \cdot {\color{blue} 35} \cdot {\color{purple} 2} +%
+  3 \cdot 21 \cdot 1 + 3 \cdot 15 \cdot 1) \text{ mod } 3 \cdot 5 \cdot 7,
+\]
+adică $ x = 73 $.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{center}
+  {\large $\bigstar\bigstar\bigstar$}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{theorem}\label{thm:functie-arbori}
+  Fie $ S $ o mulțime finită și $ f : S \to S $ o funcție.
+
+  Atunci există o submulțime $ S_0 \seq S $ astfel încît $ f(S_0) = S_0 $
+  (adică $ f $ este o permutare a lui $ S_0 $), $ S_0 $ este maximală
+  cu această proprietate, $ S_0 \neq \vid $, iar $ f \mid_{S - S_0} $
+  este o reuniune finită de arbori.
+\end{theorem}
+
+\begin{proof}
+  Fie $ x_0 \in S $. Formăm șirul $ x_0, x_1 = f(x_0), x_2 = f(f(x_0)) \dots $.
+  Acest șir va fi periodic, deoarece $ S $ este finită, adică există
+  $ n, m > n $ astfel încît $ x_m = x_n $.
+
+  Definim $ S_0 $ ca fiind reuniunea ciclurilor obținute.
+\end{proof}
+
+De exemplu, considerăm funcția definită pe $ S = \{ 1, 2, \dots, 10 \} $:
+\begin{align*}
+  1 &\mapsto 7 \\
+  2 &\mapsto 5 \\
+  3 &\mapsto 10 \\
+  4 &\mapsto 1 \\
+  5 &\mapsto 8 \\
+  6 &\mapsto 3 \\
+  7 &\mapsto 7 \\
+  8 &\mapsto 2 \\
+  9 &\mapsto 5 \\
+  10 & \mapsto 6.
+\end{align*}
+
+Diagramatic, obținem:
+\[
+  \xymatrixrowsep{0.5pc}
+  \xymatrix{
+    4 \ar[r] & 1 \ar[r] & 7{\circlearrowleft}
+  }
+  \quad
+  \xymatrix{
+    & 9 \ar[d] & \\
+    2 \ar[r] & 5 \ar[r] & 8 \ar@/^/[ll]
+  }
+  \quad
+  \xymatrix{
+    3 \ar[r] & 10 \ar[r] & 6 \ar@/^/[ll]
+  }
+\]
+Atunci, avem:
+\[
+  S_0 = \{ 7, 2, 5, 8, 3, 10, 6 \},
+\]
+iar $ S - S_0 = \{ 1, 4, 9 \} $, formată din 3 arbori.
+
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../criptav"
+%%% End:

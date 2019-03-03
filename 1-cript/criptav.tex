@@ -1,0 +1,44 @@
+\documentclass[12pt, a4paper]{book}
+
+\input{includes/packages}
+\input{includes/macros}
+\input{includes/thms}
+\input{includes/formatting}
+
+\begin{document}
+
+\thispagestyle{empty}
+\pagestyle{plain} % fix for page numbers
+
+\title{\huge\textbf{Criptografie avansată} \\ \Large{Notițe de curs}}
+\vspace{1cm}
+\author{\Large\textsc{Conf.\ dr.\ Mihai Prunescu}}
+
+\maketitle
+
+\pagenumbering{gobble}
+\tableofcontents
+
+\setcounter{page}{1} % page 1 after TOC
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MAIN CONTENT
+\pagenumbering{arabic}
+
+\include{chapters/1-recap-alg}
+\include{chapters/2-apl-mod}
+\include{chapters/3-des-aes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% INDEX
+\renewcommand{\indexname}{Index}
+\addcontentsline{toc}{chapter}{\protect\numberline{}Index}
+\printindex
+
+% BIBLIOGRAPHY
+\addcontentsline{toc}{chapter}{\protect\numberline{}Bibliografie}
+\bibliography{criptav.bib}
+\bibliographystyle{apalike}
+\nocite{*}
+
+
+\end{document}

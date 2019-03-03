@@ -1,0 +1,123 @@
+\chapter{DES și AES}
+
+\section{LFSR (completări)}
+
+În cazul LFSR, dacă se cunosc $ 2L $ valori, se pot afla
+coeficienții $ c_1, \dots, c_L $, din sistemul:
+\[
+  \begin{pmatrix}
+    s_{L-1} & s_{L-2} & \dots & s_1 & s_0 \\
+    s_L & s_{L-1} & \dots & s_2 & s_1 \\
+    \dots & \dots & \dots & \dots & \dots \\
+    s_{2L - 2} & s_{2L - 3} & \dots & s_L & s_{L - 1}
+  \end{pmatrix} \cdot
+  \begin{pmatrix}
+    c_1 \\ c_2 \\ \vdots \\ c_L
+  \end{pmatrix} =
+  \begin{pmatrix}
+    s_L \\ s_{L - 1} \\ \vdots \\ s_{2L - 1}
+  \end{pmatrix}
+\]
+
+Rezultă că, în general, un LFSR este nesigur pentru un atac pe text clar.
+
+\begin{definition}\label{def:complex-lin}
+  \index{LFSR!complexitate liniară}
+  Fie $ s = s_1, s_2, \dots $. Definim \emph{complexitatea liniară}
+  a șirului $ s $, notată $ L(s) $, prin:
+  \begin{itemize}
+  \item $ L(s) = 0 $ dacă $ s = 0, 0, 0, \dots $;
+  \item $ L(s) = \infty $ dacă niciun LFSR nu produce $ L(s) $;
+  \item $ L(s) = $ lungimea celui mai scurt LFSR care produce $ s $.
+  \end{itemize}
+\end{definition}
+
+În general, se pot constata următoarele proprietăți, pentru un șir finit
+$ s_0, \dots, s_{n-1} $:
+\begin{itemize}
+\item $ 0 \leq L(s) \leq n $;
+\item Dacă $ s $ este periodic, de perioadă $ N $, atunci $ L(s) \leq N $;
+\item $ L(s \oplus t) \leq L(s) + L(t) $.
+\end{itemize}
+
+În cazuri concrete, putem combina mai multe LFSR, de exemplu:
+\[
+  f(x_1, x_2, x_3, x_4, x_5) = 1 \oplus x_2 \oplus x_3 \oplus x_4 \oplus x_5 %
+  \oplus x_1 \odot x_2 \odot x_3 \odot x_5.
+\]
+Dacă vrem să calculăm complexitatea combinației, $ f(L_1, \dots, L_n) $,
+înlocuim $ \oplus $ cu $ +_\ZZ $ și $ \odot $ cu $ \cdot_\ZZ $.
+
+\begin{example} \index{LFSR!exemplu!generator Geffe}
+  \textbf{Geffe generator}: fie funcția:
+  \[
+    f(x_1, x_2, x_3) = x_1x_2 \oplus x_2 x_3 \oplus x_3.
+  \]
+  Complexitatea liniară este $ L_1 L_2 + L_2 L_3 + L_3 $, iar
+  perioada, $ (2^{L_1} - 1)(2^{L_2} - 1)(2^{L_3} - 1) $.
+
+  Modul în care codifică un mesaj $ x_1x_2x_3 $ este dat în tabelul de mai jos.
+  \[
+    \begin{tabular}{ccc|c}
+      $ x_1 $ & $ x_2 $ & $ x_3 $ & z \\
+      \hline
+      0 & 0 & 0 & 0 \\
+      0 & 0 & 1 & 1 \\
+      0 & 1 & 0 & 0 \\
+      0 & 1 & 1 & 0 \\
+      1 & 0 & 0 & 0 \\
+      1 & 0 & 1 & 1 \\
+      1 & 1 & 0 & 1 \\
+      1 & 1 & 1 & 1
+    \end{tabular}
+  \]
+
+  Se poate vedea de aici că $ p(z = x_1) = p(z = x_3) = \dfrac{3}{4} $,
+  care sînt valori mult prea mari pentru a da o securitate bună.
+\end{example}
+
+\begin{example} \index{LFSR!exemplu!atac bazat pe corelație}
+  \textbf{Atac bazat pe corelație:} Presupunem că știm $ L_1, L_2, L_3 $.
+  Atunci putem proceda astfel:
+  
+  \texttt{
+    \quad\textbf{pentru toate} polinoamele de conexiune primitive de grad $ L_1 $ \\
+    \indent \indent \indent \textbf{pentru toate} stările inițiale ale LFSR1 \\
+    \indent\indent\indent\indent \indent \textbf{calculează} $ 2L_1 $ biți din LFSR1 \\
+    \indent\indent\indent\indent \indent \textbf{calculează} cîți sînt egali folosind Geffe \\
+    \indent\indent \textbf{repetă} pentru LFSR3 \\
+    \indent\indent\textbf{recuperează} LFSR2 din $ x_1 x_2 \oplus x_2 x_3 \oplus x_3 $.
+  }
+\end{example}
+
+\begin{example} \index{LFSR!exemplu!Ron's Cypher RC4}
+  \textbf{Ron's Cypher RC4}: Fie $ S $ un vector cu valorile $ 0, 1, \dots, 255 $
+  permutate cumva. Procedura este:
+
+  \texttt{
+    \quad i = 0; j = 0 \\
+    \indent\indent\indent i := (i + 1) mod 256 \\
+    \indent\indent\indent j := (j + $S_i$) mod 256 \\
+    \indent\indent\indent swap($S_i, S_j$); \\
+    \indent\indent\indent t := ($S_i + S_j$) mod 256 \\
+    \indent\indent\indent k := $S_t$
+  }
+
+  Starea inițială este generată folosind cheia:
+
+  \texttt{
+    \quad \textbf{for} i = 0 \textbf{to} 255 $ S_i $ = i \\
+    \indent\indent j = 0 \\
+    \indent\indent \textbf{for} i = 0 \textbf{to} 255 \textbf{do} \\
+    \indent\indent\indent j := j + $ S_i $ + $k_i$ mod 256 \\
+    \indent\indent\indent swap($S_i, S_j$)
+  }
+
+  Problema principală este că procedura nu generează valori atît de aleatorii
+  precum s-ar dori.
+\end{example}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../criptav"
+%%% End:
