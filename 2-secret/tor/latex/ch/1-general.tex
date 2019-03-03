@@ -1,0 +1,161 @@
+%! TEX root = ../tor.tex
+
+\chapter{Generalități}
+
+\section{Idei principale}
+
+\indent\indent \qq{Rutarea în foi de ceapă} (eng.\ \textit{onion routing}, OR) a fost
+concepută pentru anonimizarea aplicațiilor care funcționează pe baza protocolului
+TCP, precum browsere, servicii de mesagerie sau \texttt{ssh}. În acest model
+de rutare, clienții aleg un drum prin rețea, construind un circuit, dar
+astfel încît fiecare nod cunoaște doar predecesorul și succesorul său, fără restul
+nodurilor care ar putea exista în rețea.
+\index{onion!routing (OR)}
+
+Traficul propriu-zis criculă în pachete de mărime fixată, numite \emph{celule},
+\index{celule} care sînt decodate cu o cheie simetrică în fiecare nod, apoi
+transmise mai departe.
+
+După înființarea proiectului, a apărut destul de repede o rețea de astfel de
+noduri, dar chiar și la început, atunci cînd singurul nod era doar o mașină de teste,
+procesa conexiuni de la peste 60 000 IP-uri din întreaga lume, cu un flux de
+aproximativ 50 000 conexiuni pe zi.
+
+Tor a fost conceput pentru a rezolva deficiențele găsite în modelul inițial OR,
+iar principalele îmbunătățiri privesc:
+\begin{enumerate}[(1)]
+  \item \textit{Secretizarea perfectă a înaintării traficului} (eng.\ perfect
+    forward secrecy): în modelul inițial, dacă exista un nod ostil într-un punct
+    al conexiunii, putea să refuze înaintarea traficului și să decripteze
+    conținutul care a ajuns pînă la el. În modelul actual, se folosește o
+    \emph{criptare telescopică}, prin care nodul curent adaugă chei
+    de sesiune la criptarea de pînă atunci și totodată pierde accesul la cheile din
+    urmă, astfel încît mesajul să nu mai poată fi decriptat (nodul curent are
+    acces doar la ultima parte a cheii, cu care contribuie).
+    \index{criptare!telescopică}
+  \item \textit{Separarea \qq{curățirii protocolului} de anonimitate:} în varianta
+    inițială, OR cerea proxy-uri pentru aplicații, corespunzătoare fiecărei
+    aplicații suportate. Dacă proxy-urile nu erau scrise (fiind un proces laborios),
+    protocoalele suportau doar puține aplicații. Tor folosește o interfață
+    proxy standard, SOCKS și proxy-uri de filtrare pentru aplicații de tip
+    Privoxy, care sînt bine cunoscute și dezvoltate.
+    \todo[inline,noline,backgroundcolor=green!40]{citări pentru SOCKS și Privoxy}
+  \item \textit{Nu influențează traficul}: OR cerea gruparea și reordonarea
+    celulelor care ajungeau la norduri și adăugarea de padding între utilizatori
+    și OR-uri. \todo[inline,noline,backgroundcolor=green!40]{padding?}
+    Această prelucrare suplimentară cerea standardizarea și găsirea unor algoritmi
+    care să facă operațiunile sigure --- algoritmi care încă nu s-au găsit. Pînă
+    la găsirea unor implementări satisfăcătoare, Tor nu \qq{modelează} în niciun
+    fel traficul.
+  \item \textit{Mai multe fire TCP pot folosi același circuit}: în implementarea
+    originală, OR cerea construirea cîte unui circuit separat pentru
+    fiecare cerere. Dar aceasta ridica probleme de securitate, deoarece
+    în cazul unui volum foarte mare de trafic, cheile generate pentru
+    anonimizare și criptare puteau să se repete. Tor permite utilizarea
+    simultană a aceluiași circuit de către mai multe fire TCP.
+  \item \textit{Implementarea unei topologii de tip \qq{țeavă cu scurgeri}}:
+    clientul poate forța celulele să iasă din circuit pe oriunde, nu doar
+    pe la capete, în cazul în care observă vreo problemă sau nu dorește
+    să continue rutarea.
+    \index{topologie!țeavă cu scurgeri}
+  \item \textit{Controlul blocajelor:} Tor implementează un control și
+    management al blocajelor și a\-glo\-me\-ră\-ri\-lor de tip decentralizat,
+    prin intermediul celor care participă în rețea (devenind noduri).
+  \item \textit{Servere directoare:} În forma inițială, OR răspîndea
+    informația prin rețea fără o anume organizare. Tor stabilește
+    existența unor servere directoare, care sînt noduri de încredere
+    și conțin semnături care asigură integritatea rețelei. Clienții
+    descarcă periodic aceste semnături prin HTTP, pentru a se asigura
+    de integritatea rețelei și a traficului.
+    \index{server!director}
+  \item \textit{Politici standardizate:} pentru intrarea și ieșirea
+    traficului în și din fiecare nod --- un element-cheie în cazul
+    rețelelor construite din voluntari.
+  \item \textit{Puncte de întîlnire și servicii ascunse:} în forma
+    originală, în OR existau noduri speciale folosite pentru a construi
+    circuite speciale către servere ascunse. Dar utilitatea lor era nulă dacă
+    vreunul se defecta. În varianta Tor, clienții negociază \qq{puncte de %
+    întîlnire} (eng.\ rendezvous-points) pe parcurs, care ghidează
+    traficul pe drum și nu se bazează doar pe \qq{autorități speciale}.
+    \index{punct!de întîlnire (rendezvous)}
+\end{enumerate}
+
+Ca implementare, Tor nu necesită instalarea de module speciale în kernel.
+Dezavantajul este că nu se pot anonimiza decît protocoale TCP, dar avantajul
+principal este dat de portabilitate.
+
+De asemenea, o altă caracteristică de implementare este aceea că Tor se 
+încadrează in categoria design-urilor cu latență scăzută, deoarece este
+folosit pentru anonimizarea traficului în timp real.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Obiective de design și asumpții}
+
+Obiectivul principal este împiediarea atacurilor care ar viza un singur
+utilizator, ca țintă unică. Totodată, următoarele aspecte esențiale au
+contribuit la dezvoltarea Tor în forma actuală:
+\begin{itemize}
+  \item Ușurința lansării în aplicații reale (eng.\ \emph{deployability}): este
+    necesar ca implementarea și utilizarea să fie cît mai simple și
+    economice, iar cerința de anonimitate este imperioasă. Singurele
+    noduri care nu satisfac această cerință de anonimitate sînt punctele
+    de întîlnire, pentru asigurarea integrității traficului.
+  \item Ușurința de utilizare: simplitatea contribuie la securitate, iar
+    anonimatul nu trebuie să fie dependent de sistemul de operare.
+  \item Flexibilitate: protocolul trebuie să fie suficient de flexibil și
+    în același timp suficient de bine specificat astfel încît să poată
+    servi drept tester pentru cercetări în domeniu.
+\end{itemize}
+
+De asemenea, s-au trasat și \emph{non-obiective}, aspecte care sînt
+în mod intenționat ignorate pe parcursul dezvoltării serviciului:
+\begin{itemize}
+  \item Nu servește drept conexiune peer-to-peer: abordarea are probleme
+    serioase de securitate, chiar dacă a fost implementată de alte servicii.
+    \todo[inline,noline,backgroundcolor=green!40]{probleme la p2p --- exemple}
+  \item Nu este sigur împotriva atacurilor end-to-end: Tor nu pretinde
+    să rezolve această problemă, împotriva atacurilor \emph{end-to-end timing}
+    sau \emph{intersection attacks}. Problema nu este rezolvată satisfăcător
+    în domeniu, dar ar putea să ajute ca utilizatorii să-și ruleze propriile
+    OR.
+    \index{atac!end-to-end}
+    \index{atac!intersection}
+    \todo[inline,noline,backgroundcolor=green!40]{detalii despre aceste atacuri!}
+  \item Nu oferă normalizarea protocoalelor: dacă se dorește securizarea
+    informației transmise folosind protocoale complexe precum HTTP sau UDP,
+    trebuie să se folosească servicii suplimentare; Tor nu normalizează securitatea.
+  \item Nu este steganografic --- nu ascunde cine este conectat în rețea.
+    \todo[inline,noline,backgroundcolor=green!40]{interesant cuvînt... detalii?}
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Modelul general al amenințărilor}
+
+\indent\indent Design-urile de anonimizare au drept adversar tipic
+unul \emph{global, pasiv}, adică unul care poate asculta tot traficul.
+\index{adversar!global} \index{adversar!pasiv}
+
+Ca orice alt proiect pentru sisteme cu latență scăzută, Tor nu
+poate proteja împotriva unui asemenea adversar. Vom analiza însă, cazul
+adversarului care poate observa o porțiune a traficului, care poate genera,
+modifica, șterge sau întîrzia traficul, care ar putea să ruleze propriile OR
+și care ar putea compromite o parte a OR existente.
+
+În sistemele de anonimizare cu latență scăzută care folosesc criptarea
+pe straturi (eng.\ \emph{layered encryption}), \index{criptare!pe straturi}
+obiectivul tipic al adversarului este să observe inițiatorul și respondentul
+traficului. Astfel, prin observare, ar putea confirma că Alice vorbește cu Bob
+dacă în trafic sînt prezente anumite variabile de flux și temporizare.
+Un atacator activ poate introduce asemenea variabile pentru a se asigura.
+
+Tor urmărește să împiedice nu atacurile de confirmare a traficului, ci pe
+cele de \emph{învățare}, pentru ca adversarul să nu poată folosi informații
+preluate pasiv pentru a afla structura rețelei sau a routerelor. De exemplu,
+învățînd structura rețelei, ar putea afla poziția nodurilor de încredere (e.g.\
+serverele directoare sau punctele de întîlnire)
+și ar putea destabiliza întreaga rețea atacîndu-le pe acelea.
+\index{atac!de confirmare a traficului}
+\index{atac!de învățare a traficului}

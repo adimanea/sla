@@ -1,0 +1,47 @@
+\documentclass[12pt, a4paper]{book}
+
+\input{in/packages}
+\input{in/macros}
+\input{in/formatting}
+
+\begin{document}
+
+\thispagestyle{empty}
+\pagestyle{plain} % fix for page numbers
+
+\title{\Huge The Onion Router (Tor)}
+\vspace{1cm}
+\author{\large\textsc{Cornel Bucurescu} \\
+  \large\textsc{Adrian Manea} \\
+\large\textsc{Cristian Nicolae}}
+
+\maketitle
+
+\pagenumbering{gobble}
+\tableofcontents
+
+\setcounter{page}{1} % page 1 after TOC
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MAIN CONTENT
+\addcontentsline{toc}{chapter}{\protect\numberline{}De ad\u{a}ugat sau clarificat}
+\listoftodos[De ad\u{a}ugat sau clarificat]
+\pagenumbering{arabic}
+
+\include{ch/1-general}
+\include{ch/2-design}
+\include{ch/3-atacuri}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% INDEX
+\renewcommand{\indexname}{Index}
+\addcontentsline{toc}{chapter}{\protect\numberline{}Index}
+\printindex
+
+% BIBLIOGRAFIE
+\bibliography{tor.bib}
+\bibliographystyle{apalike}
+\nocite{*}
+\addcontentsline{toc}{chapter}{\protect\numberline{}Bibliografie}
+
+\end{document}

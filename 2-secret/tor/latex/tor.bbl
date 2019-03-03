@@ -1,0 +1,36 @@
+\begin{thebibliography}{}
+
+\bibitem[Dingledine et~al., 2004]{whitepaper}
+Dingledine, R., Mathewson, N., and Sylverson, P. (2004).
+\newblock Tor: The second generation onion router.
+\newblock {\em SSYM Proceedings of the 13th conference on USENIX Security
+  Symbposium}, 13.
+
+\bibitem[Skerritt, 2018]{bs}
+Skerritt, B. (2018).
+\newblock How tor *really* works.
+\newblock \url{https://hackernoon.com/how-does-tor-really-work-c3242844e11f}.
+\newblock [Online; accesat martie 2019].
+
+\bibitem[Wright, 2015a]{jw1}
+Wright, J. (2015a).
+\newblock How tor works: Part one.
+\newblock
+  \url{https://jordan-wright.com/blog/2015/02/28/how-tor-works-part-one/}.
+\newblock [Online; accesat martie 2019].
+
+\bibitem[Wright, 2015b]{jw3}
+Wright, J. (2015b).
+\newblock How tor works: Part three.
+\newblock
+  \url{https://jordan-wright.com/blog/2015/05/14/how-tor-works-part-three-the-consensus/}.
+\newblock [Online; accesat martie 2019].
+
+\bibitem[Wright, 2015c]{jw2}
+Wright, J. (2015c).
+\newblock How tor works: Part two.
+\newblock
+  \url{https://jordan-wright.com/blog/2015/05/09/how-tor-works-part-two-relays-vs-bridges/}.
+\newblock [Online; accesat martie 2019].
+
+\end{thebibliography}
