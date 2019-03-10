@@ -108,3 +108,67 @@ Acest document este întreținut de autoritățile directoare (AD) și actualiza
 
 Procesul de vot și actualizare de mai sus este public, transmis prin HTTP, astfel
 încît poate fi accesat de orice utilizator.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Servicii ascunse}
+
+\indent\indent Un server poate fi configurat să funcționeze ca un serviciu
+ascuns. Atunci cînd se realizează această configurare, serverul trimite
+un mesaj către un OR ales (aleatoriu sau după o procedură specifică) pentru
+a cere ca acel OR să devină punct de intrare pentru serverul respectiv.
+
+Apoi, serverul creează un descriptor pentru servicii ascunse, care este
+criptat cu o cheie publică și conține IP-urile fiecăror puncte de introducere
+care a acceptat să conexiunea. Această informație este trimisă unui tabel
+de hash-uri distribuit, deci fiecare OR va avea doar o parte a informației
+despre serviciul ascuns. Cheia pentru acest tabel este adresa onion, care
+este calculată de server.
+
+Ideea de bază este că această adresă nu este publică la nivel de rețea Tor,
+ci este cunoscută doar de cei ce vor să o acceseze. Este vorba despre
+adresele de tip \texttt{[hash].onion}. Deci fiecare OR are cunoștințe minime
+despre aceste servicii ascunse, dar utilizatorul care vrea să se conecteze
+în mod explicit, o poate face.
+
+Atunci cînd utilizatorul cere explicit conexiunea la servicii ascunse,
+introducînd adresa \texttt{.onion}, primește lista de IP-uri care pot servi
+drept noduri de intrare către adresa respectivă. Se alege una aleatoriu
+și se stabilește circuitul, folosind celulele de mărime fixată (pentru ca
+un observator să nu-și dea seama, de exemplu, că celulele mai mari corespund
+imaginilor sau videoclipurilor).
+
+Pe scurt, funcționarea serviciilor ascunse urmează pașii:
+\begin{enumerate}[(1)]
+  \item Calculează perechea de chei pentru criptarea asimetrică;
+  \item Alege un releu ca punct de introducere;
+  \item Comunică cheia publică releurilor alese;
+  \item Creează un descriptor specific, care conține cheia publică și 
+    punctele de introducere;
+  \item Scrie descriptorul într-o listă de hash-uri distribuită;
+  \item Clientul află adresa de tip \texttt{[hash].onion}, obținută din
+    cheia publică;
+  \item Clientul se conectează la tabelul distribuit și cere să acceseze
+    serviciul corespunzător hash-ului din adresa \texttt{.onion};
+  \item Dacă serviciul există, clientul află cheia publică a serviciului
+    și punctele de introducere;
+  \item Clientul alege un punct de introducere la întîmplare și-i comunică
+    un cod de tip one time. Releul ales pentru introducere joacă rol de 
+    punct de întîlnire;
+  \item Clientul creează o celulă de introducere, care conține adresa
+    punctului de întîlnire de accesat și codul one time, pe care le criptează
+    cu cheia publică a serviciului ascuns;
+  \item Clientul trimite mesajul de mai sus în rețeaua Tor către punctul de
+    introducere ales, cerînd să se facă legătura cu serviciul ascuns;
+  \item Serviciul ascuns decriptează mesajul de introducere cu cheia privată
+    pentru a obține informațiile trimise;
+   \item De îndată ce serviciul ascuns descoperă punctul de întîlnire ales,
+     îl transmite clientului ca fiind acceptat;
+   \item Clientul și serviciul ascuns comunică folosind acest punct de întîlnire,
+     avînd traficul criptat la ambele capete. Atît clientul, cît și serverul ascuns
+     își creează propriul circuit pînă la punctul de întîlnire, fiecare circuit
+     avînd cel puțin 3 noduri, deci o asemenea conexiune are cel puțin 6 noduri.
+\end{enumerate}
+\index{serviciu ascuns}
+\index{server!ascuns}
