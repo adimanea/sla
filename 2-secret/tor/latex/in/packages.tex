@@ -1,6 +1,9 @@
-\usepackage{libertine}
-\usepackage{libertinust1math}
-\usepackage{inconsolata}
+%\usepackage{libertine}
+%\usepackage{libertinust1math}
+%\usepackage{inconsolata}
+\usepackage{kpfonts}
+\usepackage[T1]{fontenc}
+\renewcommand*{\ttdefault}{lcmtt} % typewriter = Computer Modern
 \usepackage{amsthm, amsmath}
 \usepackage[style=german]{csquotes}
 \usepackage[pagestyles]{titlesec}
@@ -21,5 +24,11 @@
 \usepackage{marginnote}
 \usepackage{imakeidx}
 \makeindex[options= -s indices-alph.ist]
-\usepackage[unicode]{hyperref}
-\hypersetup{citecolor=blue}
+\usepackage{hyperref}
+\hypersetup{%
+  unicode=true,
+  citecolor=violet,
+  colorlinks=true,
+  urlcolor=teal,
+  linkcolor=teal
+}

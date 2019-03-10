@@ -12,6 +12,13 @@ Skerritt, B. (2018).
 \newblock \url{https://hackernoon.com/how-does-tor-really-work-c3242844e11f}.
 \newblock [Online; accesat martie 2019].
 
+\bibitem[\texttt{security.stackexchange}, 2014]{dhse}
+\texttt{security.stackexchange} (2014).
+\newblock Diffie-{H}ellman in plain english.
+\newblock
+  \linebreak{}\url{https://security.stackexchange.com/questions/45963/diffie-hellman-key-exchange-in-plain-english}.
+\newblock \linebreak{}[Online; accesat martie 2019].
+
 \bibitem[Wright, 2015a]{jw1}
 Wright, J. (2015a).
 \newblock How tor works: Part one.

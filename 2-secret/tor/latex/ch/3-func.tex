@@ -1,0 +1,110 @@
+%! TEX root = ../tor.tex
+
+\chapter{Funcționarea, pe scurt}
+
+\section{Relee și \qq{foi de ceapă}}
+\indent\indent Într-o formă simplificată, Tor funcționează prin transmiterea conexiunii 
+printr-o serie de \emph{relee} (eng.\ \texttt{relay}) de la computerul inițiator pînă la
+destinație.
+
+Actualmente, există peste 6000 de relee în toată lumea, care se ocupă cu această
+redirecționare a traficului. Releele sînt localizate în întreaga lume și puse la
+dispoziție de voluntari.
+
+Într-o conexiune standard, Tor realizează conexiunea cu 3 relee, fiecare dintre
+acestea avînd cîte un rol standard.
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[scale=0.5]{fig/3relays.png}
+  \caption{Cele 3 relee standard (\cite{jw1})}
+  \label{fig:3rel}
+\end{figure}
+
+\begin{itemize}
+  \item \textit{Releul de intrare} (eng.\ \texttt{entry/guard}), prin care conexiunea
+    intră în rețeaua Tor. Asemenea relee sînt alese după ce au dovedit o vechime
+    în rețea, stabilitate și lățime de bandă corespunzătoare.
+  \item \emph{Relee intermediare} sînt cele care transmit conexiunea mai departe.
+    Totodată, în ideea anonimizării, rolul lor este ca releele de intrare și cele
+    de ieșire să nu se cunoască între ele.
+  \item \emph{Releul de ieșire}, care se află la capătul rețelei Tor și trimit 
+    traficul către destinația finală dorită de client.
+\end{itemize}
+\index{releu}
+\index{releu!de intrare}
+\index{releu!intermediar}
+\index{releu!de ieșire}
+
+De remarcat este faptul că, dacă releele intermediare pot fi orice calculator, server
+etc., care nu se compromit în niciun fel, deoarece ele nu fac decît să transporte
+trafic deja criptat, releele de ieșire au o responsabilitate deosebită. În cazul unei
+conexiuni ilicite, traficul către destinație apare ca fiind transmis de la releul
+de ieșire, ceea ce-i expune în mod deosebit.
+
+La fiecare pas se realizează o decriptare, dacă traficul circulă de la client către
+server și o criptare, dacă traficul circulă invers. Așa cum am menționat în secțiunea
+anterioară, fiecare nod intermediar adaugă sau elimină cîte un strat criptografic,
+realizînd \qq{rutarea în foi de ceapă}.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics{fig/4onions.png}
+  \caption{\qq{Foile de ceapă} (\cite{bs})}
+  \label{fig:4on}
+\end{figure}
+
+
+Prin acest mecanism, fiecare releu cunoaște doar minimul necesar: nodul anterior și
+nodul care va urma, realizînd \emph{criptarea telescopică} despre care am mai vorbit.
+De remarcat este faptul că releul de ieșire vede datele inițiale trimise de client.
+Astfel, dacă se trimit date sensibile prin protocoale care folosesc text clar, precum
+HTTP sau FTP, releul de ieșire poate să intercepteze traficul.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Poduri} \index{poduri}
+
+\indent\indent Utilizarea releelor, în forma descrisă mai sus, ridică o vulnerabilitate
+serioasă. Astfel, atunci cînd un client se conectează la rețea, trebuie să aibă acces
+la lista tuturor releelor de intrare, mediane și de ieșire, pentru a ști unde s-ar putea
+conecta. Lista releelor nu este secretă, ceea ce ridică o potențială problemă de securitate.
+
+O soluție pentru această problemă este utilizarea \emph{podurilor} (eng.\ \texttt{bridges}).
+Într-o formă simplificată, putem privi podurile ca intrări secrete în relee, pe care le
+pot accesa, de exemplu, utilizatori care se află în spatele unor rețele cenzurate.
+
+Există și o listă completă de poduri, deținută de proiectul Tor, dar această listă
+nu este publicată. Cei de la Tor au găsit o soluție prin care utilizatorii să aibă
+acces doar la o porțiune mică a listei podurilor, suficiente pentru a iniția o conexiune.
+Astfel, utilizatorul nici nu are nevoie de toate podurile disponibile, ci doar de cîteva
+pentru a-și face intrarea în rețea.
+
+Cercetătorii au reușit să identifice între 79\% și 86\% din lista totală a podurilor,
+realizînd o analiză a întregului spațiu de adrese IPv4, dar chiar și așa, putem considera
+că secretul listei podurilor este suficient de bine păstrat.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Autorități directoare} \index{autorități directoare}
+
+\indent\indent Am menționat în prima parte faptul că în rețea există o serie
+de autorități directoare, care sînt nodurile cele mai de încredere și, într-un fel,
+țin funcționare proiectului în spate.
+
+Statusul releelor Tor este ținut într-un document dinamic, numit \emph{consens}. \index{consens}
+Acest document este întreținut de autoritățile directoare (AD) și actualizat
+în fiecare oră prin voturi, în următorul mod:
+\begin{itemize}
+  \item fiecare AD face o listă de relee cunoscute;
+  \item fiecare AD calculează și ceilalți parametri necesari despre relee (țara,
+    lățimea de bandă etc.);
+  \item AD transmite această informație sub forma unui status celorlalte AD;
+  \item fiecare AD primește acest status, din care își actualizează propria
+    listă;
+  \item toți parametrii adunați de la toate AD sînt combinate și se calculează
+    un vot, care este transmis cu o semnătură de către fiecare AD;
+  \item releele care primesc majoritatea voturilor sînt păstrate în consens, care
+    se actualizează și se transmite tuturor AD.
+\end{itemize}
+
+Procesul de vot și actualizare de mai sus este public, transmis prin HTTP, astfel
+încît poate fi accesat de orice utilizator.

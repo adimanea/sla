@@ -2,7 +2,7 @@
 
 \chapter{Design}
 
-Rețeaua Tor este una care se adaugă peste rețeaua existentă (eng.\ %
+\indent\indent Rețeaua Tor este una care se adaugă peste rețeaua existentă (eng.\ %
 \emph{overlay network}). \index{overlay network} Fiecare OR funcționează
 ca un proces inițiat de utilizator, fără privilegii speciale. OR păstrează
 o conexiune TLS cu toate celelalte OR, iar utilizatorii rulează
@@ -29,7 +29,7 @@ atunci cînd comunică între OR. Toate cheile de termen scurt sînt rotite peri
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Celule}
 
-OR comunică între ele și cu utilizatorii prin conexiuni TLS cu chei efemere.
+\indent\indent OR comunică între ele și cu utilizatorii prin conexiuni TLS cu chei efemere.
 Astfel se ascund datele conexiunii cu securitate perfectă la înaintare
 (eng.\ \emph{perfect forward secrecy}), împiedicînd orice atacator să
 modifice date pe drum sau să pretindă că este un OR.
@@ -92,7 +92,26 @@ Sarcina primei celule create conține prima jumătate a criptării
 \emph{Diffie-Hellman handshake} ($g^x$), criptată ca fiind cheia onion
 a OR-ului. Bob răspunde cu celula care conține comanda \texttt{created},
 care conține $ g^y $ și un hash al cheii complet negociate, $ K = g^{xy} $.
-\todo[inline,noline,backgroundcolor=green!40]{cîte ceva despre Diffie-Hellman}
+
+\vspace{1cm}
+Facem o mică digresiune pentru a aminti funcționarea criptării Diffie-Hellman.
+Detalii și alte explicații se pot găsi la \cite{dhse}.
+Pașii sînt următorii:
+\begin{enumerate}[(1)]
+  \item Alice alege două numere prime $ g $ și $ p $ și le transmite lui Bob.
+  \item Bob alege un număr secret $ a $, pe care nu-l transmite nimănui.
+    El calculează $ A = g^a \text{ mod } p $ și transmite rezultatul lui Alice.
+  \item Alice alege un număr secret $ b $ și face un calcul similar,
+    adică $ B = g^b \text{ mod } p $ și transmite lui Bob rezultatul.
+  \item Bob calculează acum $ B^a \text{ mod } p $, iar Alice calculează
+    $ A^b \text{ mod } p $, iar amîndoi obțin același rezultat.
+    Aceasta deoarece au loc egalitățile:
+    \begin{align*}
+      (g^a \text{ mod } p)^b \text{ mod } p &= g^{ab} \text{ mod p} \\
+      (g^b \text{ mod } p)^a \text{ mod } p &= g^{ba} \text{ mod p}
+    \end{align*}
+\end{enumerate}
+\vspace{1cm}
 
 După stabilirea circuitului, Alice și Bob își pot trimite mesaje folosind
 cheia $ K $.
@@ -133,7 +152,3 @@ $ y $-ul corespunzător. În primul pas se folosește cheie publică, deoarece
 celula este prea mică pentru a stoca o cheie publică și semnătura.
 
 
-{\color{red} \textbf{Mai departe}}
-
-Detalii despre componente și exemplul de bază de la Jordan Wright +
-desenele de la \cite{bs}
