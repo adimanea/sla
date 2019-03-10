@@ -19,6 +19,18 @@ Skerritt, B. (2018).
   \linebreak{}\url{https://security.stackexchange.com/questions/45963/diffie-hellman-key-exchange-in-plain-english}.
 \newblock \linebreak{}[Online; accesat martie 2019].
 
+\bibitem[Tor, 2019]{tor}
+Tor (2019).
+\newblock The {T}or {P}roject.
+\newblock \url{https://www.torproject.org/}.
+\newblock [Online; accesat martie 2019].
+
+\bibitem[Wikipedia, 2003]{jap}
+Wikipedia (2003).
+\newblock Java {A}non {P}roxy.
+\newblock \url{https://en.wikipedia.org/wiki/Java_Anon_Proxy}.
+\newblock [Online; accesat martie 2019].
+
 \bibitem[Wright, 2015a]{jw1}
 Wright, J. (2015a).
 \newblock How tor works: Part one.
