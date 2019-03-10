@@ -1,10 +1,155 @@
 %! TEX root = ../tor.tex
 
-\chapter{Atacuri}
+\chapter{Atacuri și strategii de apărare}
 
-\begin{itemize}
-  \item din whitepaper \S7;
-  \item cenzură și "guvern ostil" (v.\ Jordan Wright) (\cite{jw2});
-\end{itemize}
+\indent\indent În lucrarea inițială de prezentare a tehnologiei Tor (\cite{whitepaper}),
+apar diverse tipuri de atacuri pe care cercetătorii le prevăzuseră, împreună cu
+modurile de apărare.
 
+\section{Atacuri pasive}
+
+\indent\indent Un atac pasiv clasic este reprezentat de \emph{observarea tiparelor %
+din traficul utilizatorilor}. Astfel, deși identitatea utilizatorilor rămîne
+necunoscută, se poate profila traficul și găsi diverse tipare în modul lor
+de utilizare. Totuși, sarcina este îngreunată de faptul că pot circula mai
+multe fire prin același circuit, așa cum am menționat în prima parte a lucrării,
+deci conexiunile interceptate pot să nu aparțină utilizatorului-țintă.
+
+Un alt tip de atac tipic este dat de \emph{observarea conținutului utilizatorului}.
+Deși la nivelul utilizatorului, conținutul este criptat, conexiunile către
+serverele care trimit răspunsul, pot să nu fie (de exemplu, conexiunea de
+la releul final la serverul adresat). Se poate chiar ca serverul accesat să
+fie ostil și să încerce să atace utilizatorul. Tor nu urmărește să filtreze
+conținutul, dar se poate apăra împotriva acestui atac folosind servicii terțe
+precum Privoxy sau altele similare pentru filtrare.
+
+Faptul că este permis fiecărui utilizator să-și configureze conexiunea poate
+fi o vulnerabilitate. De exemplu, utilizatorii mai avansați sau cei care
+ar avea nevoie de anonimitate sau intimitate mai pronunțată, pot cere schimbarea
+circuitului foarte des. Dar aceasta poate fi o vulnerabilitate pentru utilizatorii
+\qq{normali}, deoarece îi evidențiază ca pe o posibilă minoritate.
+
+Așa cum am mai menționat, un alt atac clasic poate fi \emph{corelația la ambele capete}.
+Un observator global ar putea să identifice și să profileze mai bine traficul,
+dar în realitate, acest atac este aproape imposibil. Mai mult decît atît,
+cum Tor folosește topologia țevii cu scurgeri, se poate întîmpla ca un utilizator
+să ceară ieșirea din rețea înainte de capăt, iar atunci observatorul, chiar cu
+puteri globale, este compromis.
+
+\index{atac!de confirmare}
+\index{atac!website fingerprinting}
+\index{atac!de corelație}
+Atacurile de mai sus se încadrează în categoria \emph{atacurilor de confirmare}.
+Prin observarea traficului, se poate confirma că s-a realizat o anumită
+conexiune de interes. Dar există și un alt atac cu potențial mai periculos,
+de care Tor nu poate apăra foarte eficient: \emph{amprentarea site-urilor}
+(eng.\ \texttt{website fingerprinting}). În locul căutării conexiunilor de
+intrare sau ieșire pentru profilare, atacatorul poate să-și facă o bază
+de date de \qq{amprente} care conțin tipare de acces și mărimi de fișiere
+schimbate de client cu site-uri țintă. În cazul Tor, eficiența acestui
+atac nu este foarte mare, deoarece se folosesc mai multe fire în format
+multiplex prin aceeași rețea și mai mult, amprentele sînt limitate de
+mărimea celulelor de trafic, adică de 512 octeți. Sugestii pentru îmbunătățirea
+securității din acest punct de vedere ar fi să se utilizeze scheme de grupare
+a traficului către anumite site-uri sau padding aplicat link-urilor.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Atacuri active}
+
+\indent\indent Un atacator care află cheia de sesiune TLS ar putea
+să controleze celulele și releele din circuit. Totodată, aflarea
+acestei chei îi permite să desfacă un strat din criptare și, dacă
+află cheia unui OR, poate să \qq{devină} acel OR pe durata vieții
+cheii. Însă atacul nu este foarte util, deoarece, pentru a putea crea
+într-adevăr impresia că este acel OR, trebuie să aibă acces și la cheia
+onion pentru a decripta celulele \texttt{create}. Dar, cum conexiunea
+are securitate perfectă la înaintare, de îndată ce s-a făcut o legătură
+în rețea, ea nu mai poate fi compromisă. Totodată, rotația cheilor
+limitează perioada în care asemenea atacuri pot acționa. Astfel că,
+în realitate, un asemenea atac poate fi eficient doar dacă se poate
+lansa pe durata vieții unei conexiuni. Situația este puțin probabilă,
+dar pot exista cazuri legale sau extralegale cînd autorități de un
+anume rang pot cere accesul la anumite noduri. A fost cazul în 2003,
+cînd autoritățile germane au obținut un mandat de spargere a protocoalelor
+serviciului de anonimizare \texttt{Java Anon Proxy} (\cite{jap}).
+
+În plus, dacă atacatorul află cheia de identitate a unui nod, poate
+contacta serverele directoare și să trimită descrieri false, infiltrîndu-se
+în aceste servere.
+\index{atac!compromiterea cheilor}
+
+Un alt tip de atac activ care poate fi lansat este prin rularea unui server.
+Dacă un atacator creează un server web care să ofere conținut prin care
+să atragă utilizatori ai rețelei Tor, atunci el are șanse să intre în rețea
+și să fie accesat de noduri de ieșire. În acest caz, poate afla diverse
+tipare de trafic sau poate trimite conținut malițios, deoarece are control
+asupra unui capăt al conexiunii. Similar este și cazul cînd un atacator
+deține un OR ostil. Dar, dacă atacatorul deține controlul asupra $ m > 1 $
+din $ N $ noduri, se poate arăta că el poate corela cel mult $ \Big(\dfrac{m}{n}\Big)^2 $
+din trafic. Acest număr, deși poate fi neglijabil (amintim că $ N > 6000 $),
+poate fi grupat cu alte atacuri, precum acela al rulării unui server care
+să atragă trafic.
+
+În ce privește atacurile asupra celulelor, amintim că la fiecare nod se
+fac verificări de integritate, deci acestea nu pot fi atacate cu succes.
+
+În cazul în care utilizatorul vrea să se conecteze la un server printr-un
+protocol nesecurizat, precum HTTP, se poate ca un atacator să se dea drept
+serverul-țintă. De aceea, utilizatorii se pot proteja de o asemenea situație
+conectîndu-se cu protocoale care fac autentificarea la ambele capete.
+
+Desigur, alte tipuri de atacuri care țin de faptul că rețeaua este menținută
+activă de voluntari pot fi distribuirea de cod ostil din partea unui utilizator
+de încredere sau acțiuni interzise din punctul de vedere al politicilor
+de ieșire sau de rutare ori din punct de vedere social.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Atacuri asupra directoarelor}
+
+\index{atac!pe directoare}
+\indent\indent În cazul în care se distrug servere directoare, rețeaua
+este proiectată pentru a continua să funcționeze, deoarece încă se
+primesc semnături și voturi în consens din partea serverelor încă
+active. Însă, din design, dacă se distrug peste jumătate din serverele
+directoare, este necesară intervenția umană, deoarece consensul nu mai
+are suficiente date.
+
+Atacul asupra unei singure autorități directoare, însă, nu este tocmai
+eficient, deoarece consensul înregistrează voturi, iar acest atac ar
+putea, în cel mai rău caz (dar total nepractic) să influențeze aceste
+voturi, înclinînd balanța către autorizarea unor servere ostile.
+În practică, asemenea atacuri nu au apărut, deci nu există precedențe
+pentru a se face analize de impact.
+
+Și în aceste cazuri, pot apărea atacuri datorate naturii umane. De exemplu,
+se poate păcăli o autoritate directoare că un OR funcționează, deși este
+stricat sau că este valid, deși este malițios sau convingerea pentru listarea unui
+server drept autoritate directoare. Tor nu apără împotriva unor asemenea
+atacuri.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Cenzură și atacuri politice}
+\index{atac!cenzură}
+\indent\indent Un atac special, care poate fi lansat de un atacator
+ostil sau comandat politic (sub formă de cenzură, de exemplu), ar putea
+să vizeze traficul care intră sau care iese din Tor, adică să împiedice
+utilizatorii să intre în rețea sau să iasă către destinație.
+
+Blocarea nodurilor de ieșire este o situație care poate avea loc, deoarece
+lista nodurilor de ieșire este publică, iar Tor nu se poate apăra de
+asemenea atacuri. Un atacator poate pur și simplu să dezactiveze nodul
+de ieșire sau să-l inunde cu cereri, lucru care l-ar face inutilizabil.
+
+În celălalt caz, însă, blocarea nodurilor de intrare este imposibilă,
+mulțumită podurilor. Aceasta deoarece lista tuturor nodurilor de intrare 
+nu este disponibilă, iar lista podurilor poate fi descoperită doar parțial.
+Se poate, cel mult, combina acest tip de atac cu cel de corelarea traficului.
+Dacă atacatorul are date acumulate despre anumiți utilizatori, despre care
+se crede că se conectează la anumite noduri de intrare (sau acest lucru este
+surprins în timp ce se întîmplă), se pot lansa atacuri asupra acelui nod.
+Atacurile de tip \qq{inundație} (eng.\ \texttt{flood}) sînt cele mai ușoare
+și ar putea dezactiva nodul de intrare.
 
