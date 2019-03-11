@@ -3,7 +3,7 @@
 \chapter{Design}
 
 \indent\indent Rețeaua Tor este una care se adaugă peste rețeaua existentă (eng.\ %
-\emph{overlay network}). \index{overlay network} Fiecare OR funcționează
+\texttt{overlay network}). \index{overlay network} Fiecare OR funcționează
 ca un proces inițiat de utilizator, fără privilegii speciale. OR păstrează
 o conexiune TLS cu toate celelalte OR, iar utilizatorii rulează
 software local, numit \emph{onion proxy} (OP) \index{onion!proxy (OP)} pentru
@@ -31,7 +31,7 @@ atunci cînd comunică între OR. Toate cheile de termen scurt sînt rotite peri
 
 \indent\indent OR comunică între ele și cu utilizatorii prin conexiuni TLS cu chei efemere.
 Astfel se ascund datele conexiunii cu securitate perfectă la înaintare
-(eng.\ \emph{perfect forward secrecy}), împiedicînd orice atacator să
+(eng.\ \texttt{perfect forward secrecy}), împiedicînd orice atacator să
 modifice date pe drum sau să pretindă că este un OR.
 \index{securitate!perfectă la înaintare}
 
@@ -56,9 +56,9 @@ Comenzile din celulele de control sînt:
   \item \texttt{destroy}, pentru eliminarea circuitului curent.
 \end{itemize}
 
-Celulele de transfer (eng.\ \emph{relay}) au un cap suplimentar, care
+Celulele de transfer (eng.\ \texttt{relay}) au un cap suplimentar, care
 specifică fluxul de date pentru celula respectivă, apoi o sumă de
-control bidirecțională (eng.\ \emph{end to end checksum}) pentru a
+control bidirecțională (eng.\ \texttt{end to end checksum}) pentru a
 asigura integritatea, lungimea sarcinii ce se va transfera și comanda
 de transfer. Conținutul capului și sarcinii din celula de transfer
 sînt criptate cu cifrul AES pe 128 biți.
@@ -100,11 +100,11 @@ Pașii sînt următorii:
 \begin{enumerate}[(1)]
   \item Alice alege două numere prime $ g $ și $ p $ și le transmite lui Bob.
   \item Bob alege un număr secret $ a $, pe care nu-l transmite nimănui.
-    El calculează $ A = g^a \text{ mod } p $ și transmite rezultatul lui Alice.
+    El calculează apoi $ A = g^a \text{ mod } p $ și transmite rezultatul lui Alice.
   \item Alice alege un număr secret $ b $ și face un calcul similar,
     adică $ B = g^b \text{ mod } p $ și transmite lui Bob rezultatul.
   \item Bob calculează acum $ B^a \text{ mod } p $, iar Alice calculează
-    $ A^b \text{ mod } p $, iar amîndoi obțin același rezultat.
+    $ A^b \text{ mod } p $, iar amîndoi obțin a\-ce\-lași rezultat.
     Aceasta deoarece au loc egalitățile:
     \begin{align*}
       (g^a \text{ mod } p)^b \text{ mod } p &= g^{ab} \text{ mod p} \\

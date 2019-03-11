@@ -79,9 +79,9 @@ acces doar la o porțiune mică a listei podurilor, suficiente pentru a iniția 
 Astfel, utilizatorul nici nu are nevoie de toate podurile disponibile, ci doar de cîteva
 pentru a-și face intrarea în rețea.
 
-Cercetătorii au reușit să identifice între 79\% și 86\% din lista totală a podurilor,
-realizînd o analiză a întregului spațiu de adrese IPv4, dar chiar și așa, putem considera
-că secretul listei podurilor este suficient de bine păstrat.
+Cercetătorii au reușit să identifice între 79\% și 86\% din lista totală a podurilor
+(cf.\ \cite{jw1}), realizînd o analiză a întregului spațiu de adrese IPv4, dar 
+chiar și așa, putem considera că secretul listei podurilor este suficient de bine păstrat.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Autorități directoare} \index{autorități directoare}
@@ -100,9 +100,9 @@ Acest document este întreținut de autoritățile directoare (AD) și actualiza
   \item AD transmite această informație sub forma unui status celorlalte AD;
   \item fiecare AD primește acest status, din care își actualizează propria
     listă;
-  \item toți parametrii adunați de la toate AD sînt combinate și se calculează
-    un vot, care este transmis cu o semnătură de către fiecare AD;
-  \item releele care primesc majoritatea voturilor sînt păstrate în consens, care
+  \item toți parametrii adunați de la toate AD sînt combinate și se cal\-cu\-lea\-ză
+    un vot, ca\-re este transmis cu o semnătură de către fiecare AD;
+  \item releele care primesc majoritatea voturilor sînt păstrate în consens, ca\-re
     se actualizează și se transmite tuturor AD.
 \end{itemize}
 
@@ -133,7 +133,7 @@ despre aceste servicii ascunse, dar utilizatorul care vrea să se conecteze
 în mod explicit, o poate face.
 
 Atunci cînd utilizatorul cere explicit conexiunea la servicii ascunse,
-introducînd adresa \texttt{.onion}, primește lista de IP-uri care pot servi
+introducînd a\-dre\-sa \texttt{.onion}, primește lista de IP-uri care pot servi
 drept noduri de intrare către adresa respectivă. Se alege una aleatoriu
 și se stabilește circuitul, folosind celulele de mărime fixată (pentru ca
 un observator să nu-și dea seama, de exemplu, că celulele mai mari corespund

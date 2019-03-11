@@ -4,7 +4,7 @@
 
 \section{Idei principale}
 
-\indent\indent \qq{Rutarea în foi de ceapă} (eng.\ \textit{onion routing}, OR) a fost
+\indent\indent \qq{Rutarea în foi de ceapă} (eng.\ \texttt{onion routing}, OR) a fost
 concepută pentru anonimizarea aplicațiilor care funcționează pe baza protocolului
 TCP, precum browsere, servicii de mesagerie sau \texttt{ssh}. În acest model
 de rutare, clienții aleg un drum prin rețea, construind un circuit, dar
@@ -24,8 +24,8 @@ aproximativ 50 000 conexiuni pe zi.
 Tor a fost conceput pentru a rezolva deficiențele găsite în modelul inițial OR,
 iar principalele îmbunătățiri privesc:
 \begin{enumerate}[(1)]
-  \item \textit{Secretizarea perfectă a înaintării traficului} (eng.\ perfect
-    forward secrecy): în modelul inițial, dacă exista un nod ostil într-un punct
+  \item \textit{Secretizarea perfectă a înaintării traficului} (eng.\ \texttt{perfect
+    forward secrecy}): în modelul inițial, dacă exista un nod ostil într-un punct
     al conexiunii, putea să refuze înaintarea traficului și să decripteze
     conținutul care a ajuns pînă la el. În modelul actual, se folosește o
     \emph{criptare telescopică}, prin care nodul curent adaugă chei
@@ -75,9 +75,9 @@ iar principalele îmbunătățiri privesc:
     originală, în OR existau noduri speciale folosite pentru a construi
     circuite speciale către servere ascunse. Dar utilitatea lor era nulă dacă
     vreunul se defecta. În varianta Tor, clienții negociază \qq{puncte de %
-    întîlnire} (eng.\ rendezvous-points) pe parcurs, care ghidează
+    întîlnire} (eng.\ \texttt{rendezvous-points}) pe parcurs, care ghidează
     traficul pe drum și nu se bazează doar pe \qq{autorități speciale}.
-    \index{punct!de întîlnire (rendezvous)}
+    \index{punct de întîlnire (rendezvous)}
 \end{enumerate}
 
 Ca implementare, Tor nu necesită instalarea de module speciale în kernel.
@@ -93,17 +93,17 @@ folosit pentru anonimizarea traficului în timp real.
 
 \section{Obiective de design și asumpții}
 
-Obiectivul principal este împiediarea atacurilor care ar viza un singur
+\indent\indent Obiectivul principal este împiediarea atacurilor care ar viza un singur
 utilizator, ca țintă unică. Totodată, următoarele aspecte esențiale au
 contribuit la dezvoltarea Tor în forma actuală:
 \begin{itemize}
-  \item Ușurința lansării în aplicații reale (eng.\ \emph{deployability}): este
+  \item Ușurința lansării în aplicații reale (eng.\ \texttt{deployability}): este
     necesar ca implementarea și utilizarea să fie cît mai simple și
     economice, iar cerința de anonimitate este imperioasă. Singurele
     noduri care nu satisfac această cerință de anonimitate sînt punctele
     de întîlnire, pentru asigurarea integrității traficului.
-  \item Ușurința de utilizare: simplitatea contribuie la securitate, iar
-    anonimatul nu trebuie să fie dependent de sistemul de operare.
+  \item Ușurința de utilizare: simplitatea contribuie la se\-cu\-ri\-ta\-te, iar
+    a\-no\-ni\-ma\-tul nu tre\-bu\-ie să fie dependent de sistemul de operare.
   \item Flexibilitate: protocolul trebuie să fie suficient de flexibil și
     în același timp suficient de bine specificat astfel încît să poată
     servi drept tester pentru cercetări în domeniu.
@@ -145,14 +145,14 @@ modifica, șterge sau întîrzia traficul, care ar putea să ruleze propriile OR
 și care ar putea compromite o parte a OR existente.
 
 În sistemele de anonimizare cu latență scăzută care folosesc criptarea
-pe straturi (eng.\ \emph{layered encryption}), \index{criptare!pe straturi}
+pe straturi (eng.\ \texttt{layered encryption}), \index{criptare!pe straturi}
 obiectivul tipic al adversarului este să observe inițiatorul și respondentul
 traficului. Astfel, prin observare, ar putea confirma că Alice vorbește cu Bob
 dacă în trafic sînt prezente anumite variabile de flux și temporizare.
 Un atacator activ poate introduce asemenea variabile pentru a se asigura.
 
 Tor urmărește să împiedice nu atacurile de confirmare a traficului, ci pe
-cele de \emph{învățare}, pentru ca adversarul să nu poată folosi informații
+cele de \emph{în\-vă\-ța\-re}, pentru ca adversarul să nu poată folosi informații
 preluate pasiv pentru a afla structura rețelei sau a routerelor. De exemplu,
 învățînd structura rețelei, ar putea afla poziția nodurilor de încredere (e.g.\
 serverele directoare sau punctele de întîlnire)
