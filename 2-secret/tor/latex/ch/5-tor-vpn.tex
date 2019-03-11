@@ -1,3 +1,117 @@
 %! TEX root = ../tor.tex
 
 \chapter{Tor vs VPN}
+\index{VPN}
+\indent\indent VPN (eng.\ \texttt{Virtual Private Network}) este o altă opțiune pentru
+anonimizarea traficului online, care funcționează într-o manieră aparent
+similară rețelei Tor. De aceea, poate apărea întrebarea privitoare la
+diferența între cele două și care este de preferat, în funcție de scopul
+și aplicațiile urmărite.
+
+De aceea, vom descrie pe scurt această comparație, evidențiind cazurile tipice
+cînd un VPN este de preferat sau cînd Tor este de preferat, luînd în discuție
+și avantajele și dezavantajele fiecăreia dintre aceste două soluții.
+
+Deoarece tehnologia Tor a fost descrisă pe larg în secțiunile anterioare,
+ne oprim acum atenția în special asupra VPN.
+
+Funcționarea de bază a unui VPN este centrată pe o rețea de servere, de obicei
+plasate în țări diferite, iar utilizatorul care vrea să se conecteze la un serviciu
+web prin intermediul unui VPN va folosi unul dintre serverele puse la dispoziție
+drept intermediar. Astfel că site-ul sau serviciul-țintă va vedea traficul ca venind
+dinspre serverul intermediar, iar nu din partea clientului, ceea ce realizează
+un anonimizare a traficului. De asemenea, în cadrul acestui schimb, mesajele transmise
+de la client la serverul VPN și apoi de la serverul VPN și serviciul-țintă, precum
+și înapoi, sînt criptate.
+
+Principalele avantaje și dezavantaje ale serviciului VPN provin din aceeași sursă:
+faptul că serviciul este deținut de o firmă privată, iar mesajul trece exclusiv prin
+serverul pe care îl pun ei la dispoziție.
+
+\textit{Avantajele} care derivă de aici se leagă de eficiență și viteză. Deoarece o firmă
+privată pune la dispoziție serverele, se va asigura că instalarea serviciului este
+foarte simplă, că funcționează pentru majoritatea dispozitivelor și sistemelor de
+operare și că viteza este cît se poate de mare.
+
+Dar tot de aici apar și principalele dezavantaje. Mai întîi, este un serviciu
+comercial, în majoritatea cazurilor și, dacă utilizatorul alege să plătească puțin
+sau deloc, poate avea probleme în cel puțin 3 privințe:
+\begin{itemize}
+  \item Mai întîi, este posibil ca serviciul să folosească o criptare slabă. Există
+    servicii VPN care folosesc metode de criptare standard și foarte sigure, precum
+    AES pe 256 biți, dar există și servicii care folosesc o criptare slabă.
+  \item Calitatea software-ului folosit pentru intermedierea conexiunii poate fi
+    îndoielnică, mai ales în cazul VPN-urilor ieftine. Cum conexiunea trece obligatoriu
+    prin programul oferit de firma care deține serverele, defecțiuni de software
+    au efect asupra oricărei conexiuni pe care clientul o lansează.
+  \item În funcție de țara sau țările în care se află serverele VPN, pot exista
+    reglementări legale diferite, precum impunerea unei căi de acces forțat
+    (\texttt{backdoor}) pentru organe legale sau păstrarea înregistrărilor activității
+    (\texttt{logs})\footnote{Diverse politici corecte sau mincinoase de păstrare a
+    log-urilor sînt discutate \href{https://thebestvpn.com/118-vpns-logging-policy/}{aici}}. 
+    Tot la acest capitol putem menționa și politica de achiziție.
+    Un VPN respectabil, deoarece este menit să fie folosit pentru anonimizare, acceptă
+    ca utilizatorul să devină client cu date personale minime. Au existat chiar cazuri
+    cînd servicii de VPN au vîndut datele utilizatorilor lor.\footnote{Cazuri în care
+      servicii de VPN au inclus explicit sau implicit în politica de confidențialitate
+      faptul că datele utilizatorilor pot fi folosite în scop comercial sînt
+    prezentate \href{https://thebestvpn.com/how-free-vpns-sell-your-data/}{aici}}
+    De cealaltă parte, serviciul \texttt{MULLVAD} din Suedia, de exemplu, permite ca 
+    un client să trimită bani în numerar, în plic, fără datele expeditorului pentru 
+    a-și plăti abonamentul. Va primi, apoi, un cod unic de înregistrare și poate 
+    începe să folosească serverele lor.\footnotemark
+\end{itemize}
+
+\footnotetext{Resurse suplimentare privitoare la jurisdicția serviciilor VPN,
+  politici de confidențialitate și, în general, soluții optime pentru criptare
+și anonimizare sînt colectate la \href{https://www.privacytools.io}{PrivacyTools.io}}
+
+Acum, revenind la comparația cu Tor, putem vedea că există anumite avantaje
+de partea acestui serviciu. Întîi de toate, este gratuit și nu este deținut
+de vreo autoritate sau firmă privată. Nodurile intermediare care sînt folosite
+drept relee pentru o conexiune aparțin voluntarilor și nu pot fi puse în pericol
+de o politică privată. Fiind mai multe noduri, descentralizate și aparținînd unor
+persoane fizice, serviciul este greu de atacat, în ansamblul său.
+În plus, codul utilizat este complet disponibil
+(\texttt{open source}), caz mai rar întîlnit în cazul VPN-urilor.
+
+În plus, rutarea \qq{în foi de ceapă} a serviciului Tor oferă criptare suplimentară
+și o anonimizare mai bună, așa cum am descris în secțiunile anterioare.
+
+De aici provin, totodată, și dezavantajele Tor. Fiind rulat de voluntari, pot exista
+diverse probleme politice sau sociale și, în general, compatibilitatea cu diverse
+dispozitive poate fi problematică. De exemplu, actualmente, Tor nu poate fi folosit
+pe dispozitive iOS, iar pentru Android este în faza beta.
+
+Mai mult, așa cum am descris în secțiunile anterioare, Tor nu a fost făcut pentru
+a permite conexiuni și transferuri \textit{peer-to-peer}, în vreme ce un VPN poate
+fi folosit și pentru așa ceva. La fel este și cazul transferurilor mari de date,
+precum vizionarea unui film sau descărcarea unei cantități mari de informații.
+
+\vspace{1cm}
+
+Pe scurt, deci: Tor poate fi folosit cu succes atunci cînd traficul de date nu
+este foarte mare și cînd se dorește o conexiune anonimă folosind o soluție a
+comunității. VPN-ul se pretează cazurilor în care avem trafic mare de date,
+viteza este foarte importantă, iar anonimitatea perfectă nu este prioritatea
+numărul unu. În plus, un serviciu VPN bun (cu criptare bună, fără politici de
+păstrare a log-urilor, fără preluarea datelor pentru înregistrare, cu viteză bună,
+uptime bun, relații cu clienții de calitate etc.) poate fi costisitor.
+
+Desigur, soluția optimă este utilizarea unui VPN \textit{și} a Tor, de exemplu
+accesînd serverele VPN înainte de nodul de intrare în Tor sau după nodul de
+ieșire.
+
+Mai menționăm la acest capitol comparativ și serviciile \texttt{proxy}.
+Ele funcționează pe un principiu similar, adică direcționarea traficului către
+o instanță intermediară înainte de accesarea serverului de destinație. Totuși,
+serviciile proxy pot avea o criptare deficitară (SOCKS și HTTP nu oferă niciun
+fel de criptare, iar HTTPS oferă criptare la același nivel cu orice website
+folosind SSL). În plus, serviciile proxy au fost gîndite pentru cîte o aplicație
+particulară, de obicei un browser web. Astfel, trebuie configurate diferit și
+individual pentru e-mail, chat sau alte aplicații terțe.
+\index{proxy}
+
+\todo[inline,noline,backgroundcolor=green!40]{mai multe despre proxy?}
+\todo[inline,noline,backgroundcolor=green!40]{de aranjat bibliografia}
+\todo[inline,noline,backgroundcolor=green!40]{alte cuvinte-cheie la index?}
