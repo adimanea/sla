@@ -1,3 +1,3 @@
 # Securitatea Rețelelor
 
-- Curs și laborator prezentat de lect. dr. Ruxandra Olimid.
+- Profesor de curs și laborator: Ruxandra Olimid.
