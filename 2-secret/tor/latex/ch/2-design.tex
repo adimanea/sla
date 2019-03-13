@@ -35,9 +35,11 @@ Astfel se ascund datele conexiunii cu securitate perfectă la înaintare
 modifice date pe drum sau să pretindă că este un OR.
 \index{securitate!perfectă la înaintare}
 
-Traciul între OR circulă în \emph{celule}, fiecare avînd mărimea de 512 bytes.
+Traciul între OR circulă în \emph{celule}, fiecare avînd mărimea de 512 octeți.
 Celulele sînt alcătuite dintr-un cap (\emph{header}) și o încărcătură
 (\emph{payload}). \index{celule}
+\index{celule!cap (header)}
+\index{celule!încărcătură (payload)}
 
 Capul conține un identificator al circuitului prin care trece celula respectivă
 (dat fiind că mai multe fire TLS sînt trecute prin același circuit, în format
@@ -47,10 +49,10 @@ din celulă. Indetificatorul circuitului este unic pentru fiecare conexiune.
 Pe baza comenzilor, celulele pot fi \emph{de control}, care sînt mereu
 interpretate de nodul care le primește, sau \emph{de transfer}, care
 cară informație. \index{celule!de control} \index{celule!de transfer}
-
+\index{celule!comenzi}
 Comenzile din celulele de control sînt:
 \begin{itemize}
-  \item \texttt{padding}, folosită pentru \texttt{keepalive};
+  \item \texttt{padding}, folosită pentru \texttt{TCP keepalive}\footnote{\url{http://tldp.org/HOWTO/TCP-Keepalive-HOWTO/overview.html}}, dar și pentru securitate, cf.\ \S\ref{sec:idei}.
   \item \texttt{create} sau \texttt{created}, pentru organizarea unui
     nou circuit, respectiv confirmarea reușitei;
   \item \texttt{destroy}, pentru eliminarea circuitului curent.
@@ -58,7 +60,7 @@ Comenzile din celulele de control sînt:
 
 Celulele de transfer (eng.\ \texttt{relay}) au un cap suplimentar, care
 specifică fluxul de date pentru celula respectivă, apoi o sumă de
-control bidirecțională (eng.\ \texttt{end to end checksum}) pentru a
+control bidirecțională (eng.\ \texttt{end to end check\-sum}) pentru a
 asigura integritatea, lungimea sarcinii ce se va transfera și comanda
 de transfer. Conținutul capului și sarcinii din celula de transfer
 sînt criptate cu cifrul AES pe 128 biți.
@@ -74,8 +76,9 @@ Comenzile de transfer sînt:
   \item \texttt{relay truncate} și \texttt{relay truncated}, pentru distrugerea
     unei părți de circuit și notificare;
   \item \texttt{relay sendme} pentru rezolvarea congestiilor;
-  \item \texttt{relay drop} pentru implementarea {\color{red} long range dummies}.
-    \todo[inline,noline,backgroundcolor=green!40]{clarificat asta ultima}
+  \item \texttt{relay drop} pentru implementarea long range dummies.\footnote{celule %
+      \qq{zgomot} care pot fi distinse de datele normale abia
+    la ultimul pas, cf.\ \href{https://lists.torproject.org/pipermail/tor-dev/2002-July/001127.html}{M.\ Pfajfar}.}
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -92,10 +95,11 @@ Sarcina primei celule create conține prima jumătate a criptării
 \emph{Diffie-Hellman handshake} ($g^x$), criptată ca fiind cheia onion
 a OR-ului. Bob răspunde cu celula care conține comanda \texttt{created},
 care conține $ g^y $ și un hash al cheii complet negociate, $ K = g^{xy} $.
+\index{criptare!Diffie-Hellman}
 
 \vspace{1cm}
 Facem o mică digresiune pentru a aminti funcționarea criptării Diffie-Hellman.
-Detalii și alte explicații se pot găsi la \cite{dhse}.
+Detalii și alte explicații preluate de la \cite{dhse}.
 Pașii sînt următorii:
 \begin{enumerate}[(1)]
   \item Alice alege două numere prime $ g $ și $ p $ și le transmite lui Bob.
@@ -131,7 +135,7 @@ $ K_2 = g^{x_2y_2} $.
 
 Procesul continuă analog pentru extinderi ulterioare.
 
-Protocolul unilateral de handshake la nivel de cricuit permite ca Alice să
+Protocolul unilateral de handshake la nivel de circuit permite ca Alice să
 știe cu ce OR face legătura, dar OR-ul să nu știe --- astfel se
 păstrează anonimitatea celulei care lansează cererea. Nu există chei publice
 în această legătură, iar autentificarea este unilaterală (Alice și OR
@@ -150,6 +154,15 @@ hash, iar $ \mid $ este concatenarea. Avem:
 În a doua parte, Bob arată că el este cel care primește $ g^x $ și alege
 $ y $-ul corespunzător. În primul pas se folosește cheie publică, deoarece
 celula este prea mică pentru a stoca o cheie publică și semnătura.
+
+Schema acestei conexiuni, cu tot cu celule și chei este redată în figura \ref{fig:cells}.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics{fig/cells.png}
+  \caption{Celulele schimbate la inițierea unui circuit, cf.\ \cite{whitepaper}, \S4.1}
+  \label{fig:cells}
+\end{figure}
 
 
 

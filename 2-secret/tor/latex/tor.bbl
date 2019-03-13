@@ -8,13 +8,20 @@ Dingledine, R., Mathewson, N., and Sylverson, P. (2004).
 
 \bibitem[Skerritt, 2018]{bs}
 Skerritt, B. (2018).
-\newblock How tor *really* works.
-\newblock \url{https://hackernoon.com/how-does-tor-really-work-c3242844e11f}.
-\newblock [Online; accesat martie 2019].
+\newblock How {T}or *really* works\raggedright.
+\newblock
+  \hfill{}\linebreak{}\url{https://hackernoon.com/how-does-tor-really-work-c3242844e11f}.
+\newblock \linebreak{}[Online; accesat martie 2019].
 
-\bibitem[\texttt{security.stackexchange}, 2014]{dhse}
-\texttt{security.stackexchange} (2014).
-\newblock Diffie-{H}ellman in plain english.
+\bibitem[Szczypiorski, 2003]{hicc}
+Szczypiorski, K. (2003).
+\newblock Steganography in {TCP/IP} {N}etworks.
+\newblock \url{http://www.tele.pw.edu.pl/~krzysiek/pdf/steg-seminar-2003.pdf}.
+\newblock \linebreak{}[Online; accesat martie 2019].
+
+\bibitem[\texttt{{@}tylerl}, 2014]{dhse}
+\texttt{{@}tylerl} (2014).
+\newblock Diffie-{H}ellman in plain {E}nglish.
 \newblock
   \linebreak{}\url{https://security.stackexchange.com/questions/45963/diffie-hellman-key-exchange-in-plain-english}.
 \newblock \linebreak{}[Online; accesat martie 2019].
@@ -23,7 +30,7 @@ Skerritt, B. (2018).
 Tor (2019).
 \newblock The {T}or {P}roject.
 \newblock \url{https://www.torproject.org/}.
-\newblock [Online; accesat martie 2019].
+\newblock \linebreak{}[Online; accesat martie 2019].
 
 \bibitem[VA, 2019]{vpn}
 VA (2019).
@@ -39,23 +46,23 @@ Wikipedia (2003).
 
 \bibitem[Wright, 2015a]{jw1}
 Wright, J. (2015a).
-\newblock How tor works: Part one.
+\newblock How {T}or {W}orks: {P}art {O}ne.
 \newblock
   \url{https://jordan-wright.com/blog/2015/02/28/how-tor-works-part-one/}.
-\newblock [Online; accesat martie 2019].
+\newblock \linebreak{}[Online; accesat martie 2019].
 
 \bibitem[Wright, 2015b]{jw3}
 Wright, J. (2015b).
-\newblock How tor works: Part three.
+\newblock How {T}or {W}orks: {P}art {T}hree.
 \newblock
   \url{https://jordan-wright.com/blog/2015/05/14/how-tor-works-part-three-the-consensus/}.
-\newblock [Online; accesat martie 2019].
+\newblock \linebreak{}[Online; accesat martie 2019].
 
 \bibitem[Wright, 2015c]{jw2}
 Wright, J. (2015c).
-\newblock How tor works: Part two.
+\newblock How {T}or {W}orks: {P}art {T}wo.
 \newblock
   \url{https://jordan-wright.com/blog/2015/05/09/how-tor-works-part-two-relays-vs-bridges/}.
-\newblock [Online; accesat martie 2019].
+\newblock \linebreak{}[Online; accesat martie 2019].
 
 \end{thebibliography}

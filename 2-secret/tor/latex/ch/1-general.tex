@@ -2,7 +2,7 @@
 
 \chapter{Generalități}
 
-\section{Idei principale}
+\section{Idei principale} \label{sec:idei}
 
 \indent\indent \qq{Rutarea în foi de ceapă} (eng.\ \texttt{onion routing}, OR) a fost
 concepută pentru anonimizarea aplicațiilor care funcționează pe baza protocolului
@@ -39,14 +39,34 @@ iar principalele îmbunătățiri privesc:
     protocoalele suportau doar puține aplicații. Tor folosește o interfață
     proxy standard, SOCKS și proxy-uri de filtrare pentru aplicații de tip
     Privoxy, care sînt bine cunoscute și dezvoltate.
-    \todo[inline,noline,backgroundcolor=green!40]{citări pentru SOCKS și Privoxy}
+    \index{proxy!SOCKS}
+    \index{proxy!Privoxy}
+
+    Privoxy\footnote{\url{https://www.privoxy.org/faq/general.html}} este un proxy
+    care poate realiza filtrare mult mai detaliată și atentă decît un ad blocker.
+    Este un proiect evluat dintr-un alt proxy cu efect de filtrare (\texttt{Internet Junkbuster}),
+    căruia i s-au adus îmbunătățiri și actualizări.
+
+    SOCKS\footnote{\url{https://en.wikipedia.org/wiki/SOCKS}} este un protocol care permite
+    schimbul de pachete printr-un server. El funcționează pe Layer 5 din modelul OSI
+    și acceptă conexiuni pe portul TCP 1080. În varianta inițială, SOCKS nu oferea niciun
+    fel de protecție sau autentificare, dar în ultima versiune, SOCKS5, se oferă
+    și autentificare.
+
   \item \textit{Nu influențează traficul}: OR cerea gruparea și reordonarea
     celulelor care ajungeau la norduri și adăugarea de padding între utilizatori
-    și OR-uri. \todo[inline,noline,backgroundcolor=green!40]{padding?}
+    și OR-uri.
     Această prelucrare suplimentară cerea standardizarea și găsirea unor algoritmi
     care să facă operațiunile sigure --- algoritmi care încă nu s-au găsit. Pînă
     la găsirea unor implementări satisfăcătoare, Tor nu \qq{modelează} în niciun
-    fel traficul.
+    fel traficul.\footnote{Afirmația este bazată pe \cite{whitepaper}. Dar
+      începînd cu versiunea 0.3.1.7, Tor a introdus padding
+      între celule, care funcționează astfel: la intervale aleatorii între 1,5 și 9,5
+      secunde, se trimite cîte o celulă de 512 octeți, bidirecțional, între client
+      și releu. Acest mecanism are rol de a a introduce \qq{zgomot} în trafic,
+      pentru a-l face mai greu de modelat. 
+      Detalii \href{https://www.reddit.com/r/TOR/comments/73i8cf/how_effective_is_tors_padding/}{pe Reddit}
+    și în \href{https://www.torproject.org/docs/faq.html.en\#SendPadding}{specificațiile oficiale}.}
   \item \textit{Mai multe fire TCP pot folosi același circuit}: în implementarea
     originală, OR cerea construirea cîte unui circuit separat pentru
     fiecare cerere. Dar aceasta ridica probleme de securitate, deoarece
@@ -114,20 +134,46 @@ De asemenea, s-au trasat și \emph{non-obiective}, aspecte care sînt
 \begin{itemize}
   \item Nu servește drept conexiune peer-to-peer: abordarea are probleme
     serioase de securitate, chiar dacă a fost implementată de alte servicii.
-    \todo[inline,noline,backgroundcolor=green!40]{probleme la p2p --- exemple}
+    Problemele specifice provin din faptul că într-o conexiune peer to peer,
+    aplicațiile servesc atît drept client, cît și drept server, astfel
+    că pot fi atacate sau corupte în mai multe moduri, iar cîteva exemple
+    se pot găsi \href{https://www.cse.wustl.edu/~jain/cse571-07/ftp/p2p/#attack}{aici}.
   \item Nu este sigur împotriva atacurilor end-to-end: Tor nu pretinde
     să rezolve această problemă, împotriva atacurilor \emph{end-to-end timing}
     sau \emph{intersection attacks}. Problema nu este rezolvată satisfăcător
     în domeniu, dar ar putea să ajute ca utilizatorii să-și ruleze propriile
     OR.
+
+    \index{atac!end-to-end timing}
+    Pentru clarificare, adăugăm că atacul de tip \emph{end-to-end timing}
+    implică faptul că atacatorul poate observa traficul la ambele capete
+    (la client și la server) și, în funcție de asta, poate descoperi tipare de utilizare
+    și temporizare.
+
+    Atacul de tip \emph{intersecție} studiază comportamentul normal în rețea (trafic,
+    flux de date, ore de încărcare, ore mai lejere etc.) și își organizează atacul
+    încît să semene cît mai mult cu comportamentul normal. Numele atacului provine
+    de la faptul că atacatorul trebuie să aibă un comportament care se află la intersecția
+    între malițiozitate și normalitate.
     \index{atac!end-to-end}
     \index{atac!intersection}
-    \todo[inline,noline,backgroundcolor=green!40]{detalii despre aceste atacuri!}
   \item Nu oferă normalizarea protocoalelor: dacă se dorește securizarea
     informației transmise folosind protocoale complexe precum HTTP sau UDP,
     trebuie să se folosească servicii suplimentare; Tor nu normalizează securitatea.
-  \item Nu este steganografic --- nu ascunde cine este conectat în rețea.
-    \todo[inline,noline,backgroundcolor=green!40]{interesant cuvînt... detalii?}
+  \item Nu este steganografic\footnotemark --- nu ascunde cine este conectat în rețea.
+    \footnotetext{\emph{Steganografia}, o tehnică relativ recentă apărută în criptografie
+      și securitate, înseamnă ascunderea unui mesaj sau fișier sau date sub forma unui
+      alt tip de date. Începînd cu 2016, au apărut și metode de steganografie pentru
+      comunicarea și protocoalele de rețea. Două exemple tipice sînt:
+      \begin{itemize}
+        \item \texttt{LACK} (Lost Audio Packets Steganography), care trimite pachete
+          corupte, întîrziate sau \qq{zgomot} într-o conexiune de tip VoIP;
+        \item \texttt{HICCUPS} (Hidden Communication System for Corrupted Networks), pentru WLAN,
+          detaliat în \cite{hicc}.
+    \end{itemize}}
+    \index{steganografie}
+    \index{steganografie!LACK (VoIP)}
+    \index{steganografie!HICCUPS (WLAN)}
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
