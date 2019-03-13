@@ -1,0 +1,20 @@
+=== mcb.py ===
+=== Fri Dec 28 12:06:49 2018 ===
+Hi, how can I help you today?
+Here are the topics I know something about:
+group
+limit
+sum
+product
+integral
+derivative
+differential
+exponential
+logarithm
+fraction
+calculus
+analysis
+I can help you { study, learn, practice, read, exercise, define } some of these.
+You can always end the conversation saying goodbye.
+--> bye
+==================== PROGRAM TERMINATED ====================

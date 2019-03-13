@@ -1,0 +1,116 @@
+=== Mon Dec 24 11:19:08 2018 ===
+WORD: limit
+Sense no. 0: the greatest possible degree of something
+WORD: terminus_ad_quem
+Sense no. 1: final or latest limiting point
+WORD: limit
+Sense no. 2: as far as something can go
+WORD: limit
+Sense no. 3: the boundary of a specific area
+WORD: limit
+Sense no. 4: the mathematical value toward which a function goes as the independent variable approaches infinity
+WORD: limit
+Sense no. 5: the greatest amount of something that is possible or allowed
+WORD: restrict
+Sense no. 6: place limits on (extent or access)
+WORD: limit
+Sense no. 7: restrict or confine, "I limit you to two visits to the pub a day"
+WORD: specify
+Sense no. 8: decide upon or fix definitely
+--------------------------------------------------
+WORD: sum
+Sense no. 0: a quantity of money
+WORD: sum
+Sense no. 1: a quantity obtained by the addition of a group of numbers
+WORD: sum
+Sense no. 2: the final aggregate
+WORD: kernel
+Sense no. 3: the choicest or most essential or most vital part of some idea or experience
+WORD: sum
+Sense no. 4: the whole amount
+WORD: union
+Sense no. 5: a set containing all and only the members of two or more given sets
+WORD: summarize
+Sense no. 6: be a summary of
+WORD: total
+Sense no. 7: determine the sum of
+--------------------------------------------------
+WORD: merchandise
+Sense no. 0: commodities offered for sale
+WORD: product
+Sense no. 1: an artifact that has been created by someone or some process
+WORD: product
+Sense no. 2: a quantity obtained by multiplication
+WORD: product
+Sense no. 3: a chemical substance formed as a result of a chemical reaction
+WORD: product
+Sense no. 4: a consequence of someone's efforts or of a particular set of circumstances
+WORD: intersection
+Sense no. 5: the set of elements common to two or more sets
+--------------------------------------------------
+WORD: integral
+Sense no. 0: the result of a mathematical integration; F(x) is the integral of f(x) if dF/dx = f(x)
+WORD: built-in
+Sense no. 1: existing as an essential constituent or characteristic
+WORD: integral
+Sense no. 2: constituting the undiminished entirety; lacking nothing essential especially not damaged
+WORD: integral
+Sense no. 3: of or denoted by an integer
+--------------------------------------------------
+WORD: derived_function
+Sense no. 0: the result of mathematical differentiation; the instantaneous change of one quantity relative to another; df(x)/dx
+WORD: derivative
+Sense no. 1: a compound obtained from, or regarded as derived from, another compound
+WORD: derivative_instrument
+Sense no. 2: a financial instrument whose value is based on another security
+WORD: derivative
+Sense no. 3: (linguistics) a word that is derived from another word
+WORD: derivative
+Sense no. 4: resulting from or employing derivation
+--------------------------------------------------
+--------------------------------------------------
+WORD: exponential
+Sense no. 0: a function in which an independent variable appears as an exponent
+WORD: exponential
+Sense no. 1: of or involving exponents
+--------------------------------------------------
+WORD: logarithm
+Sense no. 0: the exponent required to produce a given number
+--------------------------------------------------
+WORD: fraction
+Sense no. 0: a component of a mixture that has been separated by a fractional process
+WORD: fraction
+Sense no. 1: a small part or item forming a piece of a whole
+WORD: fraction
+Sense no. 2: the quotient of two rational numbers
+WORD: divide
+Sense no. 3: perform a division
+--------------------------------------------------
+WORD: calculus
+Sense no. 0: a hard lump produced by the concretion of mineral salts; found in hollow organs or ducts of the body
+WORD: tartar
+Sense no. 1: an incrustation that forms on the teeth and gums
+WORD: calculus
+Sense no. 2: the branch of mathematics that is concerned with limits and with the differentiation and integration of functions
+--------------------------------------------------
+WORD: analysis
+Sense no. 0: an investigation of the component parts of a whole and their relations in making up the whole
+WORD: analysis
+Sense no. 1: the abstract separation of a whole into its constituent parts in order to study the parts and their relations
+WORD: analysis
+Sense no. 2: a form of literary criticism in which the structure of a piece of writing is analyzed
+WORD: analysis
+Sense no. 3: the use of closed-class words instead of inflections: e.g., `the father of the bride' instead of `the bride's father'
+WORD: analysis
+Sense no. 4: a branch of mathematics involving calculus and the theory of limits; sequences and series and integration and differentiation
+WORD: psychoanalysis
+Sense no. 5: a set of techniques for exploring underlying motives and a method of treating various mental disorders; based on the theories of Sigmund Freud
+--------------------------------------------------
+=== Mon Dec 24 11:26:07 2018 ===
+=== Mon Dec 24 11:26:39 2018 ===
+=== Mon Dec 24 11:35:43 2018 ===
+=== Mon Dec 24 11:36:50 2018 ===
+=== Mon Dec 24 11:39:29 2018 ===
+=== Mon Dec 24 11:40:10 2018 ===
+=== Mon Dec 24 11:42:08 2018 ===
+=== Mon Dec 24 11:44:51 2018 ===

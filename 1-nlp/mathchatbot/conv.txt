@@ -1,0 +1,55 @@
+=== mcb.py ===
+=== Tue Jan  8 18:19:46 2019 ===
+Howdy! How can I be of service?
+Here's what I know so far:
+group
+limit
+sum
+product
+integral
+derivative
+differential
+exponential
+logarithm
+fraction
+calculus
+analysis
+I can help you { study, learn, practice, read, exercise, define } some of these.
+You can always end the conversation saying goodbye.
+--> I want to read about limits.
+I'm not sure I know what you mean. Could you retry?
+Adding 'bye' to your reply exits the conversation.
+What else do you want to talk about?
+Saying goodbye closes the conversation.
+--> define group
+I can give you the definition of group.
+I know 2 definitions of group.
+Here is one of them:
+> Definition: any number of entities (members) considered as a unit
+Is this what you were after?
+--> no
+Here is another one:
+> Definition: a set that is closed, associative, has an identity element and every element has an inverse
+Is this what you were after?
+--> yes
+More topics in your mind?
+Write 'bye' whenever you want to exit.
+--> practice exponential
+When in doubt, practice!
+You can always start with the exercises in the textbook.
+You should start by reading from the course textbook.
+Is there any other subject you would like to talk about?
+Writing 'bye' closes the program.
+--> kjaskjdhsakd i
+I can't quite make anything of that. Please retry.
+Writing 'bye' closes the program.
+--> bye
+I can't quite make anything of that. Please retry.
+Write 'bye' whenever you want to exit.
+--> goodbye
+Sorry, I don't understand. Could you try something else, please?
+You can always end the conversation saying goodbye.
+--> bye
+I'm not sure I know what you mean. Could you retry?
+You can always end the conversation saying goodbye.
+--> bye
