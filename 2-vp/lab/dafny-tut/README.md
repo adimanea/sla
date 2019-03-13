@@ -1,5 +1,5 @@
-# Dafny Tutorial
+# Dafny
 
-All examples are taken from [rise4fun](https://rise4fun.com/Dafny/tutorial/guide) Dafny tutorial, so check that first. 
+Toate exemplele sînt din tutorialul Dafny de la [rise4fun](https://rise4fun.com/Dafny/tutorial/guide), deci trebuie urmărite de acolo. 
 
-This was Lab 1.
+Acesta a fost laboratorul 1.
