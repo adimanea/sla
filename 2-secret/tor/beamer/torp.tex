@@ -1,0 +1,64 @@
+\documentclass[xcolor=dvipsnames]{beamer}
+
+% font setup
+\usepackage{libertine}
+\renewcommand*\familydefault{\sfdefault}    % Linux Libertine = default sans serif
+\usepackage{inconsolata}                    % Inconsolata = monospaced
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Graphics and other packages
+\usepackage{graphicx}
+\renewcommand{\figurename}{} 
+\usepackage[romanian]{babel}
+\usepackage{caption}
+\captionsetup{compatibility=false}
+\usepackage{subcaption}
+\usepackage[style=german]{csquotes}
+
+% Custom macros
+\newcommand{\bloc}[3]{\begin{bl}<#1->{{\large\color{Gray}{\hrulefill}}\\ \color{bleumarin}{\large \emph{#2}}}\\ \vspace*{-2mm}{\color{Gray}{\hrulefill}}\\ #3 \end{bl}} 
+\newcommand{\fr}[1]{\frame{#1}}
+\newcommand{\ft}[1]{\frametitle{\color{bleumarin}{\hfill #1 \hfill}}}
+\newcommand{\lin}[3]{\uncover<#1->{\alert<#1>{#2}}{\vspace*{#3 ex}}}
+\newcommand{\ite}[2]{\uncover<#1->{\alert<#1>{\item #2}}}
+\newcommand{\vs}[1]{\vspace*{#1 ex}}
+\definecolor{bleumarin}{RGB}{30,30,150} 
+\definecolor{firebrick}{RGB}{178,34,34}
+
+% Theme setup
+\useoutertheme{shadow} 
+\usetheme{CambridgeUS} 
+\usecolortheme[named=bleumarin]{structure} 
+\useoutertheme[compress]{smoothbars}
+
+% Theme finetuning
+\setbeamertemplate{items}[ball]
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}  
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TITLE PAGE
+\title[Tor]{The Onion Router (Tor)}
+\author[Bucurescu, Manea, Nicolae]{Cornel Bucurescu, Adrian Manea, Cristian Nicolae}
+\institute[SecRet]{SLA, 406 \& 410}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% SLIDES START HERE
+\fr{                            % begin frame (custom macro [see preamble])
+  \ft{Generalități}             % \frame title (custom macro [see preamble])
+ 
+  \lin{1}{Prima linie}{0}
+}
+
+\end{document}
+
