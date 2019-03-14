@@ -1,0 +1,175 @@
+Propoziția 1:
+Stanford dependencies provides a representation of grammatical relations between words in a sentence.
+Parsare prin CONSTITUENȚI:
+(ROOT
+  (S
+    (NP (NNP Stanford) (NNS dependencies))
+    (VP
+      (VBZ provides)
+      (NP
+        (NP (DT a) (NN representation))
+        (PP
+          (IN of)
+          (NP
+            (NP (JJ grammatical) (NNS relations))
+            (PP
+              (IN between)
+              (NP
+                (NP (NNS words))
+                (PP (IN in) (NP (DT a) (NN sentence)))))))))
+    (. .)))
+Parsare prin DEPENDENȚE:
+[(('provides', 'VBZ'), 'nsubj', ('dependencies', 'NNS')), (('dependencies', 'NNS'), 'compound', ('Stanford', 'NNP')), (('provides', 'VBZ'), 'dobj', ('representation', 'NN')), (('representation', 'NN'), 'det', ('a', 'DT')), (('representation', 'NN'), 'nmod', ('relations', 'NNS')), (('relations', 'NNS'), 'case', ('of', 'IN')), (('relations', 'NNS'), 'amod', ('grammatical', 'JJ')), (('relations', 'NNS'), 'nmod', ('words', 'NNS')), (('words', 'NNS'), 'case', ('between', 'IN')), (('words', 'NNS'), 'nmod', ('sentence', 'NN')), (('sentence', 'NN'), 'case', ('in', 'IN')), (('sentence', 'NN'), 'det', ('a', 'DT'))]
+--------------------------------------------------
+Propoziția 2:
+They have been designed to be easily understood and effectively used by people who want to extract textual relations.
+Parsare prin CONSTITUENȚI:
+(ROOT
+  (S
+    (NP (PRP They))
+    (VP
+      (VBP have)
+      (VP
+        (VBN been)
+        (VP
+          (VBN designed)
+          (S
+            (VP
+              (TO to)
+              (VP
+                (VB be)
+                (VP
+                  (VP (ADVP (RB easily)) (VBN understood))
+                  (CC and)
+                  (VP
+                    (ADVP (RB effectively))
+                    (VBN used)
+                    (PP
+                      (IN by)
+                      (NP
+                        (NP (NNS people))
+                        (SBAR
+                          (WHNP (WP who))
+                          (S
+                            (VP
+                              (VBP want)
+                              (S
+                                (VP
+                                  (TO to)
+                                  (VP
+                                    (VB extract)
+                                    (NP (JJ textual) (NNS relations))))))))))))))))))
+    (. .)))
+Parsare prin DEPENDENȚE:
+[(('designed', 'VBN'), 'nsubjpass', ('They', 'PRP')), (('designed', 'VBN'), 'aux', ('have', 'VBP')), (('designed', 'VBN'), 'auxpass', ('been', 'VBN')), (('designed', 'VBN'), 'xcomp', ('understood', 'VBN')), (('understood', 'VBN'), 'mark', ('to', 'TO')), (('understood', 'VBN'), 'auxpass', ('be', 'VB')), (('understood', 'VBN'), 'advmod', ('easily', 'RB')), (('understood', 'VBN'), 'cc', ('and', 'CC')), (('understood', 'VBN'), 'conj', ('used', 'VBN')), (('used', 'VBN'), 'advmod', ('effectively', 'RB')), (('used', 'VBN'), 'nmod', ('people', 'NNS')), (('people', 'NNS'), 'case', ('by', 'IN')), (('people', 'NNS'), 'acl:relcl', ('want', 'VBP')), (('want', 'VBP'), 'nsubj', ('who', 'WP')), (('want', 'VBP'), 'xcomp', ('extract', 'VB')), (('extract', 'VB'), 'mark', ('to', 'TO')), (('extract', 'VB'), 'dobj', ('relations', 'NNS')), (('relations', 'NNS'), 'amod', ('textual', 'JJ'))]
+--------------------------------------------------
+Propoziția 3:
+We are now primarily working on an improved taxonomy to capture grammatical relations across languages, including morphologically rich ones.
+Parsare prin CONSTITUENȚI:
+(ROOT
+  (S
+    (NP (PRP We))
+    (VP
+      (VBP are)
+      (ADVP (RB now))
+      (VP
+        (ADVP (RB primarily))
+        (VBG working)
+        (PP
+          (IN on)
+          (NP
+            (DT an)
+            (VBN improved)
+            (NN taxonomy)
+            (S
+              (VP
+                (TO to)
+                (VP
+                  (VB capture)
+                  (NP (JJ grammatical) (NNS relations))
+                  (PP
+                    (IN across)
+                    (NP
+                      (NP (NNS languages))
+                      (, ,)
+                      (PP
+                        (VBG including)
+                        (NP
+                          (ADJP (RB morphologically) (JJ rich))
+                          (NNS ones))))))))))))
+    (. .)))
+Parsare prin DEPENDENȚE:
+[(('working', 'VBG'), 'nsubj', ('We', 'PRP')), (('working', 'VBG'), 'aux', ('are', 'VBP')), (('working', 'VBG'), 'advmod', ('now', 'RB')), (('working', 'VBG'), 'advmod', ('primarily', 'RB')), (('working', 'VBG'), 'nmod', ('taxonomy', 'NN')), (('taxonomy', 'NN'), 'case', ('on', 'IN')), (('taxonomy', 'NN'), 'det', ('an', 'DT')), (('taxonomy', 'NN'), 'amod', ('improved', 'VBN')), (('taxonomy', 'NN'), 'acl', ('capture', 'VB')), (('capture', 'VB'), 'mark', ('to', 'TO')), (('capture', 'VB'), 'dobj', ('relations', 'NNS')), (('relations', 'NNS'), 'amod', ('grammatical', 'JJ')), (('capture', 'VB'), 'nmod', ('languages', 'NNS')), (('languages', 'NNS'), 'case', ('across', 'IN')), (('languages', 'NNS'), 'nmod', ('ones', 'NNS')), (('ones', 'NNS'), 'case', ('including', 'VBG')), (('ones', 'NNS'), 'amod', ('rich', 'JJ')), (('rich', 'JJ'), 'advmod', ('morphologically', 'RB'))]
+--------------------------------------------------
+Propoziția 4:
+It explains the differences between the five types of representation available, and how such types of representation can be obtained.
+Parsare prin CONSTITUENȚI:
+(ROOT
+  (S
+    (S
+      (NP (PRP It))
+      (VP
+        (VBZ explains)
+        (S
+          (NP
+            (NP (DT the) (NNS differences))
+            (PP
+              (IN between)
+              (NP
+                (NP (DT the) (CD five) (NNS types))
+                (PP (IN of) (NP (NN representation))))))
+          (ADJP (JJ available)))))
+    (, ,)
+    (CC and)
+    (ADVP (WRB how))
+    (S
+      (NP
+        (NP (JJ such) (NNS types))
+        (PP (IN of) (NP (NN representation))))
+      (VP (MD can) (VP (VB be) (VP (VBN obtained)))))
+    (. .)))
+Parsare prin DEPENDENȚE:
+[(('explains', 'VBZ'), 'nsubj', ('It', 'PRP')), (('explains', 'VBZ'), 'xcomp', ('available', 'JJ')), (('available', 'JJ'), 'nsubj', ('differences', 'NNS')), (('differences', 'NNS'), 'det', ('the', 'DT')), (('differences', 'NNS'), 'nmod', ('types', 'NNS')), (('types', 'NNS'), 'case', ('between', 'IN')), (('types', 'NNS'), 'det', ('the', 'DT')), (('types', 'NNS'), 'nummod', ('five', 'CD')), (('types', 'NNS'), 'nmod', ('representation', 'NN')), (('representation', 'NN'), 'case', ('of', 'IN')), (('explains', 'VBZ'), 'cc', ('and', 'CC')), (('explains', 'VBZ'), 'advmod', ('how', 'WRB')), (('explains', 'VBZ'), 'ccomp', ('obtained', 'VBN')), (('obtained', 'VBN'), 'nsubjpass', ('types', 'NNS')), (('types', 'NNS'), 'amod', ('such', 'JJ')), (('types', 'NNS'), 'nmod', ('representation', 'NN')), (('representation', 'NN'), 'case', ('of', 'IN')), (('obtained', 'VBN'), 'aux', ('can', 'MD')), (('obtained', 'VBN'), 'auxpass', ('be', 'VB'))]
+--------------------------------------------------
+Propoziția 5:
+The definition of the set of dependencies has evolved a little over the years, and the particular patterns used to convert phrase structure trees to dependencies have been improved quite a bit.
+Parsare prin CONSTITUENȚI:
+(ROOT
+  (S
+    (S
+      (NP
+        (NP (DT The) (NN definition))
+        (PP
+          (IN of)
+          (NP
+            (NP (DT the) (NN set))
+            (PP (IN of) (NP (NNS dependencies))))))
+      (VP
+        (VBZ has)
+        (VP
+          (VBN evolved)
+          (NP (DT a) (JJ little))
+          (PP (IN over) (NP (DT the) (NNS years))))))
+    (, ,)
+    (CC and)
+    (S
+      (NP
+        (NP (DT the) (JJ particular) (NNS patterns))
+        (VP
+          (VBN used)
+          (S
+            (VP
+              (TO to)
+              (VP
+                (VB convert)
+                (NP (NN phrase) (NN structure) (NNS trees))
+                (PP (TO to) (NP (NNS dependencies))))))))
+      (VP
+        (VBP have)
+        (VP
+          (VBN been)
+          (VP (VBN improved) (ADVP (RB quite) (NP (DT a) (RB bit)))))))
+    (. .)))
+Parsare prin DEPENDENȚE:
+[(('evolved', 'VBN'), 'nsubj', ('definition', 'NN')), (('definition', 'NN'), 'det', ('The', 'DT')), (('definition', 'NN'), 'nmod', ('set', 'NN')), (('set', 'NN'), 'case', ('of', 'IN')), (('set', 'NN'), 'det', ('the', 'DT')), (('set', 'NN'), 'nmod', ('dependencies', 'NNS')), (('dependencies', 'NNS'), 'case', ('of', 'IN')), (('evolved', 'VBN'), 'aux', ('has', 'VBZ')), (('evolved', 'VBN'), 'dobj', ('little', 'JJ')), (('little', 'JJ'), 'det', ('a', 'DT')), (('evolved', 'VBN'), 'nmod', ('years', 'NNS')), (('years', 'NNS'), 'case', ('over', 'IN')), (('years', 'NNS'), 'det', ('the', 'DT')), (('evolved', 'VBN'), 'cc', ('and', 'CC')), (('evolved', 'VBN'), 'conj', ('improved', 'VBN')), (('improved', 'VBN'), 'nsubjpass', ('patterns', 'NNS')), (('patterns', 'NNS'), 'det', ('the', 'DT')), (('patterns', 'NNS'), 'amod', ('particular', 'JJ')), (('patterns', 'NNS'), 'acl', ('used', 'VBN')), (('used', 'VBN'), 'xcomp', ('convert', 'VB')), (('convert', 'VB'), 'mark', ('to', 'TO')), (('convert', 'VB'), 'dobj', ('trees', 'NNS')), (('trees', 'NNS'), 'compound', ('phrase', 'NN')), (('trees', 'NNS'), 'compound', ('structure', 'NN')), (('convert', 'VB'), 'nmod', ('dependencies', 'NNS')), (('dependencies', 'NNS'), 'case', ('to', 'TO')), (('improved', 'VBN'), 'aux', ('have', 'VBP')), (('improved', 'VBN'), 'auxpass', ('been', 'VBN')), (('improved', 'VBN'), 'advmod', ('quite', 'RB')), (('quite', 'RB'), 'nmod:npmod', ('bit', 'RB')), (('bit', 'RB'), 'det', ('a', 'DT'))]
+--------------------------------------------------

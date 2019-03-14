@@ -1,0 +1,229 @@
+1. Tokenizarea textului din fișierul de intrare:
+['William', 'Shakespeare', '(', 'bapt', '.', '26', 'April', '1564', '–', '23', 'April', '1616', ')', 'was', 'an', 'English', 'poet', ',', 'playwright', 'and', 'actor', ',', 'widely', 'regarded', 'as', 'the', 'greatest', 'writer', 'in', 'the', 'English', 'language', 'and', 'the', 'world', "'s", 'greatest', 'dramatist', '.', 'He', 'is', 'often', 'called', 'England', "'s", 'national', 'poet', 'and', 'the', '``', 'Bard', 'of', 'Avon', "''", '.', 'His', 'extant', 'works', ',', 'including', 'collaborations', ',', 'consist', 'of', 'approximately', '39', 'plays', ',', '154', 'sonnets', ',', 'two', 'long', 'narrative', 'poems', ',', 'and', 'a', 'few', 'other', 'verses', ',', 'some', 'of', 'uncertain', 'authorship', '.', 'His', 'plays', 'have', 'been', 'translated', 'into', 'every', 'major', 'living', 'language', 'and', 'are', 'performed', 'more', 'often', 'than', 'those', 'of', 'any', 'other', 'playwright', '.', 'Shakespeare', 'was', 'born', 'and', 'raised', 'in', 'Stratford-upon-Avon', ',', 'Warwickshire', '.', 'At', 'the', 'age', 'of', '18', ',', 'he', 'married', 'Anne', 'Hathaway', ',', 'with', 'whom', 'he', 'had', 'three', 'children', ':', 'Susanna', 'and', 'twins', 'Hamnet', 'and', 'Judith', '.', 'Sometime', 'between', '1585', 'and', '1592', ',', 'he', 'began', 'a', 'successful', 'career', 'in', 'London', 'as', 'an', 'actor', ',', 'writer', ',', 'and', 'part-owner', 'of', 'a', 'playing', 'company', 'called', 'the', 'Lord', 'Chamberlain', "'s", 'Men', ',', 'later', 'known', 'as', 'the', 'King', "'s", 'Men', '.', 'At', 'age', '49', '(', 'around', '1613', ')', ',', 'he', 'appears', 'to', 'have', 'retired', 'to', 'Stratford', ',', 'where', 'he', 'died', 'three', 'years', 'later', '.', 'Few', 'records', 'of', 'Shakespeare', "'s", 'private', 'life', 'survive', ';', 'this', 'has', 'stimulated', 'considerable', 'speculation', 'about', 'such', 'matters', 'as', 'his', 'physical', 'appearance', ',', 'his', 'sexuality', ',', 'his', 'religious', 'beliefs', ',', 'and', 'whether', 'the', 'works', 'attributed', 'to', 'him', 'were', 'written', 'by', 'others', '.', 'Such', 'theories', 'are', 'often', 'criticised', 'for', 'failing', 'to', 'adequately', 'note', 'that', 'few', 'records', 'survive', 'of', 'most', 'commoners', 'of', 'the', 'period', '.']
+Procesarea a durat  0.18 milisecunde.
+------------------------------------------------------------
+2. Textul conține 11 propoziții.
+Procesarea a durat  0.15 milisecunde.
+------------------------------------------------------------
+Propozițiile textului sînt:
+1. William Shakespeare (bapt.
+Propoziția are 5 cuvinte.
+Procesarea a durat  0.35 milisecunde.
+------------------------------------------------------------
+Propoziția are 0 stopwords.
+Procesarea a durat  0.27 milisecunde.
+------------------------------------------------------------
+Cuvintele care nu sînt stopwords sînt:
+{'bapt', 'Shakespeare', '(', 'William', '.'}
+Procesarea a durat  0.00 milisecunde.
+------------------------------------------------------------
+Analiza morfologică a propoziției este:
+[('William', 'NNP'), ('Shakespeare', 'NNP'), ('(', 'FW'), ('bapt', 'FW'), ('.', '.')]
+Procesarea a durat  1.46 milisecunde.
+------------------------------------------------------------
+Propoziția are  0.00 % verbe 
+și  40.00 % substantive, deci 
+ 40.00 % cuvinte tematice.
+Procesarea a durat  0.01 milisecunde.
+
+2. 26 April 1564 – 23 April 1616) was an English poet, playwright and actor, widely regarded as the greatest writer in the English language and the world's greatest dramatist.
+Propoziția are 34 cuvinte.
+Procesarea a durat  0.01 milisecunde.
+------------------------------------------------------------
+Propoziția are 6 stopwords.
+Procesarea a durat  0.64 milisecunde.
+------------------------------------------------------------
+Cuvintele care nu sînt stopwords sînt:
+{')', 'writer', 'April', 'English', 'greatest', '1616', 'poet', 'language', '1564', '.', ',', '26', "'s", 'dramatist', 'actor', 'widely', '23', 'world', '–', 'playwright', 'regarded'}
+Procesarea a durat  0.00 milisecunde.
+------------------------------------------------------------
+Analiza morfologică a propoziției este:
+[('26', 'CD'), ('April', 'NNP'), ('1564', 'CD'), ('–', 'NNP'), ('23', 'CD'), ('April', 'NNP'), ('1616', 'CD'), (')', 'NNP'), ('was', 'VBD'), ('an', 'DT'), ('English', 'JJ'), ('poet', 'NN'), (',', ','), ('playwright', 'NN'), ('and', 'CC'), ('actor', 'NN'), (',', ','), ('widely', 'RB'), ('regarded', 'VBN'), ('as', 'IN'), ('the', 'DT'), ('greatest', 'JJS'), ('writer', 'NN'), ('in', 'IN'), ('the', 'DT'), ('English', 'JJ'), ('language', 'NN'), ('and', 'CC'), ('the', 'DT'), ('world', 'NN'), ("'s", 'POS'), ('greatest', 'JJS'), ('dramatist', 'NN'), ('.', '.')]
+Procesarea a durat  16.39 milisecunde.
+------------------------------------------------------------
+Propoziția are  7.41 % verbe 
+și  37.04 % substantive, deci 
+ 44.44 % cuvinte tematice.
+Procesarea a durat  6.40 milisecunde.
+
+3. He is often called England's national poet and the "Bard of Avon".
+Propoziția are 16 cuvinte.
+Procesarea a durat  8.16 milisecunde.
+------------------------------------------------------------
+Propoziția are 4 stopwords.
+Procesarea a durat  0.50 milisecunde.
+------------------------------------------------------------
+Cuvintele care nu sînt stopwords sînt:
+{'Avon', 'national', 'Bard', 'often', 'England', "'s", 'called', 'poet', '``', "''", '.', 'He'}
+Procesarea a durat  0.01 milisecunde.
+------------------------------------------------------------
+Analiza morfologică a propoziției este:
+[('He', 'PRP'), ('is', 'VBZ'), ('often', 'RB'), ('called', 'VBN'), ('England', 'NNP'), ("'s", 'POS'), ('national', 'JJ'), ('poet', 'NN'), ('and', 'CC'), ('the', 'DT'), ('``', '``'), ('Bard', 'NNP'), ('of', 'IN'), ('Avon', 'NNP'), ("''", "''"), ('.', '.')]
+Procesarea a durat  2.05 milisecunde.
+------------------------------------------------------------
+Propoziția are  12.50 % verbe 
+și  25.00 % substantive, deci 
+ 37.50 % cuvinte tematice.
+Procesarea a durat  0.02 milisecunde.
+
+4. His extant works, including collaborations, consist of approximately 39 plays, 154 sonnets, two long narrative poems, and a few other verses, some of uncertain authorship.
+Propoziția are 32 cuvinte.
+Procesarea a durat  0.45 milisecunde.
+------------------------------------------------------------
+Propoziția are 6 stopwords.
+Procesarea a durat  0.21 milisecunde.
+------------------------------------------------------------
+Cuvintele care nu sînt stopwords sînt:
+{'including', '39', 'verses', 'two', '.', 'plays', 'authorship', 'extant', ',', 'sonnets', 'approximately', 'consist', 'narrative', 'works', 'poems', 'uncertain', 'His', 'long', 'collaborations', '154'}
+Procesarea a durat  0.65 milisecunde.
+------------------------------------------------------------
+Analiza morfologică a propoziției este:
+[('His', 'PRP$'), ('extant', 'JJ'), ('works', 'NNS'), (',', ','), ('including', 'VBG'), ('collaborations', 'NNS'), (',', ','), ('consist', 'VBP'), ('of', 'IN'), ('approximately', 'RB'), ('39', 'CD'), ('plays', 'NNS'), (',', ','), ('154', 'CD'), ('sonnets', 'NNS'), (',', ','), ('two', 'CD'), ('long', 'JJ'), ('narrative', 'JJ'), ('poems', 'NNS'), (',', ','), ('and', 'CC'), ('a', 'DT'), ('few', 'JJ'), ('other', 'JJ'), ('verses', 'NNS'), (',', ','), ('some', 'DT'), ('of', 'IN'), ('uncertain', 'JJ'), ('authorship', 'NN'), ('.', '.')]
+Procesarea a durat  1.19 milisecunde.
+------------------------------------------------------------
+Propoziția are  7.69 % verbe 
+și  26.92 % substantive, deci 
+ 34.62 % cuvinte tematice.
+Procesarea a durat  0.02 milisecunde.
+
+5. His plays have been translated into every major living language and are performed more often than those of any other playwright.
+Propoziția are 22 cuvinte.
+Procesarea a durat  0.03 milisecunde.
+------------------------------------------------------------
+Propoziția are 11 stopwords.
+Procesarea a durat  0.09 milisecunde.
+------------------------------------------------------------
+Cuvintele care nu sînt stopwords sînt:
+{'translated', 'often', 'performed', 'living', 'His', 'playwright', 'language', 'plays', '.', 'major', 'every'}
+Procesarea a durat  0.26 milisecunde.
+------------------------------------------------------------
+Analiza morfologică a propoziției este:
+[('His', 'PRP$'), ('plays', 'NNS'), ('have', 'VBP'), ('been', 'VBN'), ('translated', 'VBN'), ('into', 'IN'), ('every', 'DT'), ('major', 'JJ'), ('living', 'NN'), ('language', 'NN'), ('and', 'CC'), ('are', 'VBP'), ('performed', 'VBN'), ('more', 'RBR'), ('often', 'RB'), ('than', 'IN'), ('those', 'DT'), ('of', 'IN'), ('any', 'DT'), ('other', 'JJ'), ('playwright', 'NN'), ('.', '.')]
+Procesarea a durat  13.80 milisecunde.
+------------------------------------------------------------
+Propoziția are  22.73 % verbe 
+și  18.18 % substantive, deci 
+ 40.91 % cuvinte tematice.
+Procesarea a durat  5.00 milisecunde.
+
+6. Shakespeare was born and raised in Stratford-upon-Avon, Warwickshire.
+Propoziția are 10 cuvinte.
+Procesarea a durat  6.79 milisecunde.
+------------------------------------------------------------
+Propoziția are 3 stopwords.
+Procesarea a durat  0.65 milisecunde.
+------------------------------------------------------------
+Cuvintele care nu sînt stopwords sînt:
+{',', 'raised', 'born', 'Stratford-upon-Avon', 'Shakespeare', 'Warwickshire', '.'}
+Procesarea a durat  0.02 milisecunde.
+------------------------------------------------------------
+Analiza morfologică a propoziției este:
+[('Shakespeare', 'NNP'), ('was', 'VBD'), ('born', 'VBN'), ('and', 'CC'), ('raised', 'VBN'), ('in', 'IN'), ('Stratford-upon-Avon', 'NNP'), (',', ','), ('Warwickshire', 'NNP'), ('.', '.')]
+Procesarea a durat  0.89 milisecunde.
+------------------------------------------------------------
+Propoziția are  30.00 % verbe 
+și  30.00 % substantive, deci 
+ 60.00 % cuvinte tematice.
+Procesarea a durat  0.03 milisecunde.
+
+7. At the age of 18, he married Anne Hathaway, with whom he had three children: Susanna and twins Hamnet and Judith.
+Propoziția are 25 cuvinte.
+Procesarea a durat  0.03 milisecunde.
+------------------------------------------------------------
+Propoziția are 7 stopwords.
+Procesarea a durat  0.50 milisecunde.
+------------------------------------------------------------
+Cuvintele care nu sînt stopwords sînt:
+{'twins', 'Hamnet', ',', 'age', 'three', 'Judith', 'Hathaway', 'children', 'At', '18', 'Susanna', ':', '.', 'married', 'Anne'}
+Procesarea a durat  0.26 milisecunde.
+------------------------------------------------------------
+Analiza morfologică a propoziției este:
+[('At', 'IN'), ('the', 'DT'), ('age', 'NN'), ('of', 'IN'), ('18', 'CD'), (',', ','), ('he', 'PRP'), ('married', 'VBD'), ('Anne', 'NNP'), ('Hathaway', 'NNP'), (',', ','), ('with', 'IN'), ('whom', 'WP'), ('he', 'PRP'), ('had', 'VBD'), ('three', 'CD'), ('children', 'NNS'), (':', ':'), ('Susanna', 'NNP'), ('and', 'CC'), ('twins', 'NNS'), ('Hamnet', 'NNP'), ('and', 'CC'), ('Judith', 'NNP'), ('.', '.')]
+Procesarea a durat  0.95 milisecunde.
+------------------------------------------------------------
+Propoziția are  9.09 % verbe 
+și  36.36 % substantive, deci 
+ 45.45 % cuvinte tematice.
+Procesarea a durat  0.01 milisecunde.
+
+8. Sometime between 1585 and 1592, he began a successful career in London as an actor, writer, and part-owner of a playing company called the Lord Chamberlain's Men, later known as the King's Men.
+Propoziția are 40 cuvinte.
+Procesarea a durat  0.03 milisecunde.
+------------------------------------------------------------
+Propoziția are 9 stopwords.
+Procesarea a durat  0.52 milisecunde.
+------------------------------------------------------------
+Cuvintele care nu sînt stopwords sînt:
+{'Sometime', '1592', 'writer', 'London', 'called', 'successful', '.', 'part-owner', 'Lord', 'career', ',', "'s", '1585', 'actor', 'company', 'known', 'Chamberlain', 'began', 'later', 'playing', 'King', 'Men'}
+Procesarea a durat  0.43 milisecunde.
+------------------------------------------------------------
+Analiza morfologică a propoziției este:
+[('Sometime', 'RB'), ('between', 'IN'), ('1585', 'CD'), ('and', 'CC'), ('1592', 'CD'), (',', ','), ('he', 'PRP'), ('began', 'VBD'), ('a', 'DT'), ('successful', 'JJ'), ('career', 'NN'), ('in', 'IN'), ('London', 'NNP'), ('as', 'IN'), ('an', 'DT'), ('actor', 'NN'), (',', ','), ('writer', 'NN'), (',', ','), ('and', 'CC'), ('part-owner', 'NN'), ('of', 'IN'), ('a', 'DT'), ('playing', 'NN'), ('company', 'NN'), ('called', 'VBD'), ('the', 'DT'), ('Lord', 'NNP'), ('Chamberlain', 'NNP'), ("'s", 'POS'), ('Men', 'NN'), (',', ','), ('later', 'RB'), ('known', 'VBN'), ('as', 'IN'), ('the', 'DT'), ('King', 'NNP'), ("'s", 'POS'), ('Men', 'NN'), ('.', '.')]
+Procesarea a durat  13.68 milisecunde.
+------------------------------------------------------------
+Propoziția are  9.68 % verbe 
+și  35.48 % substantive, deci 
+ 45.16 % cuvinte tematice.
+Procesarea a durat  5.65 milisecunde.
+
+9. At age 49 (around 1613), he appears to have retired to Stratford, where he died three years later.
+Propoziția are 23 cuvinte.
+Procesarea a durat  7.92 milisecunde.
+------------------------------------------------------------
+Propoziția are 4 stopwords.
+Procesarea a durat  0.68 milisecunde.
+------------------------------------------------------------
+Cuvintele care nu sînt stopwords sînt:
+{'appears', ',', 'age', 'later', 'three', 'retired', 'years', '49', ')', 'died', 'Stratford', 'At', '(', '.', 'around', '1613'}
+Procesarea a durat  0.10 milisecunde.
+------------------------------------------------------------
+Analiza morfologică a propoziției este:
+[('At', 'IN'), ('age', 'NN'), ('49', 'CD'), ('(', 'CD'), ('around', 'IN'), ('1613', 'CD'), (')', 'NN'), (',', ','), ('he', 'PRP'), ('appears', 'VBZ'), ('to', 'TO'), ('have', 'VB'), ('retired', 'VBN'), ('to', 'TO'), ('Stratford', 'NNP'), (',', ','), ('where', 'WRB'), ('he', 'PRP'), ('died', 'VBD'), ('three', 'CD'), ('years', 'NNS'), ('later', 'RB'), ('.', '.')]
+Procesarea a durat  13.65 milisecunde.
+------------------------------------------------------------
+Propoziția are  20.00 % verbe 
+și  20.00 % substantive, deci 
+ 40.00 % cuvinte tematice.
+Procesarea a durat  5.35 milisecunde.
+
+10. Few records of Shakespeare's private life survive; this has stimulated considerable speculation about such matters as his physical appearance, his sexuality, his religious beliefs, and whether the works attributed to him were written by others.
+Propoziția are 41 cuvinte.
+Procesarea a durat  9.36 milisecunde.
+------------------------------------------------------------
+Propoziția are 13 stopwords.
+Procesarea a durat  0.92 milisecunde.
+------------------------------------------------------------
+Cuvintele care nu sînt stopwords sînt:
+{'whether', 'stimulated', 'survive', 'speculation', 'beliefs', 'attributed', 'considerable', 'appearance', 'records', '.', ',', 'life', "'s", 'Shakespeare', 'others', 'sexuality', 'Few', 'religious', 'works', ';', 'matters', 'physical', 'written', 'private'}
+Procesarea a durat  0.12 milisecunde.
+------------------------------------------------------------
+Analiza morfologică a propoziției este:
+[('Few', 'JJ'), ('records', 'NNS'), ('of', 'IN'), ('Shakespeare', 'NNP'), ("'s", 'POS'), ('private', 'JJ'), ('life', 'NN'), ('survive', 'VBP'), (';', ':'), ('this', 'DT'), ('has', 'VBZ'), ('stimulated', 'VBN'), ('considerable', 'JJ'), ('speculation', 'NN'), ('about', 'IN'), ('such', 'JJ'), ('matters', 'NNS'), ('as', 'IN'), ('his', 'PRP$'), ('physical', 'JJ'), ('appearance', 'NN'), (',', ','), ('his', 'PRP$'), ('sexuality', 'NN'), (',', ','), ('his', 'PRP$'), ('religious', 'JJ'), ('beliefs', 'NNS'), (',', ','), ('and', 'CC'), ('whether', 'IN'), ('the', 'DT'), ('works', 'NNS'), ('attributed', 'VBN'), ('to', 'TO'), ('him', 'PRP'), ('were', 'VBD'), ('written', 'VBN'), ('by', 'IN'), ('others', 'NNS'), ('.', '.')]
+Procesarea a durat  12.48 milisecunde.
+------------------------------------------------------------
+Propoziția are  16.22 % verbe 
+și  27.03 % substantive, deci 
+ 43.24 % cuvinte tematice.
+Procesarea a durat  5.23 milisecunde.
+
+11. Such theories are often criticised for failing to adequately note that few records survive of most commoners of the period.
+Propoziția are 21 cuvinte.
+Procesarea a durat  7.15 milisecunde.
+------------------------------------------------------------
+Propoziția are 8 stopwords.
+Procesarea a durat  0.61 milisecunde.
+------------------------------------------------------------
+Cuvintele care nu sînt stopwords sînt:
+{'period', 'theories', 'failing', 'often', 'note', 'criticised', 'survive', '.', 'adequately', 'Such', 'records', 'commoners'}
+Procesarea a durat  0.22 milisecunde.
+------------------------------------------------------------
+Analiza morfologică a propoziției este:
+[('Such', 'JJ'), ('theories', 'NNS'), ('are', 'VBP'), ('often', 'RB'), ('criticised', 'VBN'), ('for', 'IN'), ('failing', 'VBG'), ('to', 'TO'), ('adequately', 'RB'), ('note', 'VB'), ('that', 'IN'), ('few', 'JJ'), ('records', 'NNS'), ('survive', 'VBP'), ('of', 'IN'), ('most', 'JJS'), ('commoners', 'NNS'), ('of', 'IN'), ('the', 'DT'), ('period', 'NN'), ('.', '.')]
+Procesarea a durat  1.07 milisecunde.
+------------------------------------------------------------
+Propoziția are  25.00 % verbe 
+și  20.00 % substantive, deci 
+ 45.00 % cuvinte tematice.
+Procesarea a durat  0.02 milisecunde.
+
+====================PROGRAM TERMINAT====================

@@ -1,0 +1,48 @@
+(ROOT
+  (S
+    (NP (PRP I))
+    (VP (VBP like)
+      (S
+        (VP (TO to)
+          (VP (VB study)
+            (NP
+              (NP (JJ everyday))
+              (PP (IN for)
+                (NP (PRP$ my) (JJ beloved) (NNS exams)))
+              (SBAR
+                (WHNP (WDT which))
+                (S
+                  (NP (PRP I))
+                  (VP (VBP am)
+                    (ADJP (JJ sure)
+                      (SBAR
+                        (S
+                          (VP (MD will)
+                            (VP (VB be)
+                              (ADJP (JJ useful)
+                                (PP (IN throughout)
+                                  (NP (PRP$ my) (NN life)))))))))))))))))
+    (. .)))
+
+nsubj(like-2, I-1)
+nsubj:xsubj(study-4, I-1)
+root(ROOT-0, like-2)
+mark(study-4, to-3)
+xcomp(like-2, study-4)
+dobj(study-4, everyday-5)
+dobj(sure-13, everyday-5)
+case(exams-9, for-6)
+nmod:poss(exams-9, my-7)
+amod(exams-9, beloved-8)
+nmod:for(everyday-5, exams-9)
+ref(everyday-5, which-10)
+nsubj(sure-13, I-11)
+cop(sure-13, am-12)
+acl:relcl(everyday-5, sure-13)
+aux(useful-16, will-14)
+cop(useful-16, be-15)
+ccomp(sure-13, useful-16)
+case(life-19, throughout-17)
+nmod:poss(life-19, my-18)
+nmod:throughout(useful-16, life-19)
+

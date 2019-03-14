@@ -1,0 +1,2 @@
+ java -mx200m -cp "stanford-parser.jar:stanford-parser-3.9.2-models.jar" edu.stanford.nlp.parser.lexparser.LexicalizedParser -retainTMPSubcategories -outputFormat "wordsAndTags,penn,typedDependencies" englishPCFG.ser.gz [fisier_input] > [fisier_output]
+  java -cp dependensee-3.7.0.jar:stanford-parser.jar:stanford-parser-3.9.2-models.jar:slf4j-api.jar com.chaoticity.dependensee.Main [fraza de parsat] [cale fisier png de output] 

@@ -1,0 +1,18 @@
+Acesta este un text    cu mai multe     spații
+
+
+Și rînduri goale
+
+
+
+Alte rînduri goale    și alte     spații
+
+
+ 
+
+
+---------------------OUT--------------------------
+Acesta este un text cu mai multe spații
+Și rînduri goale
+Alte rînduri goale și alte spații
+S-au eliminat 25 caractere
