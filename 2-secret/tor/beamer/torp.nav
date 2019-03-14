@@ -2,8 +2,30 @@
 \headcommand {\beamer@framepages {1}{1}}
 \headcommand {\slideentry {0}{0}{2}{2/2}{}{0}}
 \headcommand {\beamer@framepages {2}{2}}
-\headcommand {\beamer@partpages {1}{2}}
-\headcommand {\beamer@subsectionpages {1}{2}}
-\headcommand {\beamer@sectionpages {1}{2}}
-\headcommand {\beamer@documentpages {2}}
-\headcommand {\gdef \inserttotalframenumber {2}}
+\headcommand {\slideentry {0}{0}{3}{3/3}{}{0}}
+\headcommand {\beamer@framepages {3}{3}}
+\headcommand {\slideentry {0}{0}{4}{4/9}{}{0}}
+\headcommand {\beamer@framepages {4}{9}}
+\headcommand {\slideentry {0}{0}{5}{10/13}{}{0}}
+\headcommand {\beamer@framepages {10}{13}}
+\headcommand {\slideentry {0}{0}{6}{14/19}{}{0}}
+\headcommand {\beamer@framepages {14}{19}}
+\headcommand {\slideentry {0}{0}{7}{20/23}{}{0}}
+\headcommand {\beamer@framepages {20}{23}}
+\headcommand {\slideentry {0}{0}{8}{24/28}{}{0}}
+\headcommand {\beamer@framepages {24}{28}}
+\headcommand {\slideentry {0}{0}{9}{29/29}{}{0}}
+\headcommand {\beamer@framepages {29}{29}}
+\headcommand {\slideentry {0}{0}{10}{30/35}{}{0}}
+\headcommand {\beamer@framepages {30}{35}}
+\headcommand {\slideentry {0}{0}{11}{36/43}{}{0}}
+\headcommand {\beamer@framepages {36}{43}}
+\headcommand {\slideentry {0}{0}{12}{44/52}{}{0}}
+\headcommand {\beamer@framepages {44}{52}}
+\headcommand {\slideentry {0}{0}{13}{53/53}{}{0}}
+\headcommand {\beamer@framepages {53}{53}}
+\headcommand {\beamer@partpages {1}{53}}
+\headcommand {\beamer@subsectionpages {1}{53}}
+\headcommand {\beamer@sectionpages {1}{53}}
+\headcommand {\beamer@documentpages {53}}
+\headcommand {\gdef \inserttotalframenumber {13}}

@@ -1,0 +1,27 @@
+\begin{thebibliography}{}
+
+\bibitem[Dingledine et~al., 2004]{whitepaper}
+Dingledine, R., Mathewson, N., and Sylverson, P. (2004).
+\newblock Tor: The second generation onion router.
+\newblock {\em SSYM Proceedings of the 13th conference on USENIX Security
+  Symbposium}, 13.
+
+\bibitem[Skerritt, 2018]{bs}
+Skerritt, B. (2018).
+\newblock How {T}or *really* works\raggedright.
+\newblock
+  \href{https://hackernoon.com/how-does-tor-really-work-c3242844e11f}{HackerNoon}.
+
+\bibitem[Tor, 2019]{tor}
+Tor (2019).
+\newblock The {T}or {P}roject.
+\newblock \url{https://www.torproject.org/}.
+
+\bibitem[Wright, 2015]{jw1}
+Wright, J. (2015).
+\newblock How {T}or {W}orks: {P}art {O}ne.
+\newblock
+  \href{https://jordan-wright.com/blog/2015/02/28/how-tor-works-part-one/}{blog
+  post}.
+
+\end{thebibliography}
