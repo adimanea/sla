@@ -35,7 +35,7 @@ Astfel se ascund datele conexiunii cu securitate perfectă la înaintare
 modifice date pe drum sau să pretindă că este un OR.
 \index{securitate!perfectă la înaintare}
 
-Traciul între OR circulă în \emph{celule}, fiecare avînd mărimea de 512 octeți.
+Traficul între OR circulă în \emph{celule}, fiecare avînd mărimea de 512 octeți.
 Celulele sînt alcătuite dintr-un cap (\emph{header}) și o încărcătură
 (\emph{payload}). \index{celule}
 \index{celule!cap (header)}
@@ -128,8 +128,8 @@ $ g^{x_2} $ și trimite o celulă \texttt{create} către Carol. Totodată,
 Bob își alege un \texttt{circID} pentru legătura cu Carol, pe care Alice
 poate să nu-l știe; este suficient ca Bob să lege $ C_{AB} $ de $ C_{BC} $.
 
-Carol răspunde cu o celulă \texttt{created} către Bob, care apoi trimite
-sarcina către Carol și răspunde cu \texttt{relay extended} către Alice.
+Carol răspunde cu o celulă \texttt{created} către Bob și cheia $ g^{y_2} $, 
+iar Bob apoi trimite sarcina către Carol și răspunde cu \texttt{relay extended} către Alice.
 Acum circuitul este extins și legătura A--C se poate face cu cheia
 $ K_2 = g^{x_2y_2} $.
 
