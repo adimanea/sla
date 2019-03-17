@@ -20,7 +20,7 @@ typedef unsigned int size_type;
 /*@
   requires \valid_read(a + (0..n-1));
   assigns \nothing;
-  ensures 0 <= \result <= \result;
+  ensures 0 <= \result <= n;
 
   behavior some:
     assumes \exists integer i; 0 <= i < n && a[i] == val;
@@ -83,3 +83,54 @@ Pentru bucla care apare în funcția `find`, adnotările importante specifică:
 - al doilea invariant `k` va fi folosit pentru cazul cînd nu a fost găsit elementul în vector (vezi cazul `behavior some`);
 - se declară faptul că în buclă se vor da valori lui `i` (`loop assigns i`);
 - `loop variant n - i` va asigura că bucla termină (**de clarificat ulterior**).
+
+### Varianta îmbunătățită
+Observăm că apar două formule contradictorii:
+```
+\exists integer i; 0 <= i < n &&  a[i] == val;
+\forall integer i; 0 <= i < n ==> a[i] != val;
+```
+Putem "curăța" specificațiile folosind predicate, definite în cazul acesta prin:
+```c
+/*@
+  predicate
+    HasValue{A} (val_type* a, integer m, integer n, val_type v) =
+        \exists integer i; m <= i < n && a[i] == v;
+
+  predicate
+    HasValue{A}(val_type* a, integer n, val_type v) =
+        HasValue(a, 0, n, v);
+*/
+```
+Acum verificările se pot face mai curat:
+```c
+/* Formal specification using ACSL */
+/*@
+  requires valid: \valid_read(a + (0..n-1));
+  assigns \nothing;
+  ensures result: 0 <= \result <= n;
+
+  behavior some:
+    assumes HasValue(a, n, val);
+    ensures bound: 0 <= \result < n;
+    ensures result: a[\result] == val;
+    ensures first: !HasValue(a, \result, val);
+
+  behavior none:
+    assumes !HasValue(a, n, val);
+    ensures result: \result == n;
+
+  complete behaviors;
+  disjoint bheaviors;
+  */
+```
+Și în funcție:
+```c
+size_type find(const val_type* a, size_type n, val_type val) {
+    /*@
+      loop invariant bound: 0 <= i <= n;
+      loop invariant not_found: !HasValue(a, i, val);
+      loop assigns i;
+      loop variant n-i;
+      */
+```
