@@ -1,0 +1,8 @@
+#+TITLE: Monocypher
+
+* Proiectul de verificat
+Am ales proiectul [[https://github.com/LoupVaillant/Monocypher][Monocypher]], o bibliotecă criptografică scrisă în C.
+
+* Unealta de verificare formală
+Voi folosi [[https://frama-c.com/][FramaC]], cu plugin-ul [[https://frama-c.com/download/frama-c-eva-manual.pdf][Eva]].
+
