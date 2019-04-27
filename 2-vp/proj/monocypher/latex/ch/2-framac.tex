@@ -1,7 +1,90 @@
-\chapter{Despre \texttt{FramaC}}
+\chapter{Uneltele de verificare}
+
+\section{\texttt{FramaC}}
+
+\indent\indent \texttt{FramaC} este o unealtă de verificare formală dezvoltată
+de un grup de cercetători de la Commisariat \'a l'\'Energie Atomique (CEA-list)
+și INRIA din Franța.
+
+În esență, \texttt{FramaC} verifică programe scrise în C, dar este, de fapt,
+un cadru în care se pot include și utiliza unelte de verificare cu scopuri precise.
+În varianta cea mai simplă, \texttt{FramaC} folosește un dialect al limbajului C
+(de fapt, o variantă simplificată numită \emph{C Intermediate Language}) și oferă
+metode de verificare similare cu uneltele bazate pe \emph{adnotarea codului},
+precum Dafny și altele. Limbajul se numește \texttt{ACSL} și este descris detaliat
+la \cite{acsl}.
+
+\texttt{FramaC} însuși a fost implementat în limbajul OCaml, astfel că poate
+fi instalat atît individual, cît și prin managerul de pachete \texttt{opam}.
+
+Odată instalat, \texttt{FramaC} oferă două moduri de interacțiune: la nivel
+de linie de comandă (CLI) sau prin interfață grafică (GUI). Este de menționat
+faptul că verificatorul nu oferă un editor, astfel că modalitatea recomandată
+de utilizare este:
+\begin{enumerate}[(1)]
+\item se scrie programul C cu editorul preferat;
+\item se rulează din linia de comandă pe fișierele-sursă
+  de verificat;
+\item fie se redirecționează rezultatul într-un fișier separat, de exemplu
+  \texttt{frama-c *.c >> log}, fie se salvează într-un format binar, specific,
+  cu comanda \texttt{frama-c *.c -save mysession.sav};
+\item se consultă fișierul \texttt{log}, dacă s-a folosit prima variantă,
+  care este un fișier text simplu, sau, preferabil, se încarcă formatul
+  salvat specific în interfața grafică, cu comanda \texttt{frama-c-gui -load mysession.sav}.
+\end{enumerate}
+
+\todo[inline,noline,backgroundcolor=green!40]{POZE CLI}
+
+Dacă se alege varianta simplă, se poate observa că informațiile din \texttt{log}
+nu sînt foarte explicite mereu, astfel că trebuie să știm să interpretăm rezultatele.
+În general, ele sînt afișate sub forma \texttt{[nivel] fișier rezultat}, unde:
+\begin{itemize}
+\item \texttt{[nivel]} este nivelul la care se face verificarea (e.g.\ nivelul de bază, adică
+direct codul sursă, dacă s-au folosit adnotări și nu se apelează vreun plugin;
+\item \texttt{fișier} este fișierul verificat, despre care se raportează rezultatele;
+\item \texttt{rezultat} este diagnosticul sau concluzia la care a ajuns analizatorul,
+  la nivelul \texttt{[nivel]} asupra fișierului \texttt{fișier}.
+\end{itemize}
+
+\todo[inline,noline,backgroundcolor=green!40]{POZĂ log}
+
+În varianta cu interfață grafică, însă, putem vedea mult mai multe informații, într-o
+variantă mult mai flexibilă:
+\begin{itemize}
+\item În panoul din stînga se pot vedea fișierele încărcate spre analizare, care au fost
+  \qq{desfăcute} în funcțiile conținute, care pot fi analizate individual;
+\item Panoul median arată modul în care \texttt{FramaC} a interpretat codul-sursă,
+  eventual scriindu-și singur adnotări;
+\item Panoul din dreapta arată codul-sursă încărcat (în care \emph{nu} se poate scrie);
+\item Panoul din stînga-jos arată uneltele folosite pentru verificare, eventual
+  plugin-urile încărcate;
+\item Panoul de jos arată mesajele și erorile generate, cu cîmpurile populate în
+  funcție de uneltele de verificare folosite.
+\end{itemize}
+
+Deși poate fi utilizat în această formă, este recomandabil ca \texttt{FramaC} să fie
+apelat folosind plugin-uri specifice. În verificarea proiectului \texttt{Monocypher},
+vom folosi plugin-ul \texttt{Eva} (varianta actualizată [\emph{Evolved}] a
+\emph{Value Analysis}), care este descris în secțiunea următoare.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{\texttt{Eva}}
+
+\subsection{Motivație}
+\indent\indent Ca majoritatea uneltelor criptografice, \texttt{Monocypher}
+se bazează pe expresii și operații numerice, eventual cu valori foarte
+mari și prelucrări pe biți. Aceasta îl face să fie posibil vulnerabil
+atît la operații matematice interzise (precum împărțirea la 0 sau depășirea
+intervalului de valori permise de tipul de date folosit) sau la scurgeri de memorie.
+
+\texttt{Eva} se bazează pe o teorie matematică numită \emph{interpretare abstractă}
+(\cite{wikiabs}), conform și \cite{eva}, care îl face în special potrivit
+pentru verificarea programelor cu conținut aritmetic bogat. De asemenea,
+\texttt{Eva} poate detecta și scurgeri de memorie sau operații nepermise la nivel
+de memorie alocată, dar pentru verificări mai avansate în special asupra memoriei,
+este recomandabil să se folosească \texttt{Valgrind} (\cite{valgrind}).
 
 %%% Local Variables:
 %%% mode: latex
