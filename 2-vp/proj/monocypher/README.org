@@ -6,3 +6,7 @@ Am ales proiectul [[https://github.com/LoupVaillant/Monocypher][Monocypher]], o 
 * Unealta de verificare formală
 Voi folosi [[https://frama-c.com/][FramaC]], cu plugin-ul [[https://frama-c.com/download/frama-c-eva-manual.pdf][Eva]].
 
+* Documentație
+Acces direct la [[https://gitlab.com/adimanea/sla/blob/master/2-vp/proj/monocypher/latex/mono-frama.pdf][PDF]].
+
+* TODO Prezentare
