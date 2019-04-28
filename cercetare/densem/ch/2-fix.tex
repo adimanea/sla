@@ -1,0 +1,276 @@
+\chapter{Semantica punctelor fixe}
+
+\section{Motivație}
+
+\indent\indent Conform \cite{schm}, \emph{semantica denotațională} își propune să pornească de la
+spe\-ci\-fi\-ca\-ții sintactice ale limbajelor, în varianta simplă folosindu-se
+forma Backus-Naur (BNF) și să asocieze operații (în general, funcții),
+care să arate înțelesul expresiilor din sintaxă. Totodată, este de dorit
+uneori ca semantica denotațională să țină cont și de aspecte \emph{operaționale},
+adică cele privitoare la implementarea limbajului și a compilatoarelor.
+
+Deoarece accentul cade pe funcții, dar și ținîndu-se cont de aspectele
+operaționale, semantica denotațională are un \emph{caracter compozițional}. În acest
+sens, devine extrem de importantă specificarea matematică a așa-numitelor
+\emph{algebre semantice}, care constau în domeniile de definiție și de valori
+ale funcțiilor implementate și funcțiile propriu-zise (de arități diferite, deci
+în particular includem și operații binare, unare și funcții de mai multe variabile).
+
+Dana Scott (\cite{scottstrachey}) a arătat, într-o serie de articole publicate în
+anii '70-'80 că, pentru majoritatea necesităților \qq{practice}, i.e.\ a limbajelor deja
+existente, implementate sau teoretice, sînt necesare constrîngeri speciale asupra
+naturii mulțimilor ce devin domenii semantice, dar și asupra funcțiilor dintre ele.
+Astfel, dacă structuri, instrucțiuni și operații aritmetice simple se pot defini
+fără constrîngeri speciale asupra mulțimilor și funcțiilor, în afara proprietăților
+de tip morfism (i.e.\ compunerea funcțiilor să fie compatibilă cu operațiile),
+recursivitatea omniprezentă este cea care ridică probleme.
+
+În particular, \emph{combinatorii din $\lambda$-calcul} de forma $ \lambda x . xx $ sînt
+cei care ridică probleme, prin auto-aplicare.
+
+În continuare, vom prelua din expunerile \cite{abrj} și \cite{schm} pentru a justifica
+și exemplifica semantica funcțiilor recursive și a domeniilor necesare pentru a le
+susține.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Ecuația de punct fix}
+
+\indent\indent Presupunem că avem o definiție recursivă, de forma:
+\[
+  X = \dots X \dots,
+\]
+căreia vrem să-i asociem un sens (semantică), i.e.\ o metodă de interpretare, care
+să fie compatibilă cu restul limbajului din care ar face parte această expresie.
+În particular, vom fi interesați de proprietățile compoziționale, deci semantica
+va trebui să fie dată funcțional.
+
+Presupunem că ecuația este formulată într-un domeniu $ D $, deci căutăm
+un element $ d \in D $ astfel încît, făcînd o substituție convenabilă
+în $ X $ cu $ d $, să obținem o expresie cu sens. Membrul drept al unei
+expresii recursive are o formă funcțională, de tipul $ f(d) $, iar membrul
+stîng trebuie să fie un rezultat, pentru ca expresia să returneze ceva,
+deci sîntem conduși la o \emph{ecuație de punct fix}, de forma generală:
+\[
+  f(d) = d, \quad d \in D,
+\]
+unde urmează să definim funcția $ f $ și proprietățile domeniului $ D $.
+
+În plus, pentru generalitatea teoriei, avem nevoie de o metodă canonică
+sau măcar generală de a găsi puncte fixe pentru funcții (cu anumite proprietăți),
+definite între domenii de un anumit fel.
+
+Ajungem astfel la ecuația fundamentală rezolvată de Scott în semantica denotațională,
+anume:
+\[
+  D \simeq [ D \to D ].
+\]
+Această ecuație afirmă că sîntem în căutarea unei corespondențe biunivoce
+între elementele \qq{spațiului de funcții} ($ [D \to D] $) și elementele
+lui $ D $, care pot fi rezultate ale definițiilor recursive pentru aceste
+funcții.
+
+Ecuația a fost formulată și rezolvată de Scott în cazul unor domenii
+înzestrate cu o topologie discretă, numită \emph{topologia Scott}, iar
+funcțiile din $ [D \to D] $ au o proprietate de continuitate în
+raport cu această topologie.
+
+Discuția detaliată asupra topologiei Scott depășește cadrul acestei
+expuneri, dar vom folosi cele de mai sus ca motivație pentru studiul
+unor proprietăți ale domeniilor semantice, dintre care cea mai importantă
+este \emph{ordonarea parțială}. De fapt, structura de poset a domeniului $ D $
+este punctul de pornire pentru definiția generală a topologiei Scott, deci
+putem considera cele ce urmează drept o introducere elementară în acest subiect.
+
+\begin{remark}\label{rk:dom-cat}
+  Deoarece tema aleasă urmărește și legătura cu teoria categoriilor, facem
+  observația că ecuația domeniilor Scott,
+  \[
+    D \simeq [D \to D]
+  \]
+  poate fi formulată și în context categorial. Fie $ \kal{C} $ o categorie.
+  Spațiul de funcții $ [D \to D] $ poate fi gîndit ca un (bi)functor
+  $ F : \kal{C}^{\text{op}} \times \kal{C} \to \kal{C} $.
+
+  Atunci, ecuația Scott ajunge la găsirea acelor categorii $ \kal{C} $ și obiecte
+  $ D \in \kal{C} $ astfel încît $ D \simeq F(D, D) $.
+
+  Vom detalia acest punct de vedere categorial într-o oarecare măsură în
+  \S\ref{sec:ccc}.
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Exemplu: Semantica factorialului}
+
+\indent\indent Necesitatea folosirii domeniilor înzestrate cu o ordine parțială
+poate fi văzută printr-un exemplu, preluat din \cite{schm}, \S 6.
+
+Fie \texttt{Nat} domeniul numerelor naturale,
+$\texttt{Nat}_\perp = \texttt{Nat} \cup \{ \bot \} $ și funcția definită prin:
+\begin{align*}
+  \code{fac n} = \lambda \code{n}.&\code{n equals zero} \to \code{one} \\
+               &\square \code{ n times (fac n minus one)}
+\end{align*}
+
+Am folosit sintaxa preluată (și adaptată) din \cite{schm}, iar notațiile
+în litere pentru constante și funcții elementare arată faptul că ele pot fi
+definite separat, în așa-numitele domenii semantice primitive, cum este cazul
+\code{Nat}. Detalii se găsesc, de exemplu, în \cite{schm}, \S 3. În continuare,
+însă, vom face abuz de notație și vom folosi simbolurile obișnuite.
+
+Evaluînd funcția \code{fac} pe argumente concrete, observăm că avem 3 cazuri posibile:
+\begin{itemize}
+\item nicio explicitare (eng.\ \emph{unfolding}) --- caz imposibil, pe care îl notăm
+  cu $ \code{fac}_0 $ și care are graficul $ \emptyset $ (formal, este
+  $ \Gamma \code{fac}_0 = \{ (\emptyset, \emptyset) \} $;
+\item o explicitare, pentru $ n = 0 $, caz pe care îl notăm cu $ \code{fac}_1 $, care are
+  graficul $ \Gamma \code{fac}_1 = \{ (0, 1) \} $;
+\item $ i + 1 $ explicitări, pentru $ i $ apeluri recursive, caz pe care îl notăm cu
+  $ \code{fac}_i $ și care, pentru $ i $ fixat, are graficul
+  $ \Gamma \code{fac}_i = \{ (0, 1), (1, 1), \dots, (i, i!) \} $.
+\end{itemize}
+
+Aceste grafice sînt ordonate parțial cu incluziunea (admițînd că $ \{ (\emptyset, \emptyset) \} $
+este submulțime pentru orice mulțime de perechi. În mod evident, ele modelează cazuri
+particulare ale funcției \code{fac}, deci:
+\[
+  \Gamma \code{fac} \supseteq \bigcup_{i \geq 0} \Gamma \code{fac}_i.
+\]
+Dar are loc și incluziunea reciprocă: dacă o pereche $ (a, b) \in \Gamma \code{fac} $, ea
+s-a obținut printr-un anumit număr de explicitări, deci există $ i $ cu $ (a, b) \in \Gamma \code{fac}_i $.
+Rezultă că avem egalitate:
+\[
+  \Gamma \code{fac} = \bigcup_{i \geq 0} \Gamma \code{fac}_i.
+\]
+
+Aceste rezultat stă la baza semanticii pentru puncte fixe, care afirmă exact că
+înțelesul total al unei funcții recursive este dat de cazurile sale particulare.
+De aceea, putem extrage și o reprezentare nerecursivă pentru fiecare $\code{fac}_i $:
+\begin{align*}
+  \code{fac}_i &: \code{Nat} \to \code{Nat}_\bot, i \geq 0 \\
+  \code{fac}_0 &= \lambda \code{n} . \bot \\
+  \code{fac}_{i + 1} &= \lambda \code{n . n = 0 } \to 1 \square n \cdot \code{fac}_i(n-1), i \geq 1,
+\end{align*}
+ceea ce ne conduce chiar la funcționala:
+\begin{align*}
+  \code{F} &: (\code{Nat} \to \code{Nat}_\bot) \to (\code{Nat} \to \code{Nat}_\bot) \\
+  \code{F} &= \lambda \code{f}\lambda \code{n . n = 0} \to 1 \square \code{n} \cdot \code{f(n-1)},
+\end{align*}
+cu $ \code{fac}_{i + 1} = \code{F fac}_i $.
+
+Rezultă:
+\[
+  \Gamma \code{fac} = \ds\bigcup_{i \geq 0} \Gamma \code{F}^i \emptyset,
+\]
+unde $ \emptyset = \lambda \code{n.} \bot $ și mai mult,
+\[
+  \Gamma \code{F fac} = \Gamma \code{fac},
+\]
+deci $ \code{F fac} = \code{fac} $, de unde rezultă că \code{fac} este un punct
+fix pentru \code{F}.
+
+Dar, dacă pornim cu funcția:
+\begin{align*}
+  \code{q} &: \code{Nat} \to \code{Nat}_\bot \\
+  \code{q} &= \lambda \code{n.n=0} \to 1 \square \code{q(n+1)},
+\end{align*}
+se poate arăta (\cite{schm}, pp. 97-98) că ecuația $ \code{Qq = q} $ are
+o infinitate de soluții, unde \code{Q} este funcționala corespunzătoare:
+\begin{align*}
+  \code{Q} &: (\code{Nat} \to \code{Nat}_\bot) \to (\code{Nat} \to \code{Nat}_\bot) \\
+  \code{Q} &= \lambda \code{g} \lambda \code{n.n=0} \to 1 \square \code{g(n+1)}.
+\end{align*}
+
+Avem nevoie, așadar, de \emph{cel mai mic punct fix}, un motiv suplimentar de a lucra
+cu structuri de poset, atît pe $ D $, cît și pe $ [ D \to D ] $. Mai facem observația
+că pe $ [D \to D] $ vom lucra cu \emph{definiții extensionale}, adică:
+\[
+  f \geq g \Leftrightarrow \Gamma f \seq \Gamma g.
+\]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Domenii parțial ordonate}
+
+\indent\indent Fără a intra în detalii, rezultatele esențiale care arată utilitatea
+poset-urilor pentru semantica definițiilor recursive urmează.
+
+\begin{definition}\label{def:cpo}
+  Fie $ (D, \sqsubseteq) $ o mulțime parțial ordonată.
+
+  (1) O submulțime $ X \seq D $ se numește \emph{lanț} dacă $ X \neq \emptyset $ și
+  pentru orice $ a, b \in X $, $ a \sqsubseteq a $ sau $ b \sqsubseteq a $.
+
+  (2) Poset-ul $ (D, \sqsubseteq) $ se numește \emph{complet} (eng.\ \emph{cpo}) dacă
+  orice lanț în $ D $ are cea mai mică margine superioară în $ D $.
+
+  (3) $ D $ se numește \emph{punctat} sau \emph{strict} (eng.\ \emph{pcpo/scpo}) dacă
+  este complet și $ D $ însuși are un cel mai mic element.
+
+  (4) Fie $ A, B $ două cpo. O funcție $ f : A \to B $ se numește \emph{monotonă}
+  (crescătoare) dacă respectă ordinea, i.e.\ $ a_1 \sqsubseteq a_2 $ în $ A $ implică
+  $ f(a_1) \sqsubseteq f(a_2) $ în $ B $, relațiile de ordine parțială fiind cele
+  ale domeniilor respective.
+
+  (5) O funcție monotonă $ f : A \to B $ se numește \emph{continuă} dacă pentru orice
+  lanț $ X \seq A $ are loc:
+  \[
+    f \Big( \bigsqcup X \Big) = \bigsqcup \{ f(x) \mid x \in X \},
+  \]
+  unde $ \sqcup = \sup $.
+\end{definition}
+
+\begin{remark}\label{rk:top}
+  (1) Adesea, este foarte ușor de transformat un cpo într-unul strict, prin reuniune
+  cu un cel mai mic element $ \{ \bot \} $.
+
+  (2) Noțiunile de mai sus pot fi definite și mai riguros, într-o topologie, numită
+  \emph{topologia Scott} (detalii în \cite{abrj}).
+\end{remark}
+
+Rezultatul fundamental care justifică utilitatea celor de mai sus în semantica definițiilor
+recursive este:
+
+\begin{theorem}\label{thm:fix}
+  Fie $ D $ un pcpo și $ F : D \to D $ o funcție continuă. Atunci $ F $ are un cel mai
+  mic punct fix:
+  \[
+    \code{fix} F = \bigsqcup \{ F^i \bot \mid i \geq 0 \}.
+  \]
+\end{theorem}
+
+\begin{proof}
+  Calculăm succesiv:
+  \begin{align*}
+    F \code{fix} F &= F \Big( \bigsqcup \{ F^i \bot \mid i \geq 0 \} \Big) \\
+                   &= \bigsqcup \Big\{ F(F^i \bot) \mid i \geq 0 \Big\} \quad \text{(continutate)} \\
+                   &= \bigsqcup \Big\{ F^i \bot \mid i \geq 1 \Big\} \\
+                   &= \bigsqcup \Big\{ F^i \bot \mid i \geq 0 \Big\} \\
+                   &= \code{fix} F.
+  \end{align*}
+  Penultimul pas este justificat de $ F^0 \bot = \bot \sqsubseteq F \bot $, din definiția celui
+  mai mic element, $ \bot $.
+
+  Fie acum $ e $ un alt punct fix. Rezultă:
+  \[
+    \bot \sqsubseteq e \Rightarrow F^i \bot \sqsubseteq F^i e = e, \forall i \Rightarrow %
+    \sqcup \big\{ F^i \bot \mid i \geq 0 \big\} \sqsubseteq e \Rightarrow \code{fix} F \sqsubseteq e.
+  \]
+\end{proof}
+
+Putem acum formula:
+
+\begin{definition}\label{def:semfix}
+  În condițiile și cu notațiile de mai sus, semantica specificației recursive $ f = Ff $
+  este $ \code{fix} F $, cel mai mic punct fix al lui $ F $.
+\end{definition}
+
+O observație importantă pentru semantica unor limbaje de programare simple este:
+se poate arăta că, dacă $ D_1, D_2 $ sînt pcpo, atunci și domeniile compuse $ D_1 + D_2 $,
+$ D_1 \times D_2 $, $ [D_1 \to D_2] $ sînt pcpo, iar constructorii sînt operații continue.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../densem"
+%%% End:

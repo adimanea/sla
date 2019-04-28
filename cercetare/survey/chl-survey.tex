@@ -1,0 +1,733 @@
+\documentclass[a4paper]{article}
+
+\input{includes/packages}
+\input{includes/thms}
+\input{includes/macros}
+\input{includes/formatting}
+
+
+\begin{document}
+\begin{center}
+  {{\Large\textbf{Corespondența Curry--Howard--Lambek}} \\
+    --- \textit{raport de cercetare, anul 1, semestrul I} --- \\
+    Adrian Manea \\
+    coordonator: Conf.\ dr.\ Denisa Diaconescu
+  }
+\end{center}
+
+\vspace{2cm}
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introducere}
+
+\indent\indent Tema de cercetare pe care o abordez este, în termeni
+largi, \emph{corespondența Curry--Howard--Lambek}, cu mul\-te\-le sale fațete
+din logică, filosofie, matematică și informatică. Prezentarea curentă
+urmărește, într-o oarecare măsură, articolul \cite{wad}, în mod special în
+partea introductivă și cea despre logică. \\
+
+
+În multe situații din istoria științei și nu numai s-a dovedit că un punct de
+vedere dualist asupra unor noțiuni nu aduce decît beneficii, clarificări
+suplimentare și relevă similitudini care în primă fază nu erau evidente.
+
+A fost cazul, de-a lungul istoriei, în mai multe instanțe, precum:
+\begin{itemize}
+  \item sistemul de coordonate al lui Descartes, care a legat geometria de
+    algebră, introducînd totodată și un mod intuitiv de a vizualiza entitățile
+    algebrice abstracte (care în cam aceeași perioadă au primit notațiile
+    pe care le utilizăm astăzi, tot de la Descartes, Vi\`{e}te și alții);
+  \item teoria cuantică a lui Planck, ce a introdus și evidențiat dualitatea undă-corpuscul;
+  \item teoria informației a lui Shannon, cu conexiuni nebănuite
+    cu termodinamica, prin teoria entropiei.
+\end{itemize}
+
+Un astfel de rezultat este și cel pe care îl prezentăm aici, anume legătura
+între propoziții (logice) și tipuri. Acestea din urmă, la rîndul lor, și-au
+arătat polivalența, producînd ecouri în algebră, teoria limbajului, filosofie
+și informatică, pentru a da doar cîteva exemple. Conexiunea, așa cum a apărut
+ea inițial, poartă numele celor trei matematicieni care au evidențiat-o,
+anume logicienii Haskell Curry, William Howard și algebristul Joakim Lambek.
+
+Legătura pe care cei trei au evidențiat-o (lucrînd independent și pentru a
+rezolva probleme aparent diferite) își are originile în filosofie și matematică,
+mai precis în așa numita \emph{interpretare Brouwer--Heyting--Kolmogorov} (BHK)
+a logicii (intuiționiste), denumită după filosofii și matematicienii
+L.\ E.\ J.\ Brouwer, A.\ Heyting și A. Kolmogorov. Această interpretare, 
+precum mare parte a logicii intuiționiste, are o abordare constructivistă 
+asupra problemelor matematice și logice, privind propozițiile logice ca pe 
+probleme ce trebuie rezolvate. Putem formula abordarea lor, anticipînd
+dezvoltările istorice, prin legătura cu teoria mulțimilor sau cu teoria
+funcțiilor. Astfel, dacă o mulțime (respectiv, o funcție) este privită ca o
+propoziție, i.e.\ ca prezentînd o afirmație sau o proprietate, ea este
+instanțiată (\emph{demonstrată}) de elementele sale, respectiv de argumentele
+și valorile sale, în cazul funcțiilor. Așa prezentată, teoria se aseamănă
+cu \emph{teoria realizării}, formulată mai tîrziu de S.\ Kleene, care se
+remarcă tot prin abordarea constructivă, însă o prezentare a acesteia
+din urmă depășește scopurile lucrării prezente.
+
+Conceptul de \qq{propoziții ca tipuri} (preluînd exprimarea din \cite{wad})
+are o profunzime care nu este evidentă de la început. În mare, această
+legătură afirmă că există o corespondență bijectivă între propozițiile
+unei logici și tipurile dintr-un limbaj de programare.
+
+Dar legătura merge chiar mai departe. Propoziția respectivă trebuie să
+aibă o demonstrație, care va corespunde unui program în respectivul limbaj, 
+ce face uz de tipul corespunzător propoziției. Deci obținem mai departe
+o conexiune de tip \qq{demonstrații ca programe}.
+
+Încă mai departe, atunci cînd vrem să simplificăm o propoziție
+(prin rescriere, după cum vom vedea), aceasta revine la rularea programului,
+deci avem \qq{simplificarea demonstrațiilor ca evaluarea programelor}.
+
+Istoria modernă a dezvoltării acestei conexiuni se poate trasa de la
+sfîrșitul secolului al XIX-lea și începutul secolului XX. Inspirat de
+puterea de expresie a logicii formale, precum a fost relevat de Russell
+și Whitehead în a lor monumentală \emph{Principia Mathematica}, Hilbert
+a pornit un program pentru rezolvarea \emph{problemei deciziei},
+adică de a dezvolta o procedură calculabilă eficient care să determine dacă
+o afirmație dată este adevărată sau falsă. Programul său conține o presupunere
+implicită de \emph{completitudine} a matematicii, anume că, dată o propoziție,
+fie ea ori negația ei are o demonstrație.
+
+Dar G\"{o}del a arătat că aritmetica este incompletă și mai mult, programul
+lui Hilbert s-a mai lovit de o dificultate, anume aceea de a stabili precis
+ce înseamnă o \qq{calculabilitate rezonabilă} a metodei de decizie.
+
+Asemenea definiții au apărut abia în anii '30, cu 3 alternative diferite:
+\begin{itemize}
+  \item $\lambda$-calculul lui Alonzo Church (1936);
+  \item teoria funcțiilor recursive, a lui G\"{o}del și Kleene (1934, 1936);
+  \item mașinile Turing, propuse de Alan Turing (1937).
+\end{itemize}
+
+Pe scurt, teoria lui Church a pornit din dorința matematicienilor de clarifica
+noțiunea de \emph{funcție}. Astfel, Church introduce $\lambda$-abstracția,
+în primă fază privită ca un concept tehnic, utilizat la notație și care să
+ia din misterul și dificultatea definirii conceptului de funcție.
+
+G\"{o}del nu a fost convins de aborarea lui Church și, atunci cînd a vizitat
+Princeton, într-o serie de cursuri, a dezvoltat teoria funcțiilor recursive,
+împreună cu Kleene. Church, încrezător, dorea inițial să arate că această
+teorie este inclusă în teoria sa de $\lambda$-calcul, dar, pînă la urmă,
+cele două s-au dovedit echivalente.
+
+Turing, de cealaltă parte a Oceanului, la Cambridge, a pornit cu o motivație
+complet diferită. El și-a propus să înțeleagă conceptul de calculabilitate
+cît mai uman. Astfel, el a introdus multe condiții de finitudine sau mărginire
+a resurselor folosite, deoarece a modelat teoria pe capacitățile umane.
+
+De asemenea, și teoria lui Turing a fost demonstrat a fi echivalentă cu
+celelalte două. Însă Kleene a demonstrat că, în forma originală, sistemul
+de $\lambda$-calcul conduce la inconsistență, arătînd cazuri cînd o abordare
+de tip paradoxul lui Russell (i.e.\ prin autoaplicare) poate conduce la
+calcule infinite. De aceea, Church, ca și Russell, a introdus o ierarhie
+de forma teoriei tipurilor, formulînd sistemul $\lambda$ cu tipuri. Totodată,
+introducînd tipurile, sistemul lui Church beneficiază și de existența unei
+forme normale pentru fiecare termen.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Aspecte logice --- Sistemul lui Gentzen}
+\indent\indent În 1935, Gerhard Gentzen a introdus 2 formulări ale logicii
+care să ajute teoria demonstrației: \emph{deducția naturală} și \emph{calculul %
+secvent}. Prin aceste sisteme, el a arătat cum se poate obține o formă
+normală pentru demonstrații, care să asigure că acestea nu sînt circulare sau
+infinite. El a introdus și cuantificarea universală, ca o paralelă la
+cuantificarea existențială introdusă deja de Peano. Simbolurile folosite
+de Gentzen sînt $ \supset $ pentru implicație, \& pentru conjuncție și
+$ \lor $ pentru disjuncție.
+
+Una dintre ideile originale ale lui Gentzen a fost de a impune ca regulile
+de demonstrație să apară în perechi, în cazul deducției naturale fiind
+vorba despre \emph{reguli de introducere} și \emph{reguli de eliminare}.
+Regula de introducere arată cînd se poate formula o aserțiune care conține
+un conector logic, iar regula de eliminare arată cum se poate folosi conectorul
+(e.g.\ în \emph{modus ponens}, care arată cum se folosește conectorul $\supset$).
+
+Un aspect foarte util al sistemului lui Gentzen a fost așa-numitul
+\qq{principiu al subformulelor}. Conform acestuia, într-o demonstrație a unei
+formule nu pot apărea decît subformule ale acesteia sau termeni ai subformulelor.
+Aceasta este condiția de normalizare a demonstrației. O consecință imediată a fost
+consistența. Pentru a putea demonstra o contradicție, ar trebui să putem demonstra
+folosind subformule ale acesteia, dar așa ceva nu există! Rezultatul este formulat
+foarte sugestiv de Wadler prin ``\emph{What part of} no \emph{don't you understand?}''.
+
+Calculul secvent (eng.\ \emph{sequent calculus}) a fost introdus și folosit de
+Gentzen mai mult ca un instrument tehnic, cu ajutorul lui demonstrînd principiul
+subformulelor de mai sus.
+
+Vom prezenta acum pe scurt aspecte din deducția naturală, pentru a evidenția
+ulterior legătura cu $ \lambda $-calculul cu tipuri simple și categorii
+cartezian închise. Pentru simplitate, vom discuta doar doi conectori,
+\& și $ \supset $. Regulile, așa cum au fost introduse de Gentzen, sînt:
+\begin{itemize}
+  \item introducerea conjuncției:
+    \begin{prooftree}
+        \hypo{A \quad B}
+        \infer1[\&I]{A \& B}
+    \end{prooftree};
+  \item eliminarea conjuncției, de pe poziția 1 sau 2:
+    \begin{prooftree}
+      \hypo{A \& B} \infer1[\&E1]{A}
+    \end{prooftree}, respectiv
+    \begin{prooftree}
+      \hypo{A \& B} \infer1[\&E2]{B}
+    \end{prooftree};
+  \item introducerea implicației:
+    \begin{prooftree}
+      \hypo{[A]^x} \ellipsis{}{B} \infer1[\supset I^x]{A \supset B}
+    \end{prooftree};
+  \item eliminarea implicației (sau \emph{modus ponens}):
+    \begin{prooftree}
+      \hypo{A \supset B \quad A} \infer1[\supset E]{B}
+    \end{prooftree}.
+\end{itemize}
+
+Regula de introducere a implicației afirmă că dacă din presupunerea că $ A $
+are loc putem obține $ B $, atunci putem concluziona că are loc $ A \supset B $
+și să neglijăm presupunerea $ A $. Demonstrația se încheie doar cînd fiecare
+presupunere din ea a fost eliminată, folosind regula $ \supset I $. Am notat cu
+indicele superior $ x $ pentru a arăta care presupunere este eliminată atunci
+cînd se aplică introducerea corespunzătoare.
+
+\begin{remark}
+  Putem face o remarcă filosofică de felul următor. Într-o regulă de deducție
+  care folosește implicația drept premisă, implicația însăși este un fel de
+  deducție, la nivel meta (deducția care ne interesează fiind la nivel de obiect).
+  Această dificultate aparentă, cum că ar trebui să înțelegem mai întîi implicația
+  pentru a înțelege implicația, a fost discutată de Per Martin--L\"{o}f în
+  articolul \cite{pmlf}.
+\end{remark}
+
+Regulile de rescriere pentru simplificarea demonstrațiilor sînt:
+\[
+  \begin{prooftree}
+    \hypo{\stackrel{\vdots}{A} \quad \stackrel{\vdots}{B}}
+    \infer1[\& I]{A \& B}
+    \infer2[\&E1]{A}
+  \end{prooftree} \Longrightarrow
+  \begin{prooftree}
+    \ellipsis{}{A}
+  \end{prooftree} \qquad \qquad
+  \begin{prooftree}
+    \hypo{[A]^x} \ellipsis{}{B}
+    \infer1[\supset I^x]{A \supset B} \hypo{\stackrel{\vdots}{A}}
+    \infer2[\supset E]{B}
+  \end{prooftree} \Longrightarrow
+  \begin{prooftree}
+    \ellipsis{}{A} \ellipsis{}{B}
+  \end{prooftree}
+\]
+
+
+Regulile de simplificare ne arată cum să rescriem o demonstrație atunci cînd apar
+consecutiv regulile de introducere și de eliminare pentru același conector.
+Numim \emph{redex} varianta nesimplificată și \emph{reduct} varianta rescrisă.
+
+Regula de simplificare pentru \&, de exemplu, neglijează orice apariție a lui $ B $,
+pentru că, de fapt, vrem să demonstrăm $ A $.
+
+Regula de simplificare pentru $ \supset $ ține seama de faptul că vrem să obținem
+$ B $ via $ A $, dar elimină ocolișul nenecesar prin demonstrația lui $ A \supset B $.
+
+Aduse în forma normală, i.e.\ aplicînd toate rescrierile posibile, este clar că
+demonstrațiile respectă principiul subformulei.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{$\lambda$-calcul cu tipuri}
+
+\indent\indent Descriem acum $ \lambda $-calculul cu tipuri simple al
+lui Church. Pentru simplitate, putem presupune că produsele și funcțiile
+sînt obiecte primitive (în articolul original, Church a derivat produsele
+din funcții). În loc de formule, judecățile de forma $ M : A $ servesc
+drept premise și concluzii și notează că termenul $ M $ are tipul $ A $.
+
+Regulile de tipizare sînt:
+\begin{itemize}
+  \item introducerea produselor:
+    \begin{prooftree}
+      \hypo{M : A \quad N : B}
+      \infer1[\times I]{\langle M, N \rangle : A \times B}
+    \end{prooftree};
+  \item introducerea $ \lambda $-abstracției:
+    \begin{prooftree}
+      \hypo{[x : A]^x} \ellipsis{}{N : B}
+      \infer1[\to I^x]{\lambda x . N : A \to B}
+    \end{prooftree};
+  \item eliminarea produsului, pe prima sau a doua componentă, prin proiecțiile
+    canonice, $ \pi_1(L : A \times B) : A $, respectiv $ \pi_2(L : A \times B) : B $;
+  \item eliminarea $\lambda$-abstracției, prin aplicare:
+    \begin{prooftree}
+      \hypo{L : A \to B \quad M : A}
+      \infer1[\to E]{LM : B}
+    \end{prooftree}.
+\end{itemize}
+
+Observăm, de asemenea, că în regula de introducere a $\lambda$-abstracției, variabila
+$ x $ apare liberă în $ N $ în premisă și legată în concluzia $ \lambda x . N $.
+
+\begin{remark}
+  Distincția între nivelul meta si nivelul obiect în ce privește implicația
+  este mai clară în $ \lambda $-calcul. În cazul premiselor, avem o implicație,
+  dar la nivel de obiect, în concluzie, avem \emph{funcții}, obiecte diferite.
+\end{remark}
+
+Demonstrațiile în $\lambda$-calculul tipizat se numesc \emph{programe}, care
+pot fi evaluate prin rescriere, conform regulilor:
+\[
+  \begin{prooftree}
+    \hypo{\stackrel{\vdots}{M : A} \quad \stackrel{\vdots}{N : B}}
+    \infer1[\times I]{\langle M, N \rangle : A \times B}
+    \infer2[\times E1]{\pi_1\langle M, N \rangle : A}
+  \end{prooftree} \Longrightarrow
+  \begin{prooftree}
+    \ellipsis{}{M : A}
+  \end{prooftree}
+  \qquad \qquad
+  \begin{prooftree}
+    \hypo{[x : A]^x} \ellipsis{}{N : B}
+    \infer1[\to I^x]{\lambda x . N : A \to B} \hypo{\stackrel{\vdots}{M : A}}
+    \infer2[\to E]{(\lambda x.N)M : B}
+  \end{prooftree} \Longrightarrow
+  \begin{prooftree}
+    \ellipsis{}{M : A}
+  \ellipsis{}{N[M/x] : B}
+  \end{prooftree}
+\]
+
+Regulile de rescriere păstrează tipizarea, proprietate numită \emph{corectitudinea %
+tipizării} (eng.\ \emph{type soundness}).
+
+Termenul $ N[M/x] $ din a doua regulă de rescriere notează că se înlocuiesc
+toate aparițiile libere ale lui $ x $ din $N$ cu $M $. De asemenea, acest
+termen substituit poate fi, în general, mai mare decît cel inițial (în funcție de
+numărul de apariții ale lui $ x $). Dar, în orice caz, el este mai simplu,
+deoarece nu mai are un subtermen de tip $ A \to B $. Astfel, eliminarea asumpțiilor
+poate fi înțeleasă ca aplicarea funcțiilor.
+
+\vspace{1cm}
+
+Prezentate astfel, legăturile între deducția naturală și $ \lambda $-calculul
+cu tipuri simple sînt evidente. Așa cum am menționat la început, ele merg mult mai
+profund decît atît, fiind prezente la mai multe niveluri. Fiecare dintre aceste
+niveluri suplimentare cer o aprofundare a subiectelor, ce va fi obiectul cercetărilor
+ulterioare.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Categorii --- Privire de ansamblu}
+
+\indent\indent Trecem acum la un alt nivel care evidențiază legătura prezentată,
+anume acela al categoriilor, conexiune introdusă de J.\ Lambek începînd cu
+anul 1968. Prezentarea sumară ce urmează se bazează pe articolul \cite{lambek}
+și presupune o familiarizare preliminară cu teoria categoriilor.
+
+Conform lui Lambek, există două moduri nestandard de a privi o categorie,
+pe care le vom numi \emph{interpretarea logică}, respectiv \emph{interpretarea %
+algebrică}. Prima dintre acestea privește o categorie drept un \emph{sistem %
+deductiv}, în care obiectele sînt formule logice, iar săgețile, deducții.
+Egalitățile care există în axiomele care definesc categoriile sînt caracteristici
+bonus, care vor servi atunci cînd avem nevoie de teorii logice cu egalitate.
+Săgețile identitate pentru fiecare obiect $ A $ al unei categorii sînt gîndite
+ca axiome, iar compunerea săgeților devine tranzitivitatea consecinței logice
+(eng.\ \emph{entailment}):
+\[
+  \begin{prooftree}
+    \hypo{f : A \to B \quad g : B \to C}
+    \infer1{gf : A \to C}
+  \end{prooftree}
+\]
+
+Egalitățile suplimentare care există (proprietatea săgeții unitate, respectiv
+asociativitatea compunerii) sugerează necesitatea introducerii unei relații
+de (tip) egalitate între deducții, discutată de Lambek, Prawitz și alții,
+dar care depășește scopurile lucrării prezente.
+
+Interpretarea algebrică privește o catgorie drept o \emph{teorie algebrică %
+unară, multisortată}. Obiectele sînt numite sorturi sau tipuri, iar săgețile
+sînt operații unare. Aceasta diferă în mod esențial de abordarea mai des
+întîlnită, conform căreia teoria este uni-sortată, iar operațiile (funcțiile)
+sînt $n$-are. În abordarea curentă, o asemenea interpretare ar implica
+$n$-categorii.
+
+În general, teoria categoriilor are meritul de a nu mai lucra cu variabile,
+dar aici vom reintroduce variabilele și vom vedea cît ajută la formularea
+rezultatelor. De fapt, este cunoscut faptul că se poate da o reformulare
+a teoriei categoriilor folosind doar săgeți, cu anumite constrîngeri (care vor
+avea loc în cazurile ce ne interesează aici), iar un element $ x $ al unui
+obiect $ A $ poate fi gîndit ca o săgeată $ x : 1 \to A $ de la obiectul
+inițial al categoriei (în ipoteza că există un asemenea obiect).
+
+Fie, deci, $ x $ o variabilă de sort $ A $ (în terminologia de mai sus,
+adică un element $ x $ al obiectului $ A $ din categorie). Fie, de asemenea,
+$ f : A \to B $ o operație. Atunci $ fx $ este un termen de sort $ B $
+în ceea ce vom numi \emph{limbajul intern} al categoriei, privită ca o
+teorie algebrică unară, multisortată.
+
+O asemenea abordare va fi de folos și în interpretarea logică (constructivistă):
+variabila $ x $ de sort $ A $ poate fi gîndită ca o presupunere că $ A $
+are loc, iar $ fx $, de sort $ B $, să fie demonstrația lui $ B $ din
+această presupunere.
+
+Să prespunem, așadar, că lucrăm într-o categorie care are produse finite.
+Aceasta implică existența unui produs vid, care este un obiect unic $ 1 $,
+numit \emph{obiect terminal} în categorie, împreună cu o săgeată unică,
+pentru fiecare obiect $ A $, de forma $ 0_A : A \to 1 $. Pentru obiectele
+$ A $ și $ B $, produsul se identifică cu produsul cartezian (în cazul în care
+$ A $ și $ B $ sînt mulțimi) și avem săgețile canonice date de proiecții,
+care induc o corespondență bijectivă între perechi de săgeți $ (C \to A, C \to B )$
+și săgeți $ C \to A \times B $. Astfel definită, extinzînd produsul și la
+cazul finit arbitrar, se obține o \emph{categorie carteziană}.
+
+Interpretarea logică a acestei construcții este imediată: obiectul terminal poate
+fi gîndit ca $ \top $ (adevărat), iar produsul $ A \times B $, drept
+conjuncția $ A \land B $. Atunci avem axiomele:
+\[
+  0_A : A \to \top, \quad \pi_1 : A \land B \to A, \quad \pi_2 : A \land B \to B
+\]
+și o regulă de inferență:
+\[
+  \begin{prooftree}
+    \hypo{f : C \to A \quad g : C \to B}
+    \infer1{\langle f, g \rangle : C \to A \land B}
+  \end{prooftree}
+\]
+
+Suplimentar, sînt satisfăcute și:
+\begin{itemize}
+  \item $ k = 0_A $ pentru orice săgeată $ k : A \to \top $;
+  \item $ \pi_1 \langle f, g \rangle = f, \pi_2 \langle f, g \rangle = g $;
+  \item $ \langle \pi_1 h, \pi_2 h \rangle = h $ pentru orice săgeată $ h : C \to A \land B $.
+\end{itemize}
+
+Un termen $ \varphi(x, y) $ de tip $ C $ din limbajul intern, cu $ x $ de tip $ A $
+și $ y $ de tip $ B $ poate fi gîndit ca o demonstrație în deducție naturală
+a lui $ C $ din presupunerea $ x $ că $ A $ și $ y $ că $ B $. O proprietate
+interesantă (rezultată din proprietatea de universalitate a produsului din categorie)
+este că limbajul intern are \emph{completitudine funcțională}, adică orice
+demonstrație $ \varphi(x, y) $ are forma $ f(x, y) $ pentru o unică deducție
+$ f : A \land B \to C $.
+
+Putem folosi obiectul $ 1 $ al categoriei pentru a nota cu o săgeată nedeterminată
+$ x : 1 \to A $ în \emph{categoria polinomială}\footnotemark
+a categoriei date, $ \kal{C}[x] $
+și atunci putem formula completitudinea funcțională astfel.
+
+\footnotetext{Categoria polinomială este o construcție naturală care indexează
+  obiectele unei categorii după un anumit obiect (sau, mai precis, după o anumită
+  săgeată $ 1 \to A $ într-un obiect). Din acest punct de vedere, anticipînd un subiect
+  pe care nu îl detaliem aici, se poate face o legătură cu \emph{tipuri dependente},
+gîndite categorial ca niște \emph{fibrări} (eng.\ \emph{bundles})}
+
+Fie $ p(x) : B \to C $ un polinom în nedeterminata $ x : 1 \to A $. Există o unică
+săgeată $ f : A \times B \to C $ care nu depinde de $ x $ astfel încît $ p(x) = f\chi(x) $,
+cu $ \chi(x) = \langle x0_B, 1_B \rangle $, conform diagramei comutative:
+\[
+  \xymatrix{
+  A \times B \ar[r]^-f & C \\
+  B \ar[u]^-{\chi(x)} \ar[ur]_-{p(x)} &
+}
+\]
+
+\begin{remark}\label{rk:exists}
+  La prima vedere, am putea gîndi $ A \times B $ și ca fiind coprodusul a $ A $
+  copii ale lui $ B $ și să scriem:
+  \[
+    A \times B = \coprod_{x \in A} B
+  \]
+  Dar, de fapt, nu este neapărat necesar ca $ A $ să fie mulțime, deci structura nu este 
+  neapărat produsul cartezian din teoria mulțimilor. Sub interpretarea logică, putem scrie:
+  \[
+    A \land B = \exists_{x \in A} B,
+  \]
+  un caz particular al cuantificatorului existențial, cînd $ B $ este o formulă care nu
+  depinde de presupunerea $ x $.
+
+  Ne putem pune problema existenței coproduselor $ \ds\coprod_{x \in A} B(x) $, unde
+  $ B(x) $ să depindă de $ x $. În categorii carteziene, însă, acest lucru este
+  imposibil, deoarece categoria polinomială $ \kal{C}[x] $ are aceleași obiecte cu $ \kal{C} $.
+\end{remark}
+
+
+\begin{remark}\label{rk:slice}
+  În locul categoriei polinomiale, se poate face trecerea la \emph{categoria slice},
+  conform \cite{joyal} și \cite{macc}, \S II.6 (unde sînt numite \qq{categorii-virgulă},
+  eng.\ \emph{comma categories}).
+  Astfel, în loc de elementul distins $ x \in A $, cu care trecem la categoria
+  polinomială, putem considera obiectul distins $ A $ și trecem la categoria slice
+  (sau categoria deasupra lui $ A $), notată $ \kal{C}/A $. Obiectele categoriei
+  sînt săgeți $ \ast \to A $, iar săgețile categoriei sînt triunghiuri comutative
+  de forma:
+  \[
+    \xymatrix{
+    B \ar[dr] \ar[rr] & & C \ar[dl] \\ & A &
+  }
+  \]
+  
+  Acestea au meritul de a evidenția mai clar decît categoriile polinomiale existența sau 
+  lipsa structurilor suplimentare (e.g.\ egalizator sau exponențială).
+\end{remark}
+
+Vom înzestra ulterior o categorie carteziană cu o exponențială,
+conducînd astfel la categorii cartezian închise, ce vor fi legate
+strîns de $ \lambda $-calculul cu tipuri simple, dar deocamdată
+mai detaliem o construcție elementară.
+
+Fie $ \kal{C} $ o categorie carteziană. Introducem \emph{egalizatorul}
+a două săgeți paralele, $ f, g : A \to B $, conform \cite{macc}, \S III.4.
+Intuitiv, el este o generalizare a nucleului unui morfism de structuri.
+Fie obiectul egalizator $ E(f, g) $, care vine cu un monomorfism canonic
+în $ A $, ce poate fi privit ca o incluziune. Putem scrie în limbajul
+intern (adică folosind variabile):
+\[
+  E(f, g) = \{ x \in A \mid fx = gx \},
+\]
+iar dacă $ A = 1, $ atunci săgeata $ x : 1 \to A $ coincide cu $ 1_A $, 
+deci egalizatorul devine $ E(f, g) = \{ x \in 1 \mid f = g \} $. 
+Aici $ x $ nu mai joacă niciun rol, deci $ E(f, g) $ este \qq{propoziția} care
+afirmă că $ f = g $.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Categorii cartezian închise}
+
+\indent\indent Putem înzestra o categorie carteziană cu o structură
+suplimentară, numită \emph{exponențială}, care va facilita legătura cu
+$\lambda$-calcul și cu programarea funcțională. Prezentarea curentă urmează
+\cite{awodey} și \cite{mact}.
+
+Începem cu o motivație și prezentare intuitivă, care va face legătura
+și cu programarea funcțională.
+
+O funcție de două variabile $ f : A \times B \to C, f = f(x, y) $ poate
+fi privită ca o funcție de o singură variabilă, fixînd pe $ x $,
+anume $ f = f(y) \in C^B $. Acum, dacă variem pe $ x $, obținem o 
+familie indexată, care ne dă o asociere:
+\[
+  x \mapsto f_x(y) = f(x, y) : A \to C^B.
+\]
+
+Orice asemenea funcție poate fi definită astfel și este complet determinată
+de această prezentare. Deci, intuitiv, avem un izomorfism:
+\[
+  \dr{Hom}(A, C^B) \simeq \dr{Hom}(A \times B, C), \quad f_x(y) = f(x, y).
+\]
+
+Putem defini o funcție de tip evaluare, pentru a abstractiza:
+\[
+  \dr{eval} : C^B \times B \to C, \quad %
+  \dr{eval}(g, b) = g(b), \forall g \in C^B, b \in B.
+\]
+
+Această funcție are următoarea proprietate de universalitate: dată mulțimea
+$ A $ și funcția $ f : A \times B \to C $, există o unică funcție
+$ \widetilde{f} : A \to C^B $ astfel încît:
+\[
+  \dr{eval}(\widetilde{f} \times 1_B) = f \Leftrightarrow %
+  \dr{eval}(\widetilde{f}(a), b) = f(a, b),
+\]
+adică avem diagrama comutativă:
+\[
+  \xymatrix{
+  C^B \times B \ar[r]^-{\dr{eval}} & C \\
+  A \times B \ar@{.>}[u]^{\exists! \widetilde{f} \times 1_B} \ar[ur]_-f &
+}
+\]
+
+Proprietatea poate fi folosită în orice categorie cu produse binare.
+
+\begin{definition}\label{def:exp}
+  Fie $ \kal{C} $ o categorie cu produse binare. O \emph{exponențială} a
+  obiectelor $ B $ și $ C $ din $ \kal{C} $ este un obiect $ C^B $ și o
+  săgeată $\varepsilon : C^B \times B \to C $ cu proprietatea de
+  universalitate de mai sus: pentru orice $ Z \in \kal{C} $ și
+  $ f : Z \times B \to C $, există o unică săgeată $ \widetilde f : Z \to C^B $
+  care să facă diagrama comutativă:
+  \[
+    \xymatrix{
+      C^B \\
+      Z \ar[u]^-{\widetilde{f}}
+    } \qquad\qquad
+    \xymatrix{
+    C^B \ar[r]^-\varepsilon & C \\
+    Z \times B \ar@{.>}[u]^-{\widetilde{f} \times 1_B} \ar[ur]_-f &
+  }
+  \]
+  adică $ \varepsilon \circ (\widetilde{f} \times 1_B) = f $.
+
+  În acest context, $ \varepsilon $ se numește \emph{evaluare}, iar
+  $ \widetilde{f} $ se numește \emph{transpusa} lui $ f $.
+\end{definition}
+
+Dată transpusa, putem recupera funcția. Presupunem că pornim cu $ g : Z \to C^B $
+și definim:
+\[
+  \overline{g} = \varepsilon(g \times 1_B) : Z \times B \to C.
+\]
+
+Rezultă că avem izomorfismul:
+\begin{align*}
+  \dr{Hom}(Z \times B, C) &\simeq \dr{Hom}(Z, C^B) \\
+  f &\mapsto \widetilde{f} \\
+  \overline{g} &\mapsfrom g
+\end{align*}
+
+\begin{remark}\label{rk:eval}
+  În informatică, transpusa poate fi asociată cu $ \lambda(-) $, adică
+  $\widetilde{f} = \lambda f $, iar în limbajele funcționale, săgeata eval
+  se asociază, de obicei, cu \texttt{apply}, $ \lambda g $ fiind \texttt{curry(g)}.
+\end{remark}
+
+
+Putem da acum o definiție ecuațională a categoriilor cartezian închise,
+care să faciliteze legătura cu $ \lambda $-calculul cu tipuri simple.
+
+\begin{definition}\label{def:ccc}
+  O categorie $ \kal{C} $ este \emph{cartezian închisă} dacă are următoarea
+  structură:
+  \begin{enumerate}[(1)]
+    \item Un obiect distins $ 1 $ și pentru orice obiect $ C \in \kal{C} $, o săgeată
+      $ !_C : C \to 1 $ astfel încît, pentru orice altă săgeată $ f : C \to 1 $,
+      să avem $ f = !_C $;
+    \item Pentru orice pereche de obiecte $ A, B $ există un obiect $ A \times B $
+      și săgețile $ p_1 : A \times B \to A, p_2 : A \times B \to B $, iar pentru
+      orice săgeți $ f : Z \to A $ și $ g : Z \to B $ există o săgeată:
+      \[
+          \langle f, g \rangle : Z \to A \times B
+      \]
+      astfel încît:
+      \begin{align*}
+        p_1 \langle f, g \rangle &= f \\
+        p_2 \langle f, g \rangle &= g \\
+        \langle p_1 h, p_2 h \rangle &= h, \forall h : Z \to A \times B;
+      \end{align*}
+    \item Pentru orice pereche de obiecte $ A \times B $, există un obiect
+    $ B^A $ și o săgeată $ \varepsilon : B^A \times A \to B $, iar pentru orice
+    săgeată $ f : Z \times A \to B $ există o săgeată $ \widetilde{f} : Z \to B^A $
+    astfel încît:
+    \[
+      \varepsilon \circ (\widetilde{f} \times 1_A) = f, \quad %
+      \varepsilon \circ (g \times 1_A) = \widetilde{g},
+    \]
+    pentru orice $ g : Z \to B^A $, unde:
+    \[
+      g \times 1_A = \langle gp_1, p_2 \rangle : Z \times A \to B^A \times A.
+    \]
+  \end{enumerate}
+\end{definition}
+
+
+Legătura cu $ \lambda $-calculul cu tipuri poate fi făcută evidentă prin
+prezentarea ecuațională a acesteia din urmă, în forma următoare. O
+teorie de $\lambda$-calcul cu tipuri se alcătuiește din:
+\begin{itemize}
+  \item tipuri de bază: $ A, B, \dots, A \times B, A \to B $ etc.;
+  \item termeni, care pot fi:
+    \begin{itemize}
+      \item variabile de tip $ A $;
+      \item constante;
+      \item perechi $ \langle a, b \rangle : A \times B $, cu $ a : A, b : B $;
+      \item proiecții prime: $ \dr{fst}(c) : A$, cu $ c : A \times B $;
+      \item proiecții secunde: $ \dr{snd}(c) : B$, cu $ c : A \times B $;
+      \item evaluări: $ca : B$, unde $ c : A \times B, a : A $;
+      \item abstracții: $ \lambda x . b : A \to B$ ,cu $ x : A, b \in B $
+    \end{itemize}
+    \item ecuații:
+      \begin{align*}
+        \dr{fst}(\langle a, b \rangle) &= a \\
+        \dr{snd}(\langle a, b \rangle) &= b \\
+        \langle \dr{fst}(c), \dr{snd}(c)\rangle &= c \\
+        (\lambda x . b) a &= b[a/x] \\
+        \lambda x . cx &= c, \text{ cu x liberă în c}
+      \end{align*}
+\end{itemize}
+
+
+Astfel prezentată, teoriei de $ \lambda $-calcul i se poate asocia
+o \emph{categorie a tipurilor}, unde obiectele sînt tipurile simple
+(dintre tipurile de bază, $ A, B, \dots $), săgețile sînt date de
+tipurile de forma $ A \to B $, identitățile $ 1_A = \lambda x. x$,
+pentru $ x : A $, iar compunerea $ c \circ b = \lambda x.c(bx) $.
+
+Aceasta definește corect o categorie, care are produse binare și
+este chiar cartezian închisă. Date două obiecte $ A $ și $ B $
+din categorie, definim $ B^A = A \to B $, iar evaluarea:
+\[
+  \varepsilon = \lambda z . \dr{fst}(z)\dr{snd}(z) : B^A \times A \to B (z : Z).
+\]
+Atunci, pentru orice săgeată $ f : Z \times A \to B $, putem defini
+transpusa prin:
+\[
+  \widetilde{f} = \lambda z \lambda x . f\langle z, x \rangle : %
+  Z \to B^A (z : Z, x : A).
+\]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Plan}
+
+\indent\indent În ce privește continuarea cercetării, fiecare dintre
+componentele corespondenței Curry--Howard--Lambek merită studiată
+individual, împreună cu toate variantele sale. 
+
+Totodată, dezvoltarea istorică și filosofică a subiectului o considerăm 
+a fi de o importanță deosebită. Așa cum se arată în \cite{collins},
+încercările de eliminare a paradoxurilor de tip Russell, prin 
+ramificări, ierarhizări și tipizări ale teoriilor s-au întins în multe 
+domenii și au primit, la rîndul lor, tratamente diferite. Astfel,
+în afară de Russell, Ramsey, Hilbert, Turing, Church, actori principali
+ai acestei dezvoltări au fost și Wittgenstein, care a formulat o tipizare
+bazată pe teoria funcțiilor, Frege, cu a sa \qq{teorie a treptelor} și
+Carnap, care a considerat că locul cel mai potrivit al tipizării este
+la nivel de limbaj (formal).
+
+Precum menționează Shulman în \cite{sh}, o altă componentă filosofică
+importantă a teoriilor care alcătuiesc corespondența Curry--Howard--Lambek
+este aceea că \qq{spațiile} (i.e.\ tipurile) utilizate au o natură sintetică.
+Aceastea sînt construite în acord cu intuiția: pentru a le înțelege, trebuie
+să știm cum arată obiectele lor și cum ne dăm seama dacă avem de-a face
+cu obiecte diferite sau cu același obiect. Această abordare urmează varianta
+lui Martin-L\"{o}f pentru regulile de introducere și eliminare ale lui Gentzen.
+
+În partea logică a subiectului, logica intuiționistă și teoria tipurilor
+aferentă prezintă un interes deosebit. Ne referim în special la teoria
+lui Martin-L\"{o}f (cf.\ \cite{pml}), care introduce tipul egalitate,
+nevid atunci cînd se poate demonstra că două tipuri sînt \qq{egale}. Exact
+echivocul lăsat de această noțiune de egalitate a permis dezvoltarea
+\emph{teoriei de omotopie a tipurilor}, în care relația de egalitate este
+relaxată și se preia relația de echivalență omotopică din topologie algebrică
+(mai general, algebră omologică). Această noțiune de \qq{egalitate} a deschis
+calea către o descriere axiomatică, i.e.\ \emph{axioma de univalență} a lui
+Voevodsky și interpretarea ei structuralistă din partea lui Awodey (cf.,
+de exemplu, \cite{awos}).
+
+În ce privește aspectele categoriale, sîntem interesați de trecerea către
+toposuri, structurile \qq{naturale} pentru a studia fundamente matematice,
+în care se poate formula semantica mai multori logici (e.g.\ intuiționistă
+și clasică, în special). În aceste structuri, algebrele Heyting joacă un rol
+fundamental, deoarece ele ajută la trecerea dinspre logica booleană către
+logica intuiționistă. Detalii sînt conținute în \cite{gold}. Totodată, muncă
+de pionierat în traducerea logicilor în teoria categoriilor a fost realizată
+de Lawvere, începînd cu \cite{law} și continuînd cu Seely în \cite{see}.
+
+Pe lîngă aceste fațete specializate, monografia \cite{ch} reprezintă o lectură
+obligatorie pentru aprofundarea le\-gă\-tu\-ri\-lor între conceptele de bază ale
+acestei corespondențe de interes. 
+
+\vspace{3cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliography{chl-survey.bib}
+\bibliographystyle{apalike}
+
+    
+
+
+
+
+\end{document}

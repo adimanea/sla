@@ -1,0 +1,317 @@
+\documentclass[xcolor=dvipsnames]{beamer}
+\usepackage{mathpazo}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb, bbding}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+\usepackage[all]{xy} 
+\usepackage{lmodern}
+\usepackage[romanian]{babel}
+\renewcommand{\figurename}{} 
+\usepackage{caption}
+\captionsetup{compatibility=false}
+\usepackage{subcaption}
+\usepackage[style=german]{csquotes}
+\usepackage{ebproof} % for logic proof trees
+
+\newcommand\ds{\displaystyle}
+\newcommand\seq{\subseteq}
+\newcommand\speq{\supseteq}
+\newcommand\rar{\rightarrow}
+\newcommand\Rar{\Rightarrow}
+
+\newtheoremstyle{mystyle}{0mm}{0mm}{}{}{\itshape}{}{ }{}
+\theoremstyle{mystyle}
+\newtheorem{bl}{}
+
+\newcommand{\bloc}[3]{\begin{bl}<#1->{{\large\color{Gray}{\hrulefill}}\\ \color{firebrick}{\large \emph{#2}}}\\ \vspace*{-2mm}{\color{Gray}{\hrulefill}}\\ #3 \end{bl}} 
+
+\newcommand{\fr}[1]{\frame{#1}}
+\newcommand{\ft}[1]{\frametitle{\color{firebrick}{\hfill #1 \hfill}}}
+\newcommand{\lin}[3]{\uncover<#1->{\alert<#1>{#2}}{\vspace*{#3 ex}}}
+\newcommand{\ite}[2]{\uncover<#1->{\alert<#1>{\item #2}}}
+\newcommand{\vs}[1]{\vspace*{#1 ex}}
+\definecolor{bleaumarin}{RGB}{30,30,150} 
+\definecolor{firebrick}{RGB}{178,34,34}
+
+\useoutertheme{shadow} 
+\usetheme{CambridgeUS} 
+\usecolortheme[named=firebrick]{structure} 
+\useoutertheme[compress]{smoothbars}
+
+\setbeamertemplate{items}[ball]
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamertemplate{navigation symbols}{}
+% \setbeamercovered{still covered={\opaqueness<1->{15}},again covered={\opaqueness<1->{15}}}
+\setbeamertemplate{headline}{}  
+
+\title[Curry-Howard-Lambek]{Corespondența între propoziții, tipuri și categorii}
+\author[Adrian Manea]{Adrian Manea \\ \vspace{.3cm} 
+                      \small{supervizor: Conf.\ Dr.\ Denisa Diaconescu}}
+\institute[410]{SLA, anul 1, grupa 410}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+%\fr{%
+  %\ft{Motivație}
+  %\lin{1}{Teorii computaționale: Turing, categorii, logica}{1}
+
+  %\begin{itemize}
+    %\ite{2}{\textbf{Turing}: aspecte filosofice, determinism, finitudine, \enquote{umanizarea}
+    %calculatorului;}
+    %\ite{3}{\textbf{Categorii}: de la ``abstract nonsense'' la modele computaționale,
+    %modelarea proceselor neuronale, lingvistică;}
+    %\ite{4}{\textbf{Logica}: teorii cu egalitate, raționamente privite drept \enquote{calcule};}
+  %\end{itemize}
+  %\vspace{.3cm}
+  %\lin{5}{Abordarea multifațetată a acelorași rezultate nu poate fi decît benefică!}{2}
+  %\lin{6}{\enquote{propoziții (văzute) ca tipuri}, \enquote{demonstrații (văzute) ca programe},
+  %\enquote{simplificarea demonstrațiilor (văzută) ca evaluarea programelor}}{1}
+%}
+
+\fr{%
+    \ft{Subiectele de interes}
+
+    \lin{1}{\textbf{Informatică teoretică}: programare funcțională, programe scrise
+      ca teorii și demonstrații, teoria de omotopie a tipurilor;}{1}
+
+    \lin{2}{\textbf{Logică}: logica intuiționistă, interpretarea BHK,
+    teoria intuiționistă a tipurilor (Per Martin-L\"{o}f);}{1}
+   
+    \lin{3}{\textbf{Categorii}: CCC, $ \infty $-grupoizi, algebre Heyting, 
+    fascicule, toposuri;}{2}
+
+    \lin{4}{\textbf{Filosofie}: structuralism (axioma univalenței, Voevodsky-Awodey), 
+      \enquote{spații sintetice} (Shulman), ierarhii (tipuri: trepte [Frege], 
+    funcții [Wittgenstein], limbaj [Carnap]);}{1}
+}
+
+\fr{%
+  \ft{Logică: Deducția naturală (Gentzen)}
+
+  \lin{1}{Reguli de deducție în perechi (introducere--eliminare):}{2}
+
+  \lin{2}{%
+    \[%
+    \begin{prooftree}
+        \hypo{A \quad B}
+        \infer1[\&I]{A \& B}
+    \end{prooftree} \qquad %
+    \begin{prooftree}
+      \hypo{A \& B} \infer1[\&E1]{A}
+    \end{prooftree} \qquad %
+    \begin{prooftree}
+      \hypo{A \& B} \infer1[\&E2]{B}
+    \end{prooftree};
+    \]
+}{2}
+
+\lin{3}{%
+  \[
+    \begin{prooftree}
+      \hypo{[A]^x} \ellipsis{}{B} \infer1[\supset I^x]{A \supset B}
+    \end{prooftree} \qquad %
+    \begin{prooftree}
+      \hypo{A \supset B \quad A} \infer1[\supset E]{B}
+    \end{prooftree}.
+\]
+}{2}
+
+}
+
+\fr{%
+  \ft{Logică: Deducția naturală (Gentzen)}
+
+  \lin{1}{Reguli de rescriere (simplificare):}{2}
+  
+  \lin{2}{%
+    \[
+  \begin{prooftree}
+    \hypo{\stackrel{\vdots}{A} \quad \stackrel{\vdots}{B}}
+    \infer1[\& I]{A \& B}
+    \infer2[\&E1]{A}
+  \end{prooftree} \Longrightarrow
+  \begin{prooftree}
+    \ellipsis{}{A}
+  \end{prooftree} \qquad \qquad
+  \begin{prooftree}
+    \hypo{[A]^x} \ellipsis{}{B}
+    \infer1[\supset I^x]{A \supset B} \hypo{\stackrel{\vdots}{A}}
+    \infer2[\supset E]{B}
+  \end{prooftree} \Longrightarrow
+  \begin{prooftree}
+    \ellipsis{}{A} \ellipsis{}{B}
+  \end{prooftree}
+\]}{3}
+}
+
+\fr{%
+  \ft{$\lambda$-calculul cu tipuri simple}
+
+  \lin{1}{Reguli de tipizare:}{0}
+  \lin{2}{\begin{itemize}
+      \ite{2}{introducere = tipizare/abstracție;}
+      \ite{3}{eliminare = aplicare/proiecție.}
+  \end{itemize}
+}{2}
+
+  \lin{4}{%
+    \[
+    \begin{prooftree}
+      \hypo{M : A \quad N : B}
+      \infer1[\times I]{\langle M, N \rangle : A \times B}
+    \end{prooftree} \qquad
+    \begin{prooftree}
+      \hypo{[x : A]^x} \ellipsis{}{N : B}
+      \infer1[\to I^x]{\lambda x . N : A \to B}
+    \end{prooftree}
+  \]
+}{2}
+
+\lin{5}{\[\pi_1(L : A \times B) : A, \qquad \pi_2(L : A \times B) : B\]}{1}
+\lin{6}{%
+  \[
+    \begin{prooftree}
+      \hypo{L : A \to B \quad M : A}
+      \infer1[\to E]{LM : B}
+    \end{prooftree}.
+  \]
+}{2}
+}
+
+\fr{%
+  \ft{$\lambda$-calculul cu tipuri simple}
+
+    \lin{1}{Reguli de simplificare (evaluare):}{0}
+    
+    \lin{2}{%
+      \[
+  \begin{prooftree}
+    \hypo{\stackrel{\vdots}{M : A} \quad \stackrel{\vdots}{N : B}}
+    \infer1[\times I]{\langle M, N \rangle : A \times B}
+    \infer2[\times E1]{\pi_1\langle M, N \rangle : A}
+  \end{prooftree} \Longrightarrow
+  \begin{prooftree}
+    \ellipsis{}{M : A}
+  \end{prooftree}
+\]}{2}
+
+\lin{3}{%
+  \[
+  \begin{prooftree}
+    \hypo{[x : A]^x} \ellipsis{}{N : B}
+    \infer1[\to I^x]{\lambda x . N : A \to B} \hypo{\stackrel{\vdots}{M : A}}
+    \infer2[\to E]{(\lambda x.N)M : B}
+  \end{prooftree} \Longrightarrow
+  \begin{prooftree}
+    \ellipsis{}{M : A}
+  \ellipsis{}{N[M/x] : B}
+  \end{prooftree}
+\]}{2}
+}
+
+\fr{%
+  \ft{Categorii cartezian închise}
+
+  \lin{1}{O categorie $ \mathcal{C} $ se numește \emph{cartezian închisă} dacă are:}{0}
+  \lin{2}{\begin{itemize}
+      \ite{2}{Un obiect distins $1 \in \mathcal{C} $ și o săgeată $ !_C : C \to 1 $ unică;}
+      \ite{3}{Pentru orice $ A, B $, un obiect $ A \times B $ și săgeți $ p_1 : A \times B \to A $
+      și $ p_2 : A \times B \to B $ cu \emph{proprietate de universalitate};}
+      \ite{4}{Pentru orice $ A \times B $, un obiect $ B^A $ (exponențială, $\lambda(-)$) și
+      $ \varepsilon : B^A \times A \to B $ (\texttt{eval(-)});}
+      \ite{5}{+ diagrame comutative (compatibilitate și universalitate).}
+\end{itemize}}{4}
+  }
+
+
+\fr{%
+  \ft{$\lambda$-calculul cu tipuri simple --- Prezentare ecuațională}
+
+  \lin{1}{Tipuri de bază: $ A, B, \dots, A \times B, A \to B$ etc.;}{2}
+
+  \lin{2}{Termeni:}{0}
+  
+  \lin{3}{\begin{itemize}
+      \ite{3}{Variabile de tip $ A $;}
+      \ite{4}{Constante;}
+      \ite{5}{Perechi $ \langle a, b \rangle : A \times B \quad (a : A, b : B) $;}
+      \ite{6}{Proiecții $ \mathrm{fst}(c) : A, \mathrm{snd}(c) : B \quad (c : A \times B) $;}
+      \ite{7}{Evaluări $ ca : B \quad (c : A \times B, a : A) $;}
+      \ite{8}{Abstracții $ \lambda x . b : A \times B \quad (x : A, b : B) $;}
+\end{itemize}}{4}
+}
+
+\fr{%
+  \ft{$\lambda$-calculul cu tipuri simple --- Prezentare ecuațională}
+
+  \lin{1}{Ecuații:}{0}
+  \lin{2}{\begin{itemize}
+      \ite{2}{$\mathrm{fst}(\langle a, b \rangle) = a, \quad %
+      \mathrm{snd}(\langle a, b \rangle) = b $;}
+      \ite{3}{$\langle \mathrm{fst}(c), \mathrm{snd}(c) \rangle = c \quad (c : A \times B) $;}
+      \ite{4}{$(\lambda x . b)a = b [a/x] $;}
+      \ite{5}{$\lambda x . cx = c $, cu $ x $ liberă în $ c $.}
+  \end{itemize}
+}{3}
+
+\lin{6}{$\leadsto$ \emph{categoria tipurilor $ \lambda $-calculului}:}{0}
+\lin{7}{\begin{itemize}
+    \ite{7}{Obiecte: tipurile simple (dintre tipurile de bază, $ A, B, C, \dots $);}
+    \ite{8}{Săgeți: tipuri de forma $ A \times B $;}
+    \ite{9}{Identități $ 1_A = \lambda x . x \quad (x : A) $;}
+    \ite{10}{Compunerea: $ c \circ b = \lambda x . c(bx) $}
+\end{itemize}
+}{4}
+
+}
+
+\fr{%
+  \ft{Plan}
+  
+  \lin{1}{\textbf{Tipuri (ierarhii)}: introducere logică și filosofică (Frege, Russell, %
+  Ramsey, Wittgenstein, Carnap);}{1}
+
+  \lin{2}{\textbf{Logica intuiționistă} (Brouwer, Heyting) și teoria intuiționistă a tipurilor %
+    (Martin-L\"{o}f);}{1}
+
+    \lin{3}{Tipuri de egalitate (ML) $\leadsto$ \textbf{teorii de omotopie (HoTT)};}{1}
+
+    \lin{4}{Axioma de \textbf{univalență} (Voevodsky, HoTT): \enquote{echivalența este %
+    echivalentă cu egalitatea}}{1}
+    
+    \lin{5}{\textbf{Toposuri} via fascicule (Mac Lane) sau teorii semantice (Lawvere), 
+    categorii ca sisteme deductive (Lambek).}{0}
+}
+
+
+\fr{%
+  \ft{Bibliografie orientativă}
+
+  \vspace{1cm}
+
+  \lin{1}{\begin{itemize}
+      \ite{1}{Awodey, S.\ --- \emph{Structuralism, Invariance, and Univalence} (2014);}
+      \ite{1}{Goldblatt, R.\ --- \emph{Topoi: The Categorial Analysis of Logic} (1984);}
+      \ite{1}{Lambek, J., Scott, P.\ J.\ --- \emph{Introduction to Higher Order Categorical %
+      Logic} (1988);}
+      \ite{1}{Lawvere, F.\ --- \emph{Functorial Semantics of Algebraic Theories} (1963);}
+      \ite{1}{Martin-L\"of, P. --- \emph{Intuitionistic Type Theory} (1980);}
+      \ite{1}{Shulman, M.\ --- \emph{Homotopy Type Theory: The Logic of Space} (2017);}
+      \ite{1}{S{\o}rensen, M.\, Urzyczyn, P.\ --- \emph{Lectures on the Curry-Howard %
+      isomorphism} (2006);}
+      \ite{1}{Wadler, P.\ --- \emph{Propositions as Types} (2015).}
+  \end{itemize}
+    }{8}
+  }
+
+
+\end{document}
+

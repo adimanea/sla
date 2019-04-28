@@ -1,0 +1,15 @@
+#+TITLE: Activitatea de cercetare @ SLA
+#+AUTHOR: Adrian Manea
+
+
+* Descriere
+Tema aleasă pentru activitatea de cercetare în toate cele 4 semestre ale programului de masterat SLA este corespondența [[https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence][Curry-Howard]]-Lambek, între:
+- propoziții ale unei logici;
+- lambda-calcul cu tipuri;
+- teoria categoriilor.
+
+Mai precis, componenta logică va pune accent pe [[https://en.wikipedia.org/wiki/Intuitionistic_logic][logica intuiționistă]], cu aplicații în teoria tipurilor a lui [[https://en.wikipedia.org/wiki/Per_Martin-L%C3%B6f#Type_theory][Per-Martin Löf]], iar teoria categoriilor se va concentra pe [[https://en.wikipedia.org/wiki/Cartesian_closed_category][categorii cartezian închise]] și [[https://en.wikipedia.org/wiki/Topos][topos-uri]], puse împreună în [[https://en.wikipedia.org/wiki/Categorical_logic][logica categorială]].
+
+Aplicațiile studiate vor fi în semantica limbajelor de programare și teoria tipurilor.
+
+* Prezentări
