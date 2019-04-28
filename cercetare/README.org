@@ -13,3 +13,5 @@ Mai precis, componenta logică va pune accent pe [[https://en.wikipedia.org/wiki
 Aplicațiile studiate vor fi în semantica limbajelor de programare și teoria tipurilor.
 
 * Prezentări
+- Semestrul 1: [[https://gitlab.com/adimanea/sla/blob/master/cercetare/survey/chl-survey.pdf][Prezentare de ansamblu]] (notițe) și [[https://gitlab.com/adimanea/sla/blob/master/cercetare/survey/presentation/chl-presentation.pdf][beamer]];
+- Semestrul 2: [[https://gitlab.com/adimanea/sla/blob/master/cercetare/densem/densem.pdf][Aplicații în semantica denotațională]];
