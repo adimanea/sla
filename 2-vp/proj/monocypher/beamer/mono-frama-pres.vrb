@@ -1,0 +1,24 @@
+\ft{Cîteva linii din \code{log}}
+  \begin{verbatim}
+    [value] Analyzing a complete application starting at main
+    [value] Computing initial state
+    [value] Initial state computed
+    [value:initial-state] Values of globals at initialization
+    __fc_errno in [--..--]
+    __fc_stderr in {{ NULL ; &S___fc_stderr[0] }}
+    __fc_strtok_ptr in {0}
+    K[0] in {4794697086780616226}
+    [1] in {8158064640168781261}
+    ...
+    blake2b_compress_sigma[0][0] in {0}
+    [0][1] in {1}
+    ...
+    [value:alarm] test.c:126: Warning:
+    out of bounds write. assert \valid(v->buf + v->size);
+    [value:alarm] test.c:121: Warning:
+    function memcpy: precondition 'valid_src' got status unknown.
+    [value:alarm] monocypher.c:839: Warning:
+    signed overflow. assert g3 * 19 leq 2147483647;
+    [kernel] monocypher.c:494:
+    more than 200(253) locations to update in array. Approximating.
+\end{verbatim}
