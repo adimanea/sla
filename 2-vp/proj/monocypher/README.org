@@ -9,5 +9,5 @@ Voi folosi [[https://frama-c.com/][FramaC]], cu plugin-ul [[https://frama-c.com/
 * Documentație
 Acces direct la [[https://gitlab.com/adimanea/sla/blob/master/2-vp/proj/monocypher/latex/mono-frama.pdf][PDF]].
 
-* TODO Prezentare
-[TODO]
+* Prezentare
+Acces direct la [[https://gitlab.com/adimanea/sla/blob/master/2-vp/proj/monocypher/beamer/mono-frama-pres.pdf][handout]].
