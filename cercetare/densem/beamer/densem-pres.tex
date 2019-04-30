@@ -1,0 +1,224 @@
+\documentclass[xcolor=dvipsnames,handout]{beamer}
+
+\input{../in/macros}
+
+\usepackage{soul}
+\newcommand{\code}[1]{\texttt{#1}}
+\soulregister{\code}{1}
+
+% font setup
+\usepackage{libertine}
+\renewcommand*\familydefault{\sfdefault}    % Linux Libertine = default sans serif
+\usepackage{inconsolata}                    % Inconsolata = monospaced
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathrsfs}
+
+% Graphics and other packages
+\usepackage[romanian]{babel}
+\usepackage{graphicx}
+\addto\captionsromanian{\renewcommand{\figurename}{Ilustrație}}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[style=german]{csquotes}
+
+% Custom macros
+\newtheorem{bl}{}
+\newcommand{\bloc}[3]{\begin{bl}<#1->{{\large\color{Gray}{\hrulefill}}\\ \color{bleumarin}{\large \emph{#2}}}\\ \vspace*{-2mm}{\color{Gray}{\hrulefill}}\\ #3 \end{bl}} 
+\newcommand{\fr}[1]{\frame{#1}}
+\newcommand{\ft}[1]{\frametitle{\color{bleumarin}{\hfill #1 \hfill}}}
+\newcommand{\lin}[3]{\uncover<#1->{\alert<#1>{#2}}{\vspace*{#3 ex}}}
+\newcommand{\ite}[2]{\uncover<#1->{\alert<#1>{\item #2}}}
+\newcommand{\vs}[1]{\vspace*{#1 ex}}
+\definecolor{bleumarin}{RGB}{30,30,150} 
+\definecolor{firebrick}{RGB}{178,34,34}
+
+% Theme setup
+\useoutertheme{shadow} 
+\usetheme{CambridgeUS} 
+\usecolortheme[named=bleumarin]{structure} 
+\useoutertheme[compress]{smoothbars}
+
+% Theme finetuning
+\setbeamertemplate{items}[ball]
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}  
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% TITLE PAGE
+\title[DenSem]{Introducere în semantică denotațională}
+\author{Adrian Manea}
+\institute{SLA, 410}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+
+% SLIDES START HERE
+\fr{
+  \ft{Context}
+
+  \lin{1}{Tema: Corespondența Curry-Howard-Lambek.}{3}
+
+  \lin{2}{Acum: Aplicații în semantică ale $\lambda$-calculului + CCC.}{3}
+
+  \lin{3}{Resurse principale: \cite{schm} și \cite{abrj}.}{0}
+}
+
+\fr{
+  \ft{Semantica punctelor fixe}
+
+  \lin{1}{Problema: Specificațiile recursive}{0}
+
+  \lin{2}{\begin{center}$\lambda x . xx$\end{center}}{0}
+
+  \lin{3}{\begin{center}$ X = \dots X \dots $ \end{center}}{0}
+
+  \lin{4}{Avem nevoie de o \emph{metodă canonică} de a rezolva ecuațiile pentru orice $ x, X $}{3}
+
+  \lin{5}{$ \Rightarrow $ ecuația domeniilor (Scott) $ D \simeq [D \to D] $, cu $ D $ = \emph{domeniu semantic}}{3}
+
+  \lin{6}{În categorii, $ F : \kal{C}^{op} \times \kal{C} \to \kal{C} \Rightarrow D \simeq F(D, D) $.}{1}
+}
+
+\fr{
+  \ft{Exemplu: Semantica factorialului}
+
+  \lin{1}{
+    \begin{align*}
+      \code{fac n} = \lambda \code{n}.&\code{n equals zero} \to \code{one} \\
+                                      &\square \code{ n times (fac n minus one)}
+    \end{align*}}{1}
+
+  \lin{2}{După explicitare pe cazuri particulare $ \Rightarrow \Gamma \code{fac} = \ds\bigcup_{n \geq 0} \code{fac}_i $}{0}
+
+  \lin{3}{Mai general, obținem funcționala:
+    \begin{align*}
+      \code{F} &: (\code{Nat} \to \code{Nat}_\bot) \to (\code{Nat} \to \code{Nat}_\bot) \\
+      \code{F} &= \lambda \code{f}\lambda \code{n.n = 0} \to 1 \,\, \square \code{ n} \cdot \code{f(n-1)},
+    \end{align*}
+    cu $ \code{fac}_{i + 1} = \code{F fac}_i $.}{3}
+
+  \lin{4}{Rezultă $ \Gamma \code{fac} = \ds\bigcup_{i \geq 0} \Gamma F^i \emptyset $ și
+    $ \Gamma \code{F fac} = \Gamma \code{fac}$.}{1}
+
+  \lin{5}{Folosind \emph{definiții extensionale}, \code{F fac = fac} , deci \code{fac}
+    este \emph{punct fix} pentru \code{F}.}{1}
+}
+
+\fr{
+  \ft{Domenii parțial ordonate}
+
+  \bloc{1}{Definiții}
+  {
+    \lin{1}{$(D, \sqsubseteq)$ = \textbf{CPO} dacă orice submulțime total
+      ordonată (\textbf{lanț}) are $\sup$ în $ D $.}{0}
+
+    \lin{2}{$D$ = \textbf{punctat/strict} dacă este complet și
+       are cel mai mic element.}{0}
+
+    \lin{3}{$ f : A \to B $ monotonă între CPO = \textbf{continuă} dacă
+      pentru orice lanț $ X \seq A, f(\sup(X)) = \sup_{x \in X}(f(x)) $.}{0}
+  }
+
+  \bloc{4}{Teoremă}
+  {
+    \lin{5}{$ D $ = PCPO, $ F : D \to D $ continuă.}{0}
+
+    \lin{6}{$ F $ are un cel mai mic
+      punct fix: \code{fix F} $ = \sup_{i \geq 0}(F^i \bot) $.}{0}
+  }
+
+  \bloc{7}{Definiție}
+  {
+    \lin{8}{Semantica specificației recursive $ f = Ff $ este \code{fix F}.}{0}
+  }
+}
+
+\fr{
+  \ft{Categorii cartezian închise}
+
+  \bloc{1}{Definiție}
+  {
+    \lin{1}{Categoria $ \kal{C} $ se numește \textbf{cartezian închisă} (\textbf{CCC}) dacă:}{0}
+    \begin{itemize}
+      \ite{2}{are un obiect terminal, $ 1 $;}
+      \ite{3}{orice pereche de obiecte are un produs direct și proiecții canonice;}
+      \ite{4}{$\forall A, B \in \kal{C}, \exists [A \to B] \in \kal{C} $ și săgeata
+        \[
+          \code{eval} : [A \to B] \times A \to B,
+        \]
+        a.î.\ $ \forall f : C \times A \to B, \exists! {} \lambda f : C \to [A \to B] $,
+        \[
+          f = C \times A \xrar{\lambda f \times A} [A \to B] \times A \xrar{\code{eval}} B.
+        \]
+      }
+    \end{itemize}
+  }
+}
+
+
+\fr{
+  \ft{Exemple de CCC}
+
+  \lin{1}{\code{Set} este CCC, $ [A \to B] = \dr{Func}(A, B) $ și
+    \[
+      \code{eval} : [A \to B] \times A \to B, \quad \code{eval f a = f a}.
+    \]
+  }{1}
+
+  \lin{2}{Orice algebră Boole este poset, deci categorie. Def.\ $ [a \to b] = \lnot a \lor b $.}{0}
+
+  \lin{3}{\code{eval} asigură $ [a \to b] \land a \leq b $.}{0}
+
+  \lin{4}{$ \lambda f : c \to [a \to b] $ asociată $ f : c \land a \to b $ înseamnă:
+    \[
+      c \land a \leq b \Rightarrow c \leq [a \to b].
+    \]}{1}
+
+  \lin{5}{Categoria \code{CPO} cu funcții continue este CCC, dar subcategoria strictă, nu.
+    \cite{rey}.}{1}
+}
+
+\fr{
+  \ft{Exemple de CCC (informale)}
+
+  \lin{1}{Un limbaj simplu de programare funcțională = categorie (tipuri și funcții).}{3}
+
+  \lin{2}{Existența $ [A \to B] $ cere \qq{funcții clasa I}.}{3}
+
+  \lin{3}{Proprietatea de universalitate ridică probleme de implementare, mai ales pentru
+    produse $ n $-are. (\cite{bw})}{3}
+}
+
+\fr{
+  \ft{Exemple de CCC (informale)}
+
+  \lin{1}{\cite{lambek}: Categorie = sistem deductiv (formule și demonstrații).}{3}
+
+  \lin{2}{CCC: $[A \to B]$ = implicație. $ \code{eval} : [A \to B] \times A \to B $
+    este \emph{modus ponens}.}{3}
+
+  \lin{3}{Proprietatea de universalitate asociază $ f : C \times A \to B $
+    o \qq{deducție} $ \lambda f : C \to [A \to B] $, care este
+    \emph{regula detașării}.}{3}
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% BIBLIOGRAFIE
+\begin{frame}[allowframebreaks]
+  \ft{Citări}
+  \bibliography{../densem.bib}
+  \bibliographystyle{apalike}
+\end{frame}
+
+\end{document}
+
