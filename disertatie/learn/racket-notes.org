@@ -1,0 +1,12 @@
+#+TITLE: Racket Notes
+#+AUTHOR: Adrian
+
+* References
+- Felleisen - /How to design programs/, 2nd edition, 2018
+
+* Emacs
+- [[https://docs.racket-lang.org/guide/Emacs.html][Official guide]].
+
+* Vim
+- [[https://docs.racket-lang.org/guide/Vim.html][Official guide]];
+- [[https://github.com/wlangstroth/vim-racket][vim-racket]] bundle.
