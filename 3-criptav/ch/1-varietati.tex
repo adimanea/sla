@@ -1,0 +1,251 @@
+% ! TEX root = ../curbe.tex
+
+\chapter{Preliminarii}
+
+\section{Varietăți algebrice}
+
+Începem prezentarea cu cîteva preliminarii privitoare la varietăți algebrice
+și alte noțiuni elementare de algebră comutativă.
+
+Vom folosi următoarele notații și obiecte:
+\begin{itemize}
+\item $ K $ este un corp perfect, i.e.\ unul pentru care orice extindere algebrică
+  este separabilă;
+\item $ \overline{K} $ este o închidere algebrică fixată a lui $ K $;
+\item $ \dr{Gal}(\overline{K}/K) = G_{\overline{K}/K} $ este grupul Galois
+  al extinderii $ K \seq \overline{K} $.
+\end{itemize}
+
+În majoritatea exemplelor, $ K $ va fi (o extindere algebrică a lui) $ \QQ $,
+$ \QQ $ sau $ \mathbb{F}_p $.
+
+\begin{definition}\label{def:spatiu-afin}
+  \index{spațiu!afin}
+  \index{spațiul!punctelor raționale}
+  \emph{Spațiul afin} peste corpul $ K $ este mulțimea de $ n $-tupluri:
+  \[
+    \mathbb{A}^n = \mathbb{A}^n(K) = \{ P = (x_1, \dots, x_n) \in \overline{K}^n \}.
+  \]
+  Similar, se definește \emph{spațiul punctelor $ K $-raționale} din $ \mathbb{A}^n $,
+  care conține restricția $ P \in K^n $.
+\end{definition}
+
+Fie $ \overline{K}[X] = \overline{K}[X_1, \dots, X_n] $ un inel de polinoame în $ n $
+nedeterminate și fie $ I \ideal \overline{K}[X] $ un ideal. Putem asocia fiecărui
+astfel de ideal o submulțime a lui $ \AF^n $:
+\[
+  V_I = \{ P \in \AF^n \mid f(P) = 0, \quad \forall f \in I \}.
+\]
+
+\begin{definition}\label{def:multime-algebrica-afina}
+  \index{mulțime!algebrică afină}
+  O \emph{mulțime algebrică afină} este o mulțime de forma $ V_I $ ca mai sus.
+
+  Dacă $ V $ este o astfel de mulțime, \emph{idealul} lui $ V $ este:
+  \[
+    I(V) = \{ f \in \overline{K}[X] \mid f(P) = 0, \quad \forall P \in V \}.
+  \]
+\end{definition}
+
+Spunem că o mulțime algebrică este \emph{definită} peste $ K $ dacă idealul său
+$ I(V) $ poate fi generat de polinoame din $ K[X] $ și notăm aceasta cu $ V/K $.
+\index{mulțime!algebrică definită}
+
+Dacă $ V $ este definită peste $ K $, \emph{mulțimea punctelor $ K $-raționale} ale
+lui $ V $ este mulțimea:
+\[
+  V(K) = V \cap \AF^n(K).
+\]
+
+\begin{remark}\label{rk:kx-finit-gen}
+  Conform teoremei bazei a lui Hilbert, idealele lui $ \overline{K}[X] $ și
+  $ K[X] $ sînt finit generate.
+\end{remark}
+
+Fie $ V $ o mulțime algebrică și considerăm idealul:
+\[
+  I(V/K) = \{ f \in K[X] \mid f(P) = 0, \quad \forall P \in V \} = I(V) \cap K[X].
+\]
+
+Se poate observa că $ V $ este definită peste $ K $ dacă și numai dacă are loc
+relația:
+\[
+  I(V) = I(V/K) \cdot \overline{K}[X].
+\]
+
+Presupunem acum că $ V $ este definită peste $ K $ și fie $ f_1, \dots, f_m \in K[X] $,
+generatori ai idealului $ I(V/K) $. Rezultă că $ V(K) $ este mulțimea soluțiilor
+$ x = (x_1, \dots, x_n) $ pentru ecuațiile polinomiale:
+\[
+  f_1(x) = \dots = f_m(x) = 0, \quad x_1, \dots, x_n \in K.
+\]
+
+\begin{example}\label{exm:multime-alg1}
+  Fie $ V $ mulțimea algebrică din $ \AF^2 $ dată de ecuația $ X^2 - Y^2 = 1 $.
+
+  Atunci $ V $ este definită peste orice corp $ K $.
+
+  Presupunem acum $ \dr{char}K \neq 2 $. Rezultă $ V(K) \simeq \AF^1(K) - \{ 0 \} $,
+  o bijecție fiind, de exemplu:
+  \begin{align*}
+    \AF^1(K) - \{ 0 \} &\to V(K) \\
+    t &\mapsto \left( \dfrac{t^2 + 1}{2t}, \dfrac{t^2 - 1}{2t} \right).
+  \end{align*}
+\end{example}
+
+\begin{example}\label{exm:multime-alg2}
+  Mulțimea algebrică $ V : X^n + Y^n = 1 $ este definită peste $ \QQ $ și,
+  folosind Marea Teoremă a lui Fermat, pentru orice $ n \geq 3 $, are loc:
+  \[
+    V(\QQ) = %
+    \begin{cases}
+      \{(1, 0), (0, 1) \}, & n \text{ impar} \\
+      \{(\pm 1, 0), (0, \pm 1)\}, & n \text{ par}
+    \end{cases}.
+  \]
+\end{example}
+
+\begin{example}\label{exm:multime-alg3}
+  Mulțimea algebrică $ V: X^2 = Y^3 + 17 $ are multe puncte $ \QQ $-raționale.
+  De fapt, se poate arăta că $ V(\QQ) $ este infinită. Cîteva exemple sînt:
+  \[
+    V(\QQ) = \{ (3, -2), (378661, 5234), \left( \dfrac{2651}{512}, \dfrac{137}{64} \right) \}.
+  \]
+\end{example}
+
+\begin{definition}\label{def:varietate-afina}
+  \index{varietate!afină}
+  O mulțime algebrică (afină) se numește \emph{varietate algebrică (afină)} dacă $ I(V) $ este
+  un ideal prim al lui $ \overline{K}[X] $.
+\end{definition}
+
+Remarcăm că dacă $ V $ este definită peste $ K $, atunci este suficient să verificăm dacă
+$ I(V/K) $ este ideal prim al lui $ K[X] $.
+
+Fie $ V/K $ o varietate, adică $ V $ este varietate definită peste $ K $. Atunci
+\emph{inelul coordonatelor afine} al $ V/K $ este:
+\[
+  K[V] = \dfrac{K[X]}{I(V/K)}.
+\]
+
+De asemenea, deoarece $ I(V/K) $ este ideal prim, rezultă că $ K[V] $ este
+domeniu de integritate. Corpul său de fracții se notează $ K(V) $ și se numește
+\emph{corpul de funcții} al lui $ V/K $.
+
+Similar putem formula înlocuind $ K $ cu $ \overline{K} $.
+
+În plus, orice element al $ \overline{K}[V] $ se definește pînă la un element din
+$ I(V/\overline{K}) $, deci pînă la un polinom ce se anulează pe $ V $. Rezultă
+că $ f \in \overline{K}[V] $ induce o funcție $ f : V \to \overline{K} $.
+
+\begin{definition}\label{def:varietate-alg-dim}\index{varietate!afină!dimensiune}
+  Fie $ V $ o varietate algebrică.
+
+  \emph{Dimensiunea} varietății, notată $ \dim V $, este gradul de transcendență
+  al extinderii $ \overline{K}(V) $ peste $ \overline{K} $.
+\end{definition}
+
+\begin{example}\label{exm:dim}
+  $ \dim\AF^n = n $, deoarece $ \overline{K}(\AF^n) = \overline{K}(X_1, \dots, X_n) $.
+
+  Dacă $ V \seq \AF^n $ este dat de o ecuație polinomială neconstantă $ f(X_1, \dots, X_n) = 0 $,
+  atunci $ \dim V = n - 1 $.
+\end{example}
+
+Vom fi interesați de proprietatea de \emph{netezime}, care se definește prin analogul condiției
+de existență a planului tangent:
+
+\begin{definition}\label{def:neted}
+  \index{varietate!netedă}
+  Fie $ V $ o varietate algebrică, $ P \in V, f_1, \dots, f_m \in \overline{K}[X] $ o mulțime
+  de generatori pentru $ I(V) $.
+
+  $ V $ se numește \emph{nesingulară (netedă)} în $ P $ dacă matricea jacobiană
+  $ \left( \dfrac{\partial f_i}{\partial X_j}(P) \right) $ are rangul $ n - \dim V $.
+\end{definition}
+
+\begin{example}\label{exm:dim}
+  Fie $ V $ dată de o ecuație polinomială neconstantă $ f(x_1, \dots, x_n) = 0 $.
+
+  Atunci $ \dim V $ = $ n - 1 $, deci $ P $ este singularitate dacă și numai dacă
+  $ \dfrac{\partial f}{\partial x_i}(P) = 0, \forall 1 \leq i \leq n $. Totodată,
+  $ f(P) = 0 $, deci în total obținem $ n + 1 $ condiții pe $ n $ nedeterminate.
+\end{example}
+
+\begin{example}\label{exm:dim2}
+  Fie două varietăți:
+  \[
+    V_1: Y^2 = X^3 + X \quad \text{și} \quad V_2: Y^2 = X^3 + X^2.
+  \]
+
+  Punctele lor singulare trebuie să satisfacă:
+  \[
+    V_1^{\text{sing}}: 3X^2 + 1 = 2Y = 0 \quad \text{și} \quad %
+    V_2^{\text{sing}}: 3X^2 + 2X = 2Y = 0.
+  \]
+
+  Rezultă că $ V_1 $ nu are singularități, dar $ V_2 $ are, originea $ (0, 0) $.
+\end{example}
+
+Putem formula și o altă caracterizare a netezimii, prin funcții definite pe varietate.
+Fie $ P $ un punct arbitrar din $ V $. Definim idealul $ M_P \ideal \overline{K}[V] $ prin:
+\[
+  M_P = \{ f \in \overline{K}[V] \mid f(P) = 0 \}.
+\]
+Se poate observa că $ M_P $ este maximal, deoarece avem izomorfismul:
+\begin{align*}
+  \overline{K}[V]/M_P &\to \overline{K} \\
+  f &\mapsto f(P).
+\end{align*}
+
+Rezultă că grupul factor $ M_P/M_P^2 $ este un $ \overline{K} $-spațiu vectorial
+finit dimensional.
+
+Are loc:
+\begin{proposition}\label{pr:var-alg}
+  Fie $ V $ o varietate algebrică.
+
+  Punctul $ P \in V $ este nesingular dacă și numai dacă $ \dim_{\overline{K}} M_P/M_P^2 = \dim V $.
+\end{proposition}
+
+\begin{example}\label{exm:nesing}
+  Reluăm cazul anterior al varietăților $ V_1 $ și $ V_2 $ (exemplul \ref{exm:dim2}) și
+  fie $ P = (0, 0) $.
+
+  În ambele cazuri, $ M_P $ este generat de $ X $ și $ Y $, deci $ M_P^2 $ este generat de
+  $ X^2, XY $ și $ Y^2 $.
+
+  Pentru $ V_1 $ avem:
+  \[
+    X = Y^2 - X^3 \equiv 0 \text{ mod } M_P^2,
+  \]
+  deci $ M_P^2 $ este generat doar de $ Y $.
+
+  Dar pentru $ V_2 $ nu avem nicio relație netrivială între $ X $ și $ Y $ modulo $ M_P^2 $, deci
+  ambele nedeterminate sînt necesare ca generatori.
+
+  Rezultă că $ V_1 $ e netedă, dar $ V_2 $ nu este, deoarece $ \dim V_{1,2} = 1 $.
+\end{example}
+
+Folosind idealul maximal, avem:
+\begin{definition}\label{def:inel-local}
+  \emph{Inelul local} al varietății $ V $ în $ P $, notat $ \overline{K}[V]_P $, este localizatul
+  în $ M_P $, adică:
+  \[
+    \overline{K}[V]_P = \{ F \in \overline{K}(V) \mid F = f/g, \quad f,g \in \overline{K}[V], g(P) \neq 0 \}.
+  \]
+\end{definition}
+
+Remarcăm că din $ F = f/g $ rezultă că $ F(P) = f(P)/g(P) $ este corect definită.
+
+Funcțiile din $ \overline{K}[V]_P $ se numesc \emph{regulate} (sau \emph{definite}) în $ P $.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Varietăți proiective}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../curbe"
+%%% End:
