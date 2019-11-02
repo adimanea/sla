@@ -3,10 +3,10 @@
 Materia se va finaliza cu un proiect, pentru care am ales tema **Curbe eliptice peste corpuri finite**.
 
 ## Bibliografie
-- [Husemoller - Elliptic curves](~/Documents/purgatory/Husemoller - Elliptic Curves 1987.pdf);
-- [Silverman - Advanced Topics in the Arithmetic of Elliptic Curves](~/Documents/purgatory/Silverman - Advanced Topics in the Arithmetic of Elliptic Curves 1994.pdf);
-- [Silverman - The Arithmetic of Elliptic Curves](~/Documents/purgatory/Silverman - The Arithmetic of Elliptic Curves 2009.pdf);
-- [Washington - Elliptic Curves](~/Documents/purgatory/Washington - Elliptic Curves 2008.pdf);
+- Husemoller - Elliptic curves;
+- Silverman - Advanced Topics in the Arithmetic of Elliptic Curves;
+- Silverman - The Arithmetic of Elliptic Curves;
+- Washington - Elliptic Curves;
 
 ## De inclus
 - Washington:
