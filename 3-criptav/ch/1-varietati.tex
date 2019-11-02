@@ -244,6 +244,201 @@ Funcțiile din $ \overline{K}[V]_P $ se numesc \emph{regulate} (sau \emph{defini
 
 \section{Varietăți proiective}
 
+Definim varietățile proiective ca fiind colecția de linii ce trec prin originea
+unui spațiu afin de dimensiune imediat superioară.
+
+\begin{definition}\label{def:spatiu-proiectiv}
+  \index{spațiu!proiectiv}
+  \emph{Spațiul $ n $-proiectiv} peste $ K $, notat $ \PP^n $ sau $ \PP^n(\overline{K}) $,
+  este mulțimea tuturor $ (n + 1) $-tuplurilor $ (x_0, \dots, x_n) \in \AF^{n + 1} $,
+  astfel încît cel puțin o coordonată $ x_i $ este nenulă modulo echivalența:
+  \[
+    (x_0, \dots, x_n) \sim (y_0, \dots, y_n) \Leftrightarrow \exists \lambda %
+    \in \overline{K}^\times \text{ a.\^{i}. } x_i = \lambda y_i, \forall i.
+  \]
+
+  Clasa de echivalență
+  $ \{(\lambda x_0, \dots, \lambda x_n) \mid \lambda \in \overline{K}^\times \} $
+  se notează $ [x_0, \dots, x_n] $, iar $ x_0, \dots, x_n $ se numesc \emph{coordonatele %
+  omogene} ale punctului respectiv în $ \PP^n $.
+\end{definition}
+
+De asemenea, mulțimea punctelor $ K $-raționale din $ \PP^n $ este:
+\[
+  \PP^n(K) = \{ [x_0, \dots, x_n] \in \PP^n \mid x_i \in K \}.
+\]
+
+\begin{remark}\label{rk:proj}
+  Pentru $ P = [x_0, \dots, x_n] \in \PP^n(K) $, \emph{nu} rezultă că fiecare $ x_i \in K $.
+  În schimb, alegem un $ i $ cu $ x_i \neq 0 $ și rezultă că $ x_j / x_i \in K $, pentru
+  orice $ j $.
+\end{remark}
+
+\begin{definition}\label{def:corp-minimal}
+  \index{corp!minimal}
+  Fie $ P = [ x_0, \dots, x_n ] \in \PP^n(\overline{K}) $. \emph{Corpul minimal de definiție}
+  pentru $ P $ peste $ K $ este corpul:
+  \[
+    K(P) = K(x_0/x_i, \dots, x_n/x_i), \quad \forall i, \text{ cu } x_i \neq 0.
+  \]
+\end{definition}
+
+\begin{definition}\label{def:polinom-omogen}
+  \index{polinom!omogen}
+  Un polinom $ f \in \overline{K}[X] $ se numește \emph{omogen de grad $ d $} dacă:
+  \[
+    f(\lambda x_0, \dots, \lambda x_n) = \lambda^d f(x_0, \dots, x_n), %
+    \quad \forall \lambda \in \overline{K}.
+  \]
+
+  Un \emph{ideal omogen} al lui $ \overline{K}[X] $ este generat de polinoame omogene.
+\end{definition}
+
+Fiecărui ideal omogen îi putem asocia o submulțime a $ \PP^n $:
+\[
+  V_I = \{ P \in \PP^n \mid f(P) = 0, \text{ pentru orice } f \in I \text{ omogen } \}.
+\]
+
+\begin{definition}\label{def:multime-proiectiva}
+  \index{mulțime!proiectivă}
+  O \emph{mulțime (algebrică) proiectivă} este una de forma $ V_I $ ca mai sus.
+
+  Idealul omogen al unei mulțimi proiective, notat $ I(V) $, este idealul lui
+  $ \overline{K}[X] $ generat de:
+  \[
+    \{ f \in \overline{K}[X] \mid f \text{ omogen }, f(P) = 0, \forall P \in V \}.
+  \]
+\end{definition}
+
+Similar putem descrie și $ V/K $ și $ V(K) = V \cap \PP^n(K) $.
+
+\begin{example}\label{exm:dreapta-proj}
+  O \emph{dreaptă} în $ \PP^2 $ este o mulțime algebrică dată de
+  $ aX + bY + cZ = 0 $, cu $ a, b, c \in \overline{K} $, nu toate nule.
+
+  Dacă, de exemplu, $ c \neq 0 $, atunci dreapta este definită peste orice corp
+  care conține $ a/c $ și $ b/c $.
+
+  În general, un \emph{hiperplan} în $ \PP^n $ este dat de o ecuație:
+  \[
+    a_0 X_0 + a_1 X_1 + \dots + a_n X_n = 0, %
+    \quad a_i \in \overline{K}, \text{ nu toate nule}.
+  \]
+\end{example}
+
+\begin{example}\label{exm:var-proj}
+  Fie $ V $ în $ \PP^2 $ dată de $ X^2 + Y^2 = Z^2 $.
+
+  Atunci, pentru orice corp $ K $, cu $ \dr{char}K \neq 2 $, avem $ V(K) \simeq \PP^1(K) $,
+  de exemplu prin:
+  \begin{align*}
+    \PP^1(K) &\to V(K) \\
+    [s, t] &\mapsto [s^2 - t^2, 2st, s^2 + t^2].
+  \end{align*}
+\end{example}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Aplicație aritmetică}
+
+Fie un punct din $ \PP^n(\QQ) $, de coordonate $ [x_0, \dots, x_n], x_i \in \QQ $.
+
+Putem presupune că am înmulțit cu numitorul comun și am eliminat factorii comuni,
+deci putem presupune $ x_i \in \ZZ, \dr{gcd}(x_i) = 1 $. Rezultă că punctul
+$ P $ determină coordonatele omogene $ x_i $, \emph{pînă la un semn}.
+
+În general, dacă un ideal al unei mulțimi algebrice definite peste $ \QQ $,
+$ V / \QQ $, este generat de polinoame omogene $ f_1, \dots, f_m \in \QQ[X] $,
+descrierea $ V(\QQ) $ revine la a rezolva ecuațiile omogene:
+\[
+  f_1(x_0, \dots, x_n) = \dots = f_m(x_0, \dots, x_n) = 0, \quad \dr{gcd}(x_i) = 1.
+\]
+
+\begin{example}\label{exm:proj-aritm}
+  Fie $ V : X^2 + Y^2 = 3Z^2 $, definit peste $ \QQ $, dar $ V(\QQ) = \emptyset $.
+  Într-adevăr, presupunem că $ [x, y, z] \in V(\QQ) $, cu $ x, y, z \in \ZZ $ și
+  $ \dr{gcd}(x, y, z) = 1 $. Rezultă $ x^2 + y^2 \equiv 0 \text{ mod } 3 $,
+  dar cum $ -1 $ nu este pătrat modulo 3, rezultă că $ x \equiv y \equiv 0 $
+  modulo 3, deci $ x^2, y^2 \vdots 3^2 $, adică $ 3 \mid z $, contradicție
+  cu $ \dr{gcd}(x, y, z) = 1 $.
+\end{example}
+
+Așadar, ideea generală este că, pentru a arăta că $ V(\QQ) = \emptyset $, este
+suficient să arătăm că ecuațiile omogene corespunzătoare nu au soluții nenule
+\emph{modulo $ p $}, pentru orice prim $ p $ (sau pentru orice putere a unui prim).
+
+Spus mai simplu, avem implicația $ V(\QQ) = \emptyset \Rightarrow V(\QQ_p) = \emptyset $,
+pentru orice corp p-adic $ \QQ_p $. Mai departe, implicația poate continua cu $ V(\RR) = \emptyset $.
+
+Însă \emph{reciproca este falsă!} Se poate arăta că, pentru varietatea:
+\[
+  V: 3X^2 + 4Y^2 + 5Z^3 = 0,
+\]
+avem $ V(\QQ_p) \neq \emptyset, \forall p $, dar $ V(\QQ) = \emptyset $.
+
+\begin{definition}\label{def:var-proj}
+  \index{varietate!proiectivă}
+  O mulțime algebrică proiectivă se numește \emph{varietate proiectivă} dacă
+  idealul omogen $ I(V) $ este prim în $ \overline{K}[X] $.
+\end{definition}
+
+Fie $ f(Y) \in \overline{K}[Y] $. Definim:
+\[
+  f^\ast(x_0, \dots, x_n) = x_i^d f \left(\dfrac{x_0}{x_i}, \dfrac{x_1}{x_i}, \dots, %
+    \dfrac{x_{i - 1}}{x_i}, \dfrac{x_{i + 1}}{x_i}, \dots, \dfrac{x_n}{x_i} \right),
+\]
+unde $ d = \dr{deg}f $ este cel mai mic întreg care face $ f^\ast $ polinom.
+
+Spunem că $ f^\ast $ este \emph{omogenizatul} lui $ f $ în raport cu $ x_i $.
+\index{polinom!omogenizat}
+
+\begin{definition}\label{def:inchidere-proi}
+  \index{varietate!proiectivă!închidere proiectivă}
+  Fie $ V \seq \AF^n $ o mulțime algebrică afină, cu idealul $ I(V) $ și
+  fie $ V $ o submulțime a $ \PP^n $ prin:
+  \begin{align*}
+    V \seq \AF^n &\xrar{\phi_i} \PP^n \\
+    \phi_i(y_1, \dots, y_n) &\mapsto [y_1, \dots, y_{i-1}, 1, y_i, \dots, y_n].
+  \end{align*}
+
+  \emph{Închiderea proiectivă} a lui $ V $, notată $ \overline{V} $, este
+  mulțimea proiectivă al cărui ideal omogen $ I(\overline{V}) $ este generat
+  de omogenizatele generatorilor lui $ I(V) $.
+
+  Punctele din $ V - \overline{V} $ se numesc \emph{puncte la infinit} din $ V $.
+\end{definition}
+
+\begin{example}\label{exm:punct-infinit}
+  Fie $ V $ proiectivă, definită de $ Y^2 = X^3 + 17 $.
+
+  Rezultă că $ V $ este dată în $ \PP^2 $ de:
+  \[
+    \overline{Y}^2 \overline{Z} = \overline{X}^3 + 17 \overline{Z}^3, \quad %
+    X = \overline{X}/\overline{Z}, Y = \overline{Y}/\overline{Z}.
+  \]
+
+  Varietatea are un singur punct la infinit, $ [0, 1, 0] $, obținut din
+  $ \overline{Z} = 0 $. Rezultă:
+  \[
+    V(\QQ) = \{ (x, y) \in \AF^2(\QQ) \mid y^2 = x^3 + 17 \} \cup \{ [0, 1, 0] \}.
+  \]
+\end{example}
+
+\begin{definition}\label{def:corp-functii}
+  Fie $ V/K $ o varietate proiectivă și fie $ \AF^n \seq \PP^n $ astfel încît
+  $ V \cap \AF^n \neq \emptyset $. Atunci se definește:
+  \[
+    \dim V = \dim (V \cap \AF^n).
+  \]
+
+  \emph{Corpul de funcții} $ K(V) $ este corpul de funcții al $ V \cap \AF^n $.
+\end{definition}
+
+\begin{remark}\label{rk:alegeri}
+  Pentru alegeri diferite ale lui $ \AF^n $, obținem izomorfisme canonice între
+  rezultate.
+\end{remark}
+
+Similar, \emph{netezimea} în varietăți proiective $ V $ se traduce în $ V \cap \AF^n $.
 
 %%% Local Variables:
 %%% mode: latex
