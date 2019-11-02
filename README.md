@@ -4,4 +4,4 @@ Aici voi păstra notițele, temele, proiectele și materialele pe care le fac sa
 
 Directoarele sînt denumite după regula `[semestrul]-[materia]`.
 
-De asemenea, am inclus și notițele rezultate în urma activității de [cercetare](https://github.com/adimanea/sla/tree/master/cercetare).
+De asemenea, am inclus și notițele rezultate în urma activității de [cercetare](https://github.com/adimanea/sla/tree/master/cercetare) și [disertația](https://github.com/adimanea/sla/tree/master/disertatie), cu tot cu [resurese de studiu](https://github.com/adimanea/sla/tree/master/disertatie/learn).
