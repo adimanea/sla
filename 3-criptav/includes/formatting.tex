@@ -1,0 +1,30 @@
+% FONTS
+\usepackage[mathscr]{euscript}
+\usepackage[normalem]{ulem}
+\usepackage{eurosym}
+\usepackage{sectsty}
+\allsectionsfont{\rmfamily}
+\usepackage{anyfontsize}
+
+% PAGE SETUP
+\usepackage[portrait]{geometry}
+\geometry{
+  a4paper,
+  left=20mm,
+  right=25mm,
+  % marginparwidth=40mm,
+}
+\usepackage{afterpage}
+\newcommand\blankpage{
+  \null
+  \thispagestyle{empty}
+  \addtocounter{page}{-1}
+  \newpage}
+\newenvironment{myenv}[1]
+  {\begin{spacing}{#1}}
+    {\end{spacing}}
+
+% FANCY SETUP
+\usepackage[Glenn]{fncychap}
+\usepackage{fancyhdr}
+\addto\captionsromanian{\renewcommand{\chaptername}{Seminar}}
