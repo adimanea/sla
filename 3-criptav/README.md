@@ -16,7 +16,7 @@ Acces direct la PDF [aici](https://github.com/adimanea/sla/blob/master/3-criptav
 - Washington:
     + Cap 4: Elliptic Curves over Finite Fields;
 - Silverman:
-    + Cap VI: Elliptic Curves over Finite Fields;
+    + Cap V: Elliptic Curves over Finite Fields;
     + Cap XI.3: Counting the Number of Points in E(F_q);
 - Husemoller:
     + Cap 13: Elliptic Curves over Finite Fields;
