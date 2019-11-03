@@ -1,0 +1,101 @@
+%! TEX root = ../curbe.tex
+
+\chapter{Algoritmul lui Schoof}
+
+Există o abordare algoritmică pentru a număra punctele unei curbe
+eliptice definită peste un corp finit. Știm din teorema lui Hasse
+(teorema \ref{thm:hasse}) că:
+\[
+    \# E(\FF_q) = q + 1 - a_1, \quad |a_q| \leq 2 \sqrt{q}.
+\]
+Pentru aplicații criptografice, însă, este util să avem o metodă
+eficientă de a calcula numărul de puncte din $ E(\FF_q) $.
+
+Pentru simplitate, vom presupune că lucrăm cu $ q $ impar și
+că $ E $ este dată de ecuația Weierstrass de forma:
+\[
+    E: y^2 = f(x) = 4x^3 + b_2x^2 + 2b_4x + b_6,
+\]
+pentru care mare parte din rezultatele folosite vor fi valabile
+și în caracteristică 2, cu mici modificări.
+
+Există o metodă directă, dar deloc simplă, de a calcula numărul de
+puncte, care folosește simboluri Legendre:
+\[
+    a_q = \sum_{x \in \FF_q} \left( \dfrac{f(x)}{q} \right),
+\]
+dar fiecare simbol Legendre se calculează folosind reciprocitatea
+pătratică în $ O(\log q) $ pași, deci în total avem $ O(q \log q) $
+pași, adică un algoritm exponențial.
+
+În continuare, descriem un algoritm care calculează $ \# E(\FF_q) $ în
+timp polinomial, i.e.\ $ O(\log^c q) $, cu $ c $ fixat, independent de $ q $.
+Ideea acestui algoritm este să se calculeze $ a_q \text{ mod } \ell $
+pentru prime mici $ \ell $ și apoi să se folosească lema chineză a resturilor
+pentru a recompune $ a_q $.
+
+Fie aplicația:
+\[
+    \tau : E(\overline{\FF_q}) \to E(\overline{\FF_q}), \quad (x, y) \mapsto (x^q, y^q),
+\]
+aplicația Frobenius de putere $ q $, deci știm că are loc:
+\[
+      \tau^2 - a_q \tau + q = 0
+\]
+în $ \dr{End}(E) $. În particular, pentru $ P \in E(\FF_q)[\ell] $, are loc:
+\[
+    \tau^2(P) - [a_q]\tau(P) + [q]P = O,
+\]
+deci dacă punem $ P = (x, y) $ și presupunem $ P \neq O $, avem:
+\[
+    (x^{q^2}, y^{q^2}) - [a_q](x^q, y^q) + [q](x, y) = O.
+\]
+Deoarece am presupus că $ P = (x, y) $ are ordinul $ \ell $, rezultă:
+\[
+    [a_q](x^q, y^q) = [n_\ell](x^q, y^q),
+\]
+pentru un $ n_\ell \equiv a_q \text{ mod } \ell $ și $ 0 \leq n_\ell < \ell $.
+
+Similar, putem calcula $ [q](x, y) $ prin a reduce $ q $ modulo $ \ell $ mai
+întîi.
+
+Nu trebuie să știm exact valoarea lui $ n_\ell $, deci pentru orice întreg
+între 0 și $ \ell $ calculăm $ [n](x^q, y^q) $ pentru orice punct
+$ (x, y) \in E[\ell] - \{ O \} $ și verificăm dacă satisface:
+\[
+    [n](x^q, y^q) = (x^{q^2}, y^{q^2}) + [q](x, y).
+\]
+
+Problema care apare este că punctele din $ E[\ell] $ sînt definite
+peste extinderi destul de mari ale lui $ \FF_q $, deci va trebui
+să lucrăm cu toate punctele de $ \ell $-torsiune simultan. Pentru aceasta,
+folosim polinomul $ \psi_\ell(x) \in \FF_q[x] $, ale cărui rădăcini
+sînt coordonatele $ x $ ale punctelor nenule de $ \ell $-torsiune
+din $ E $ (presupunem, pentru simplitate, $ \ell \neq 2 $). Acest
+polinom are gradul $ \dfrac{1}{2}(\ell^2 - 1) $ și se poate calcula
+simplu ({\color{red}\textbf{v.\ Ex. 3.7, pagina 105}}). Acum putem lucra
+în inelul factor:
+\[
+    R_\ell = \dfrac{\FF_q[x, y]}{\psi_\ell(x), y^2 - f(x)}.
+\]
+
+Rezultă că, dacă avem o putere neliniară a lui $ y $, putem înlocui
+$ y^2 $ cu $ f(x) $ și dacă avem o putere $ x^d $, mai mare decît
+$ \dfrac{1}{2}(\ell^2 - 1) $, putem împărți la $ \psi_\ell(x) $ și luăm
+doar restul. Astfel, nu lucrăm niciodată cu polinoame de grad mai mare
+decît $ \dfrac{1}{2}(\ell^2 - 3) $.
+
+Scopul va fi să calculăm $ a_q \text{ mod } \ell $ pentru suficiente
+prime $ \ell $ și apoi să găsim $ a_q $. Teorema lui Hasse (\ref{thm:hasse})
+ne dă $ |a_q| \leq 2 \sqrt{q} $, deci este suficient să luăm primele
+$ \ell \leq \ell_{\max} $ astfel încît:
+\[
+    \prod_{\ell \leq \ell_{\max}} \ell \geq 4 \sqrt{q}.
+\]
+
+\begin{theorem}[Algoritmul Schoof]\label{thm:schoof}
+   Fie $ E/\FF_q $ o curbă eliptică. Algoritmul descris mai jos este
+   unul în timp polinomial pentru a calcula $ \# E(\FF_q) $. Mai precis,
+   calculează $ \# E(\FF_q) $ în $ O(\log^8 q) $ pași.
+\end{theorem}
+<++>
