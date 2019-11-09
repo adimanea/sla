@@ -1,6 +1,8 @@
-%! TEX root = ../curbe.tex
+% ! TEX root = ../curbe.tex
 
 \chapter{Algoritmul lui Schoof}
+
+\todo[inline,noline,backgroundcolor=green!40]{clarifică!}
 
 Există o abordare algoritmică pentru a număra punctele unei curbe
 eliptice definită peste un corp finit. Știm din teorema lui Hasse
@@ -40,7 +42,7 @@ Fie aplicația:
 \]
 aplicația Frobenius de putere $ q $, deci știm că are loc:
 \[
-      \tau^2 - a_q \tau + q = 0
+    \tau^2 - a_q \tau + q = 0
 \]
 în $ \dr{End}(E) $. În particular, pentru $ P \in E(\FF_q)[\ell] $, are loc:
 \[
@@ -94,14 +96,13 @@ $ \ell \leq \ell_{\max} $ astfel încît:
 \]
 
 \begin{theorem}[Algoritmul Schoof]\label{thm:schoof}
-   Fie $ E/\FF_q $ o curbă eliptică. Algoritmul descris la \algref{alg:schoof} este
-   unul în timp polinomial pentru a calcula $ \# E(\FF_q) $. Mai precis,
-   calculează $ \# E(\FF_q) $ în $ O(\log^8 q) $ pași.
+    Fie $ E/\FF_q $ o curbă eliptică. Algoritmul descris la \ref{alg:schoof} este
+    unul în timp polinomial pentru a calcula $ \# E(\FF_q) $. Mai precis,
+    calculează $ \# E(\FF_q) $ în $ O(\log^8 q) $ pași.
 \end{theorem}
 
 \begin{algorithm}
   \caption{Algoritmul lui Schoof}
-  \label{alg:schoof}
   \begin{algorithmic}[1]
     \Procedure{Schoof}{$q, a$}\Comment{returnează $\# E(\FF_q)$}
       \State $ A \gets 1 $
@@ -120,7 +121,96 @@ $ \ell \leq \ell_{\max} $ astfel încît:
       \State \textbf{returnează} $ \# E(\FF_q) = q + 1 - a $
     \EndProcedure
   \end{algorithmic}
+  \label{alg:schoof}
 \end{algorithm}
+
+\begin{proof}
+    Arătăm că timpul de rulare pentru algoritmul Schoof este $ O(\log^8 q) $.
+
+    Mai întîi:
+    \begin{enumerate}[(a)]
+        \item Cel mai mare număr prim $ \ell $ folosit în algoritm are
+            proprietatea $ \ell \leq O(\log q) $:
+
+            Teorema de distribuție a numerelor prime poate fi rescrisă în forma:
+            \[
+                \lim_{x \to \infty} \dfrac{1}{x} %
+                \sum_{\stackrel{\ell \leq x}{l\text{ prim }}} \log \ell = 1.
+            \]
+            Rezultă $ \ds\prod_{\ell < x} \ell \simeq e^x $, deci pentru a face
+            ca produsul să fie mai mare decît $ 4 \sqrt{q} $, este suficient
+            să luăm $ x \simeq \dfrac{1}{2} \log(16 q) $.
+        \item Înmulțirea în inelul $ R_\ell $ se poate face în $ O(\ell^4 \log^2 q) $ operații
+            pe biți:
+
+            Elementele inelului $ R_\ell $ sînt polinoame de grad $ O(\ell^2) $.
+            Înmulțirea între două astfel de polinoame și reducerea modulo
+            $ \psi_\ell(x) $ consumă $ O(\ell^4) $ operații elementare
+            (adunări și înmulțiri) în corpul $ \FF_q $. Similar, înmulțirea
+            în $ \FF_q $ consumă $ O(\log^2 q) $ operați pe biți.
+
+            Rezultă că operațiile de bază în $ R_\ell $ consumă $ O(\ell^4 \log^2 q) $
+            operații pe biți.
+
+        \item Sînt necesare $ O(\log q) $ operații în inelul $ R_\ell $ pentru
+            a reduce $ x^q, y^q, x^{q^2} $ și $ y^{q^2} $ în inelul $ R_\ell $:
+
+
+            În general, sînt necesare $ O(\log n) $ operații pentru a
+            calcula puterile $ x^n $ și $ y^n $ în $ R_\ell $.
+            Dar aceste operații sînt făcute o singură dată, iar apoi putem stoca
+            punctele de forma:
+            \[
+                (x^{q^2}, y^{q^2}) + [q \text{ mod } \ell] (x, y) \quad \text{ și } \quad (x^q, y^q)
+            \]
+            pe care apoi le folosim în pasul 4 al algoritmului Schoof.
+    \end{itemize}
+
+    Folosind operațiile elementare de mai sus, putem estima timpul de rulare pentru
+    algoritmul Schoof. Din (a), obținem că avem nevoie doar de $ \ell $ prime care sînt
+    mai mici decît $ O(log q) $ și cum există $ O\left( \dfrac{\log q}{\log \log q} \right) $
+    asemenea prime, rezultă că liniile 4-12 din algoritmul lui Schoof
+    se execută de atîtea ori. Apoi, de fiecare dată cînd se intră în bucla
+    controlată de $ A $, se execută bucla controlată de $ n $ (liniile
+    5-8) de $ \ell = O(\log q) $ ori.
+
+    Mai departe, cum $ \ell = O(\log q) $, din afirmația (b) de mai sus,
+    rezultă că operațiile de bază din $ R_\ell $ durează $ O(\log^6 q) $
+    operații pe biți. Valoarea $ [n](x^q, y^q) $ din linia 6 a algoritmului
+    se poate calcula în $ O(1) $ operații în $ R_\ell $, știind valoarea
+    anterioară $ [n-1](x^q, y^q) $.
+
+    Rezultă că numărul total de pași este:
+    \[
+        \underbrace{O(\log q)}_{\text{bucla A}} \cdot \underbrace{O(\log q)}_{\text{bucla n}} \cdot %
+        \underbrace{O(\log^6 q)}_{\text{operații pe biți}} = O(\log^8 q) \text{ operații pe biți}.
+    \]
+    Am demonstrat, deci, că algoritmul lui Schoof calculează $ \# E(\FF_q) $ în timp polinomial.
+\end{proof}
+
+Remarcăm că cele mai costisitoare etape sînt calculele în inelul $ R_\ell $, care este o
+extindere a lui $ \FF_q $, de grad $ 2 \ell^2 $. Așadar, deși marginea pentru $ \ell $
+este liniară în $ \log q $, pentru valori mari ale lui $ q $, și marginea pentru $ \ell $
+și dimensiunea inelului $ R_\ell $ peste $ \FF_q $ sînt mari.
+
+\textbf{Exemplu:} Fie $ q \simeq 2^{256} $, o valoare utilizată în practică în aplicații
+criptografice. Rezultă:
+\[
+    \prod_{\ell \leq 103} \ell \simeq 2^{133} > 4 \sqrt{q} = 2^{130},
+\]
+deci cel mai mare prim $ \ell $ utilizat de algoritmul lui Schoof este $ \ell = 103 $.
+
+Rezultă că un element din $ V = \FF_q[x]/\psi_\ell(x) $ este reprezentat de un
+$ \FF_q $-vector de mărime $ 103^2 \simeq 2^{13} $, iar fiecare element al
+$ \FF_q $ este un număr pe 256 biți. Așadar, elementele din $ V $ ocupă
+aproximativ $ 2^{22} $ biți, adică mai mult de 16 kB. Mărimea nu este nerezonabilă
+pentru computerele moderne, totuși calcule intensive în inele ale căror elemente se
+stochează pe 16 kB durează considerabil.
+
+\todo[inline,noline,backgroundcolor=green!40]{exemple + de luat din alte părți explicații}
+\todo[inline,noline,backgroundcolor=green!40]{vezi și \href{https://en.wikipedia.org/wiki/Schoof\%27s\_algorithm}{wiki}}
+
+
 
 
 %%% Local Variables:
