@@ -4,7 +4,7 @@
 
 Materia se va finaliza cu un proiect, pentru care am ales tema **Curbe eliptice peste corpuri finite**.
 
-Acces direct la PDF [aici](https://github.com/adimanea/sla/blob/master/3-criptav/curbe.pdf).
+Acces direct la PDF [aici](https://github.com/adimanea/sla/blob/master/3-criptav/current/pce.pdf).
 
 ## Bibliografie
 - Husemoller - Elliptic curves;
