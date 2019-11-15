@@ -1,0 +1,58 @@
+\documentclass[12pt, a4paper]{report}
+
+\input{pkg/packages}
+\input{pkg/macros}
+\input{pkg/thms}
+\input{pkg/formatting}
+
+\begin{document}
+
+\thispagestyle{empty}
+\pagestyle{plain} % fix for page numbers
+
+\title{\huge\textbf{Numărul de puncte \\ ale curbelor eliptice}}
+\vspace{1cm}
+\author{\Large\textsc{Adrian Manea}}
+
+\maketitle
+
+\pagenumbering{gobble}
+\tableofcontents
+
+\setcounter{page}{1} % page 1 after TOC
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MAIN CONTENT
+\pagenumbering{arabic}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\footnotesize{\color{gray}Puncte ale curbelor eliptice}}
+\lhead{\footnotesize{\color{gray}Adrian Manea, 510 SLA}}
+
+\pagestyle{plain} % restore page numbering
+
+% DE ADĂUGAT
+\addcontentsline{toc}{chapter}{\protect\numberline{}DE ADĂUGAT/CLARIFICAT}
+\listoftodos[DE ADĂUGAT/CLARIFICAT]
+
+% CHAPTERS
+\include{ch/intro}
+\include{ch/1-curbe-el}
+\include{ch/2-ec-fq}
+\include{ch/3-schoof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% INDEX
+\renewcommand{\indexname}{Index}
+\addcontentsline{toc}{chapter}{\protect\numberline{}Index}
+\printindex
+
+% BIBLIOGRAPHY
+% IN ROMANIAN
+\addcontentsline{toc}{chapter}{\protect\numberline{}Bibliografie}
+\bibliography{pce.bib}
+\bibliographystyle{apalike}
+% add all to bibliography, even if not \cited
+\nocite{*}
+
+\end{document}

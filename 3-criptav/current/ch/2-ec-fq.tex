@@ -1,0 +1,45 @@
+% ! TEX root = ../pce.tex
+
+\chapter{Curbe eliptice peste corpuri finite}
+
+Lucrăm acum într-un caz particular, acela al curbelor eliptice definite
+peste corpuri finite $ \FF_q $. Notațiile pe care le fixăm sînt:
+\begin{itemize}
+\item $ q $, o putere a unui prim $ p $;
+\item $ \FF_q $, un corp finit cu $ q $ elemente;
+\item $ \overline{\FF}_q $, o închidere algebrică a lui $ \FF_q $.
+\end{itemize}
+
+Fie acum $ E/\FF_q $ o curbă eliptică definită peste un corp finit.
+Vrem să estimăm numărul punctelor din $ E(\FF_q) $, notat $ \# E(\FF_q) $,
+adică una sau mai multe soluții ale ecuației Weierstrass scrisă în forma:
+\[
+  E : y^2 + a_1 xy + a_3 y = x^3 + a_2 x^2 + a_4 x + a_6, \quad %
+  (x, y) \in \FF_q^2.
+\]
+
+Evident că valoarea lui $ x $ conduce la cel mult 2 valori pentru $ y $,
+deci vom avea o margine superioară:
+\[
+  \# E(\FF_q) \leq 2q + 1.
+\]
+Dar o ecuație pătratică aleatorie are mici șanse să fie rezolvabilă
+în $ \FF_q $, deci ne așteptăm ca marginea superioară să conțină mai curînd
+$ q $, nu $ 2q $.
+
+Rezultatul important de mai jos a fost formulat ca o conjectură de E.\ Artin
+în 1924 și demonstrat de H.\ Hasse în 1933:
+\begin{theorem}[Hasse]\label{thm:hasse}
+  Fie $ E/\FF_q $ o curbă eliptică definită peste corpul finit $ \FF_q $.
+
+  Atunci:
+  \[
+    \left| \# E(\FF_q) - q - 1 \right| \leq 2 \sqrt{q}.
+  \]
+\end{theorem}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../pce"
+%%% End:
