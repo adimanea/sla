@@ -1,0 +1,101 @@
+%! TEX root = ../curbe.tex
+
+\chapter{Curbe eliptice peste corpuri finite}
+
+Considerăm acum cazul particular al curbelor eliptice definite peste corpuri
+finite $ \FF_q $. Cea mai importantă noțiune este aceea a numărului punctelor
+raționale.
+
+Notațiile pe care le folosim sînt:
+\begin{itemize}
+    \item $ q $, o putere a unui prim $ p $;
+    \item $ \FF_q $, un corp finit cu $ q $ elemente;
+    \item $ \overline{\FF}_q $, o închidere algebrică a lui $ \FF_q $.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Numărul punctelor raționale}
+
+Fie $ E/\FF_q $ o curbă eliptică definită peste un corp finit.
+Vrem să estimăm numărul punctelor din $ E(\FF_q) $ (notat $ \#E(\FF_q) $) sau, echivalent,
+una sau mai multe soluții ale ecuației:
+\[
+    E : y^2 + a_1xy + a_3y = x^3 + a_2x^2 + a_4x + a_6, \quad (x, y) \in \FF_q^2.
+\]
+Deoarece fiecare valoarea a lui $ x $ conduce la cel mult 2 valori pentru $ y $,
+o margine superioară este:
+\[
+    \# E(F_q) \leq 2q + 1.
+\]
+Dar o ecuație pătratică aleatorie are șanse mici de a fi rezolvabilă în $ \FF_q $
+deci ne așteptăm ca marginea superioară să conțină $ q $, nu $ 2q $.
+
+Rezultatul de mai jos a fost formulat ca o conjectură de E.\ Artin și demonstrat
+de H.\ Hasse în anii 1930:
+\begin{theorem}[Hasse]\label{thm:hasse}
+    Fie $ E/\FF_q $ o curbă eliptică definită peste un corp finit. Atunci:
+    \[
+        | \#E(\FF_q) - q - 1 | \leq 2 \sqrt{q}.
+    \]
+\end{theorem}
+\begin{proof}
+    Fie o ecuație Weierstrass pentru $ E $ în $ \FF_q $ și fie:
+    \[
+        \phi : E \to E, \quad (x, y) \mapsto (x^q, y^q)
+    \]
+    morfismul Frobenius de putere $ q $. Grupul Galois $ \dr{Gal}(\overline{\FF}_q/\FF_q) $
+    este generat de aplicația de putere $ q $ pe $ \overline{\FF}_q $, deci pentru
+    orice punct $ P \in E(\overline{\FF}_q) $, are loc:
+    \[
+        P \in E(\FF_q) \Leftrightarrow \phi(P) = P.
+    \]
+    Rezultă $ E(\FF_q) = \dr{ker}(1 - \phi) $, deci:
+    \[
+        \# E(\FF_q) = \# \dr{Ker}(1 - \phi) = \dr{deg}(1 - \phi).
+    \]
+    Aplicația de putere pe $ \dr{End}(E) $ este o formă pătratică pozitiv definită și
+    cum $ \dr{deg}\phi = q $, rezultă inegalitatea dorită folosind Cauchy-Schwarz.
+\end{proof}
+
+\begin{example}\label{exm:eliptic-fq}
+    Fie $ \FF_q $ un corp finit cu $ q $ impar. Putem folosi teorema Hasse pentru a estima
+    diverse caractere pe $ \FF_q $. Definim:
+    \[
+        f(x) = ax^3 + bx^2 + cx + d \in K[x]
+    \]
+    un polinom cubic, cu rădăcini distincte în $ \overline{\FF}_q $ și fie:
+    \[
+        \chi : \FF_q^\times \to \{ \pm 1 \}
+    \]
+    caracterul netrivial de ordin 2, adică $ \chi(t) = 1 $ dacă și numai dacă
+    $ t $ este un pătrat în $ \FF_q^\times $.
+
+    Putem extinde $ \chi $ la $ \FF_q $ definind $ \chi(0) = 0 $ și putem folosi
+    $ \chi $ pentru a număra punctele $ \FF_q $-raționale de pe curba eliptică:
+    \[
+        E : y^2 = f(x).
+    \]
+    Fiecare $ x \in \FF_q $ produce 0, 1 sau 2 puncte $ (x, y) \in E(\FF_q) $, în
+    funcție de faptul dacă $ f(x) $ este pătrat, ne-pătrat sau nulă în $ \FF_q $.
+    Rezultă, folosind și punctul de la infinit:
+    \begin{align*}
+        \# E(\FF_q) &= 1 + \sum_{x \in \FF_q} (1 + \chi(f(x))) \\
+                    &= 1 + q + \sum_{x \in \FF_q} \chi(f(x))
+    \end{align*}
+\end{example}
+
+Folosind exemplul de mai sus, împreună cu teorema Hasse, obținem:
+\begin{corollary}\label{cor:hass-char}
+    Folosind notațiile și contextul de mai sus, avem:
+    \[
+        \left| \sum_{x \in \FF_q} \chi(f(x)) \right| \leq 2 \sqrt{q}.
+    \]
+\end{corollary}
+
+\todo[inline,noline,backgroundcolor=green!40]{clarifică!}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../curbe"
+%%% End:
