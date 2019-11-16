@@ -108,6 +108,161 @@ Rezultatul important de mai jos a fost formulat ca o conjectură de E.\ Artin
   \]
 \end{theorem}
 
+\begin{proof}
+  Considerăm endomorfismul Frobenius de putere $ q $:
+  \[
+    \phi : (x, y) \mapsto (x^q, y^q).
+  \]
+  Din mica teoremă a lui Fermat:
+  \[
+    x^q \equiv x \text{ mod } q,
+  \]
+  deci aplicația fixează $ E $ punct cu punct, i.e.\ $ \phi(P) = P $,
+  pentru orice punct $ P $ de pe curbă.
+
+  Rezultă mai departe $ (\phi - \dr{id})(P) = 0 $, adică
+  $ P \in \dr{Ker}(\phi - \dr{id}) $. Atunci toată curba $ E $ este
+  izomorfă $ \dr{Ker}(\phi - \dr{id}) $.
+
+  Așadar, $ \# E(\FF_q) $ coincide cu gradul aplicației $ \phi - \dr{id} $,
+  ca polinom.
+
+  Din lema~\ref{le:deg-hasse}, rezultă:
+  \[
+    |\dr{grad}(\phi - \dr{id}) - \dr{grad}(\phi) - \dr{grad}(\dr{id}) \leq %
+    2 \sqrt{\dr{grad}\phi \cdot \dr{grad}(\dr{id})}.
+  \]
+
+  Dar $ \dr{grad}(\phi - \dr{id}) = \# E(\FF_q) $, iar $ \dr{grad}(\phi) = q $
+  și $ \dr{grad}(\dr{id}) = 1 $, rezultă:
+  \[
+    | \# E(\FF_q) - q - 1 | \leq 2 \sqrt{q}.
+  \]
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Optimizarea 2: Baby Step, Giant Step}
+
+Putem aplica o metodă simplă de optimizare, schimbînd un pic abordarea.
+
+Fie $ P(x, y) \in E(\FF_q) $, punct pe care îl alegem luînd valori
+arbitrare pentru $ x $ pînă ce $ x^3 + Ax + B $ este un pătrat în $ \FF_q $.
+Apoi, calculăm radicalul acestui număr și obținem $ y $. Din teorema lui
+Hasse (teorema \ref{thm:hasse}), știm că:
+\[
+  \# E(\FF_q) \in (q + 1 - 2 \sqrt{q}, q + 1 + 2 \sqrt{q}).
+\]
+
+Apoi, folosind teorema lui Lagrange din liceu, rezultă că există un punct
+$ M $ în acest interval, cu proprietatea $ MP = O $.
+
+Algoritmul nu va funcționa dacă există două astfel de puncte, $ M $ și
+$ M' $ astfel încît $ MP = M'P = O $. Pentru astfel de cazuri, însă, va
+fi suficient să repetăm procedura cu un alt punct $ P \in E(\FF_q) $.
+
+Testarea tuturor valorilor $ M $ astfel încît $ MP = O $ durează cel mult
+$ 4 \sqrt{q} $ pași (lungimea intervalului de căutare).
+
+Dar putem îmbunătăți acest număr folosind algoritmul \emph{baby step giant step},
+utilizat de obicei pentru calculul logaritmului discret.
+
+Pe scurt, algoritmul este redat în figura \ref{alg:bsgs}. Presupunem că se
+pornește cu un grup ciclic $ G $ de ordin $ n $, cu un generator $ \alpha $
+și un element oarecare $ \beta $.
+
+\begin{algorithm}
+  \caption{Baby Step, Giant Step}
+  \begin{algorithmic}[1]
+    \Procedure{BSGS}{$\alpha, \beta$}\Comment{returnează $ \log_\alpha \beta $}
+        \State $ m \gets \lceil \sqrt{n} \rceil $
+        \For{$ 0 \leq j < m $}
+            \State Calculează $ \alpha^j $ și notează $ (j, \alpha^j) $
+        \EndFor
+        \State Calculează $ a^{-m} $
+        \State Definește $ \gamma \gets \beta $
+        \For{$ 0 \leq i < m $}
+            \If{$ \gamma = \alpha^j $ pentru un $ j $}
+                \State \textbf{returnează} $ i \cdot m + j $
+            \Else
+                \State $ \gamma \gets \gamma \cdot \alpha^{-m} $
+            \EndIf
+        \EndFor
+    \EndProcedure
+  \end{algorithmic}
+  \label{alg:bsgs}
+\end{algorithm}
+
+Putem acum aplica ideile din algoritmul \ref{alg:bsgs} pentru calculul
+$ \# E(\FF_q) $ și să obținem un timp de rulare de aproximativ $ 4\sqrt[4]{q} $.
+Algoritmul este redat în figura \ref{alg:bsgs-fq}
+
+\begin{algorithm}
+  \caption{Baby Step, Giant Step în $ \FF_q $}
+  \begin{algorithmic}[1]
+    \Procedure{BSGSq}{$ E(\FF_q) $}\Comment{returnează $ \# E(\FF_q) $}
+        \State Alegem $ m > \sqrt[4]{q} $
+        \For{$ j = 0, m $}
+            \State $ P_j \gets jP $
+        \EndFor
+        \State $ L \gets q $
+        \State $ Q \gets (q + 1) P $
+        \Repeat
+            \State calculează $ Q + k \cdot (2mP) $
+        \Until{$ \exists j, Q + k \cdot (2mP) = \pm P_j $}\Comment{comparăm coordonatele $ x $}
+        \State $ M \gets q + 1 + 2mk \mp j $ \Comment{verificăm $ MP = O $}
+        \State Factorizăm $ M = p_1^{\alpha_1} \cdots p_r^{\alpha_r} $
+        \While{$ i \leq r $}
+            \If{$ \dfrac{M}{p_i} P = O $}
+                \State $ M \gets \dfrac{M}{p_i} $
+            \Else
+                \State $ i \gets i + 1 $
+            \EndIf
+        \EndWhile
+        \State $ L \gets \dr{cmmmc}(L, M) $
+        \While{$ L $ divide cel puțin 2 elemente $ N \in (q + 1 - 2 \sqrt{q}, q + 1 + 2 \sqrt{q}) $}
+            \State Alege un nou punct $ P $ și reia de la început
+        \EndWhile
+        \State \textbf{returnează} $ N = \# E(\FF_q) $
+    \EndProcedure
+  \end{algorithmic}
+  \label{alg:bsgs-fq}
+\end{algorithm}
+
+Cîteva observații importante pe marginea acestui algoritm:
+\begin{itemize}
+\item Am presupus implicit că bucla din liniile 8-10 se execută cel puțin o dată.
+  Într-adevăr, acest lucru rezultă imediat dintr-un rezultat de forma:
+  \begin{lemma}\label{le:alg-bsgs}
+    Fie $ a \in \ZZ $ astfel încît $ |a| \leq 2m^2 $. Atunci există doi întregi
+    $ a_0, a_1 $, cu $ -m < a_0 \leq m $ și $ -m \leq a_1 \leq m $ astfel încît
+    $ a = a_0 + 2ma_1 $.
+  \end{lemma}
+\item Calculul $ (j + 1) P $ atunci cînd se știe $ jP $ se poate face mai simplu
+  adunînd $ P $ la $ jP $ decît prin calculul produsului din nou. Calculul complet
+  necesită, în această variantă, $ m $ adunări. Apoi $ 2mP $ se poate calcula prin
+  dublarea lui $ mP $. Calculul lui $ Q $ necesită $ \log(q + 1) $ dublări
+  și $ w $ adunări, unde $ w $ este numărul de cifre nenule din reprezentarea
+  binară a lui $ q + 1 $. Mai mult, cunoașterea lui $ jP $ și a lui $ 2mP $
+  ne permite să reducem numărul de dublări. În fine, pentru a calcula
+  $ Q + (k + 1) 2mP $ din $ Q + k(2mP) $, adunăm $ 2mP $ în loc să calculăm
+  din nou;
+\item Presupunem implicit că putem factoriza $ M $. Dacă nu, măcar putem
+  găsit toți factorii primi mici $ p_i $ și să verificăm $ \dfrac{M}{p_i} \neq O $
+  pentru aceștia. Atunci $ M $ este un candidat bun pentru ordinul lui $ P $,
+  ca element în grupul $ E(\FF_q) $;
+\item Linia 20 se bazează pe următorul fapt: cum $ MP = O $, ordinul lui $ P $
+  divide $ M $ (teorema lui Lagrange de la grupuri). Dacă nu există niciun
+  divizor propriu $ \overline{M} $ al lui $ M $ cu $ \overline{M}P = O $,
+  atunci $ M $ este chiar ordinul lui $ P $;
+\item Algoritmul este costisitor din punct de vedere al spațiului. Se lucrează
+  cu multe numere, unele dintre ele calculate cu proceduri complicate atunci
+  cînd $ q $ devine mare. Optimizări ulterioare mai pot folosi,
+  de exemplu, metoda Pollard rho pentru logaritmul discret, în loc
+  de baby step, giant step.
+\end{itemize}
+  
+
+
 
 %%% Local Variables:
 %%% mode: latex
