@@ -2,19 +2,20 @@
 
 \chapter{Algoritmul lui Schoof}
 
-\todo[inline,noline,backgroundcolor=green!40]{clarifică!}
+\todo[inline,noline,backgroundcolor=green!40]{de clarificat pașii}
+\todo[inline,noline,backgroundcolor=green!40]{de uniformizat descrierea}
 
 Există o abordare algoritmică pentru a număra punctele unei curbe
 eliptice definită peste un corp finit. Știm din teorema lui Hasse
 (teorema \ref{thm:hasse}) că:
 \[
-    \# E(\FF_q) = q + 1 - a_1, \quad |a_q| \leq 2 \sqrt{q}.
+    \# E(\FF_q) = q + 1 - a_q, \quad |a_q| \leq 2 \sqrt{q}.
 \]
 Pentru aplicații criptografice, însă, este util să avem o metodă
 eficientă de a calcula numărul de puncte din $ E(\FF_q) $.
 
 Pentru simplitate, vom presupune că lucrăm cu $ q $ impar și
-că $ E $ este dată de ecuația Weierstrass de forma:
+că $ E $ este dată de o ecuație Weierstrass de forma:
 \[
     E: y^2 = f(x) = 4x^3 + b_2x^2 + 2b_4x + b_6,
 \]
@@ -40,11 +41,18 @@ Fie aplicația:
 \[
     \tau : E(\overline{\FF}_q) \to E(\overline{\FF}_q), \quad (x, y) \mapsto (x^q, y^q),
 \]
-aplicația Frobenius de putere $ q $, deci știm că are loc:
+aplicația Frobenius de putere $ q $, extinsă la curba definită peste închiderea
+algebrică a lui $ \FF_q $, deci știm că are loc:
 \[
     \tau^2 - a_q \tau + q = 0
 \]
-în $ \dr{End}(E) $. În particular, pentru $ P \in E(\FF_q)[\ell] $, are loc:
+în $ \dr{End}(E) $, conform și demonstrației teoremei \ref{thm:hasse}.
+Se definește subgrupul de $ \ell $-torsiune al curbei eliptice, pentru
+un prim impar fixat $ \ell $:
+\[
+  E(\FF_q)[\ell] = \left\{ P \in E(\overline{\FF}_q) \mid lP = O \right\}.
+\]
+În particular, pentru $ P \in E(\FF_q)[\ell] $, are loc:
 \[
     \tau^2(P) - [a_q]\tau(P) + [q]P = O,
 \]
@@ -74,9 +82,42 @@ să lucrăm cu toate punctele de $ \ell $-torsiune simultan. Pentru aceasta,
 folosim polinomul $ \psi_\ell(x) \in \FF_q[x] $, ale cărui rădăcini
 sînt coordonatele $ x $ ale punctelor nenule de $ \ell $-torsiune
 din $ E $ (presupunem, pentru simplitate, $ \ell \neq 2 $). Acest
-polinom are gradul $ \dfrac{1}{2}(\ell^2 - 1) $ și se poate calcula
-simplu ({\color{red}\textbf{v.\ Ex. 3.7, pagina 105}}). Acum putem lucra
-în inelul factor:
+polinom are gradul $ \dfrac{1}{2}(\ell^2 - 1) $ și îl descriem
+pe scurt mai jos.
+
+\begin{definition}\label{def:polinom-div}
+  Mulțimea polinoamelor de diviziune (eng.\ \emph{division polynomials})
+  din $ \ZZ[x, y, A, B] $ se definește recursiv prin:
+  \begin{align*}
+    \psi_0 &= 0 \\
+    \psi_1 &= 1 \\
+    \psi_2 &= 2y \\
+    \psi_3 &= 3x^4 + 6Ax^2 + 12Bx - A^2 \\
+    \psi_4 &= 4y\left(x^6 + 5Ax^4 + 20Bx^3 - 5A^2x^2 - 4ABx - 8B^2 - A^3\right) \\
+           &\vdots \\
+    \psi_{2m + 1} &= \psi_{m + 2} \psi^3 m - \psi_{m-1}\psi_{m+1}^3, m \geq 2 \\
+    \psi_{2m} &= \left( \dfrac{\psi_m}{2y} \right) \cdot 5
+                \left( \psi_{m+2}\psi_{m-1}^2 - \psi_{m-2} \psi_{m+1}^2 \right), m \geq 3
+  \end{align*}
+\end{definition}
+
+Legătura cu curbele eliptice este realizată astfel. Presupunem că lucrăm
+cu o curbă eliptică de ecuație $ y^2 = x^3 + Ax + B $. Atunci polinoamele
+de diviziune definite ca mai sus au proprietatea $ \psi_{2m+1} \in \ZZ[x, A, B] $
+și $ \psi_{2m} \in 2y \ZZ[x, A, B] $ și în cazul nostru vom avea,
+suplimentar, $ A, B \in \FF_q $, deoarece curba este definită peste acest corp.
+
+În plus, rădăcinile polinoamelor $ \psi_{2n+1} $ sînt coordonatele $ x $
+ale punctelor $ E(\FF_q)[2n+1] - \{ O \} $, subgrupul de $ 2n + 1 $-torsiune,
+iar similar, rădăcinile polinoamelor $ \dfrac{\psi_{2n}}{y} $ sînt
+coordonatele $ x $ ale punctelor din $ E(\FF_q)[2n] - E(\FF_q)[2] $.
+
+Încă mai mult, $ E(\overline{\FF}_q) \simeq \ZZ/\ell \times \ZZ/\ell $
+dacă $ \ell \neq p $ și în rest, avem izomorfism cu $ \ZZ/\ell $ sau $ \{ 0 \} $
+dacă $ \ell = p $. Rezultă că, după cazuri, gradul polinomului $ \psi_\ell $
+este $ \dfrac{1}{2}(\ell^2 - 1) $, $ \dfrac{1}{2} (\ell - 1) $ sau $ 0 $.
+
+Revenind la algoritmul lui Schoof, acum putem lucra în inelul factor:
 \[
     R_\ell = \dfrac{\FF_q[x, y]}{\psi_\ell(x), y^2 - f(x)}.
 \]
@@ -96,9 +137,9 @@ $ \ell \leq \ell_{\max} $ astfel încît:
 \]
 
 \begin{theorem}[Algoritmul Schoof]\label{thm:schoof}
-    Fie $ E/\FF_q $ o curbă eliptică. Algoritmul descris la \ref{alg:schoof} este
-    unul în timp polinomial pentru a calcula $ \# E(\FF_q) $. Mai precis,
-    calculează $ \# E(\FF_q) $ în $ O(\log^8 q) $ pași.
+  Fie $ E/\FF_q $ o curbă eliptică. Algoritmul descris la figura \ref{alg:schoof} este
+  unul în timp polinomial pentru a calcula $ \# E(\FF_q) $. Mai precis,
+  calculează $ \# E(\FF_q) $ în $ O(\log^8 q) $ pași.
 \end{theorem}
 
 \begin{algorithm}
@@ -110,7 +151,7 @@ $ \ell \leq \ell_{\max} $ astfel încît:
       \While{$ A < 4 \sqrt{q} $}
         \While{$n = 0, 1, 2, \dots, \ell - 1 $}
           \If{$(x^{q^2}, y^{q^2}) + [q](x, y) = [n](x^q, y^q)$}
-            \texttt{break}
+            \texttt{ieși}
           \EndIf
         \EndWhile
         \State $ A \gets \ell \cdot A $
@@ -193,19 +234,37 @@ extindere a lui $ \FF_q $, de grad $ 2 \ell^2 $. Așadar, deși marginea pentru 
 este liniară în $ \log q $, pentru valori mari ale lui $ q $, și marginea pentru $ \ell $
 și dimensiunea inelului $ R_\ell $ peste $ \FF_q $ sînt mari.
 
-\textbf{Exemplu:} Fie $ q \simeq 2^{256} $, o valoare utilizată în practică în aplicații
-criptografice. Rezultă:
-\[
+\begin{example}\label{exm:schoof}
+  Fie $ q \simeq 2^{256} $, o valoare utilizată în practică în aplicații
+  criptografice. Rezultă:
+  \[
     \prod_{\ell \leq 103} \ell \simeq 2^{133} > 4 \sqrt{q} = 2^{130},
-\]
-deci cel mai mare prim $ \ell $ utilizat de algoritmul lui Schoof este $ \ell = 103 $.
+  \]
+  deci cel mai mare prim $ \ell $ utilizat de algoritmul lui Schoof este $ \ell = 103 $.
 
-Rezultă că un element din $ V = \FF_q[x]/\psi_\ell(x) $ este reprezentat de un
-$ \FF_q $-vector de mărime $ 103^2 \simeq 2^{13} $, iar fiecare element al
-$ \FF_q $ este un număr pe 256 biți. Așadar, elementele din $ V $ ocupă
-aproximativ $ 2^{22} $ biți, adică mai mult de 16 kB. Mărimea nu este nerezonabilă
-pentru computerele moderne, totuși calcule intensive în inele ale căror elemente se
-stochează pe 16 kB durează considerabil.
+  Rezultă că un element din $ V = \FF_q[x]/\psi_\ell(x) $ este reprezentat de un
+  $ \FF_q $-vector de mărime $ 103^2 \simeq 2^{13} $, iar fiecare element al
+  $ \FF_q $ este un număr pe 256 biți. Așadar, elementele din $ V $ ocupă
+  aproximativ $ 2^{22} $ biți, adică mai mult de 16 kB. Mărimea nu este nerezonabilă
+  pentru computerele moderne, totuși calcule intensive în inele ale căror elemente se
+  stochează pe 16 kB durează considerabil.
+\end{example}
+
+Rezultatul lui Schoof a fost formulat în 1985 și este unul foarte important din punct
+de vedere teoretic, deoarece toți algoritmii inițiali erau exponențiali, iar
+cel mai bun de pînă atunci era varianta Baby Step, Giant Step, care are un timp
+de rulare de asemenea exponențial.
+
+Ulterior, în anii `90, s-au adus îmbunătățiri algoritmului lui Schoof, de
+către Noam Elkies și A.\ O.\ Atkin, prin considerarea unor prime $ \ell $
+de o anumită formă și folosind rezultate teoretice mult mai puternice,
+precum formele modulare.
+
+Varianta îmbunătățită rulează în aproximativ $ O(\log^6 q) $, cu presupunerea
+că aproximativ jumătate dintre primele mai mici decît $ O(\log q) $ au
+proprietatea dorită. Însă această presupunere este una euristică și nu
+a fost demonstrată, nici măcar în cazul în care ipoteza lui Riemann ar fi
+adevărată.
 
 
 %%% Local Variables:
