@@ -1,14 +1,8 @@
 % ! TEX root = ../pce.tex
 
-\chapter{Curbe eliptice peste corpuri finite}
+\chapter{Numărul de puncte peste $ \FF_{\text{q}} $}
 
-Lucrăm acum într-un caz particular, acela al curbelor eliptice definite
-peste corpuri finite $ \FF_q $. Notațiile pe care le fixăm sînt:
-\begin{itemize}
-\item $ q $, o putere a unui prim $ p $;
-\item $ \FF_q $, un corp finit cu $ q $ elemente;
-\item $ \overline{\FF}_q $, o închidere algebrică a lui $ \FF_q $.
-\end{itemize}
+\section{Problema și abordarea naivă}
 
 Fie acum $ E/\FF_q $ o curbă eliptică definită peste un corp finit.
 Vrem să estimăm numărul punctelor din $ E(\FF_q) $, notat $ \# E(\FF_q) $,
@@ -26,6 +20,82 @@ deci vom avea o margine superioară:
 Dar o ecuație pătratică aleatorie are mici șanse să fie rezolvabilă
 în $ \FF_q $, deci ne așteptăm ca marginea superioară să conțină mai curînd
 $ q $, nu $ 2q $.
+
+\begin{example}\label{exm:puncte}
+  Să luăm un exemplu simplu mai întîi, pe care să-l rezolvăm manual.
+
+  Fie $ E $ curba $ y^2 = x^3 + x + 1 $, definită peste $ \FF_5 $.
+
+  Putem calcula direct astfel: luăm resturile lui $ x $ modulo 5, calculăm
+  pătratele lor, precum și expresia $ x^3 + x + 1 $. Urmărind apoi primele
+  două coloane ale tabelului de mai jos, putem găsit dacă există $ y $
+  care să fie pătrat modulo 5, egal cu expresia corespunzătoare.
+
+  \begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+      \hline
+      $ x $ & $ x^2 $ & $ x^3 + x + 1 $ & $ y $ & Puncte \\
+      \hline
+      0 & 0 & 1 & 1, 4 & $ (0, 1), (0, 4) $ \\
+      1 & 1 & 3 & $ \nexists $ & $ \nexists $ \\
+      2 & 4 & 1 & 1, 4 & $ (2, 1), (2, 4) $ \\
+      3 & 4 & 1 & 1, 4 & $ (3, 1), (3, 4) $ \\
+      4 & 1 & 4 & 2, 3 & $ (4, 2), (4, 3) $ \\
+                         \hline
+    \end{tabular}
+  \end{center}
+
+  Rezultă $ \# E(\FF_5) = 9 $, adică cele 8 puncte din tabel și punctul de la
+  infinit.
+
+  În acest caz particular, am avut nevoie de $ O(5) $ pași, pentru că a
+  trebuit să calculăm toți termenii din tabel, pentru orice $ x \in \FF_5 $.
+\end{example}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Optimizarea 1: Teorema Hasse}
+
+Calculul manual de mai sus nu este practic pentru valori mari ale lui $ q $.
+Avem un rezultat teoretic care ne arată, însă, că nu este necesar să luăm
+chiar toate valorile $ x \in \FF_q $, lucru care conduce la faptul că
+marginea superioară a pașilor de calculat este ceva mai blîndă.
+
+Vom avea nevoie de:
+\begin{lemma}\label{le:deg-hasse}
+  Fie $ A $ un grup abelian și $ d : A \to \ZZ $ o formă pătratică
+  pozitiv definită. Atunci:
+  \[
+    | d(\psi - \phi) - d(\phi) - d(\psi)| \leq 2 \sqrt{d(\phi)d(\psi)}, %
+    \quad \forall \psi, \phi \in A.
+  \]
+\end{lemma}
+
+\begin{proof}
+  Fie $ \psi, \phi \in A $. Folosim forma biliniară asociată formei
+  pătratice $ d $:
+  \[
+    L(\psi, \phi) = d(\psi - \phi) - d(\phi) - d(\psi).
+  \]
+
+  Cum $ d $ este pozitiv definită, pentru orice $ m, n \in \ZZ $:
+  \[
+    0 \leq d(m\psi - n\phi) = m^2 d(\psi) + mnL(\psi, phi) + n^2 d(\phi).
+  \]
+
+  În particular, luăm
+  \[
+    m = -L(\psi, \phi), \quad n = 2 d(\psi)
+  \]
+  și se obține:
+  \[
+    0 \leq d(\psi)\left(4d(\psi)d(\phi) - L(\psi, \phi)^2\right).
+  \]
+
+  Pentru $ \psi \neq 0 $, rezultă inegalitatea noastră,
+  iar pentru $ \psi = 0 $, inegalitatea este trivială.
+\end{proof}
 
 Rezultatul important de mai jos a fost formulat ca o conjectură de E.\ Artin
 în 1924 și demonstrat de H.\ Hasse în 1933:
