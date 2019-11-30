@@ -1,0 +1,7 @@
+2019-10-19 18:58:07.950 EEST [21230] LOG:  could not bind IPv4 address "0.0.0.0": Address already in use
+2019-10-19 18:58:07.950 EEST [21230] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2019-10-19 18:58:07.950 EEST [21230] LOG:  could not bind IPv6 address "::": Address already in use
+2019-10-19 18:58:07.950 EEST [21230] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2019-10-19 18:58:07.950 EEST [21230] WARNING:  could not create listen socket for "*"
+2019-10-19 18:58:07.950 EEST [21230] FATAL:  could not create any TCP/IP sockets
+2019-10-19 18:58:07.950 EEST [21230] LOG:  database system is shut down

@@ -1,0 +1,21 @@
+#+TITLE: Idei proiect
+#+AUTHOR: Adrian
+
+* Manager de fișiere
+- o bază de date cu un tabel *DOCUMENTE*, cu coloanele:
+  + ID (nr. crt.);
+  + nume de fișier;
+  + titlu;
+  + autor;
+  + tip (extensie);
+  + cale;
+  + mărime;
+  + comentarii;
+- o interfață separată, scrisă în C/C++/Python/altceva, prin care să se permită:
+  + introducere de documente;
+  + filtre;
+  + afișare de informații pentru anume documente;
+
+** Probleme și întrebări
+- Ce securizăm?
+  + accesul utilizatorilor (roluri);

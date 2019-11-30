@@ -1,0 +1,14 @@
+2019-10-19 18:58:39.826 EEST [21239] LOG:  could not bind IPv4 address "0.0.0.0": Address already in use
+2019-10-19 18:58:39.826 EEST [21239] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2019-10-19 18:58:39.826 EEST [21239] LOG:  could not bind IPv6 address "::": Address already in use
+2019-10-19 18:58:39.826 EEST [21239] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2019-10-19 18:58:39.826 EEST [21239] WARNING:  could not create listen socket for "*"
+2019-10-19 18:58:39.826 EEST [21239] FATAL:  could not create any TCP/IP sockets
+2019-10-19 18:58:39.826 EEST [21239] LOG:  database system is shut down
+2019-10-19 18:59:57.509 EEST [21284] LOG:  could not bind IPv4 address "0.0.0.0": Address already in use
+2019-10-19 18:59:57.509 EEST [21284] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2019-10-19 18:59:57.509 EEST [21284] LOG:  could not bind IPv6 address "::": Address already in use
+2019-10-19 18:59:57.509 EEST [21284] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2019-10-19 18:59:57.509 EEST [21284] WARNING:  could not create listen socket for "*"
+2019-10-19 18:59:57.509 EEST [21284] FATAL:  could not create any TCP/IP sockets
+2019-10-19 18:59:57.509 EEST [21284] LOG:  database system is shut down
