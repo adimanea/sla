@@ -2,48 +2,45 @@
 
 \chapter{Descrierea aplicației}
 
-Aplicația urmărește să servească pentru gestionarea unei biblioteci,
-atît în relația cu cititorii (clienții), cît și cu furnizorii (edituri,
-persoane fizice sau persoane juridice). De asemenea, biblioteca are
-șoferi angajați, care livrează periodice sau cărți cititorilor.
+Aplicația servește la gestionarea unei biblioteci, în relația cu cititorii,
+oferind roluri speciale pentru clienți din mediul academic.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \section{Utilizatori și atribute}
 \label{sec:util-atr}
 
-Utilizatorii aplicației și atributele lor sînt:
+Utilizatorii aplicației, identificați prin IP-uri specifice sînt:
 \begin{itemize}
-\item \textbf{Studenți}, identificați prin afiliere și CNP;
-\item \textbf{Profesori}, identificați prin afiliere și CNP;
-\item \textbf{Cititori înregistrați}, identificați prin CNP;
-\item \textbf{Administratorii} aplicației, identificați prin CNP;
-\item \textbf{Bibliotecarii}, identificați prin CNP;
-\item \textbf{Publicul} (cititori neînregistrați) identificat prin CNP;
-\item \textbf{Șoferii}, identificați prin CNP.
+\item \textbf{Administratori} ai bazei de date;
+\item \textbf{Personal educațional (Edu)};
+\item \textbf{Cititori} din afara mediului educațional;
+\item \textbf{Bibliotecari}.
 \end{itemize}
 
-La nivelul tuturor acestor utilizatori, CNP-ul servește drept atribut
-de identificare. De asemenea, putem utiliza și o adresă de e-mail confirmată,
-care poate servi drept contact pentru diverse anunțuri.
+Considerăm că studenții și profesorii fac parte din personalul educațional
+(Edu), statut pe care trebuie să-l verifice periodic. De asemenea, un
+cititor oarecare poate deveni Edu în timp, dacă adaugă verificarea.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \section{Procesele din aplicație}
 \label{sec:procese}
 
 \begin{enumerate}[(P1)]
-\item Administrare utilizatori;
+\item Vizualizarea cărților în stoc;
+\item Vizualizarea bibliotecarilor, cu specializările lor;
 \item Adăugarea unei cărți;
-\item Adăugarea unei reviste;
 \item Adăugarea unui cititor;
-\item Adăugarea unui șofer;
-\item Adăugarea unui bibliotecar;
-\item Abonare la periodice;
-\item Actualizarea dovezii de plată;
-\item Actualizarea dovezii de statut academic;
-\item Vizualizarea cărților;
-\item Vizualizarea revistelor;
-\item Vizualizarea cititorilor;
-\item Vizualizarea furnizorilor;
+\item Adăugarea unui abonat Edu;
+\item Înregistrarea unui cont public;
+\item Administrarea utilizatorilor;
+\item Actualizarea stocului unor cărți;
+\item Verificarea statutului Edu;
+\item Administrarea abonamentului;
+\item Vizualizarea cărților de o anumită specializare;
+\item Vizualizarea revistelor de o anumită specializare;
+\item Adăugare reviste;
+\item Administrare abonament revistă;
+\item Administrare abonament la newsletter;
 \end{enumerate}
 
 \todo[inline,noline,backgroundcolor=green!40]{Descompunerea funcțională pe 2 nivele}
@@ -55,23 +52,19 @@ care poate servi drept contact pentru diverse anunțuri.
 
 \begin{center}
   \small
-  \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
     \hline
-    & P1 & P2 & P3 & P4 & P5 & P6 & P7 & P8 & P9 & P10 & P11 & P12 & P13\\
+    & P1 & P2 & P3 & P4 & P5 & P6 & P7 & P8 & P9 & P10 & P11 & P12 & P13 & P14 & P15\\
     \hline \hline
-    Bibliotecari & & X & X & X & & & & X & X & X & X & X & X \\
+    Administrator & X & X & X & X & X & X & X & X & X & X & X & X & X & X & X \\
     \hline
-    Studenți & & & & & & & & X & X & X & X & & \\
+    Edu & X & X & & & & & & & X & X & X & & & X & X \\
     \hline
-    Profesori & & & & & & & X & X & X & X & X & & \\
+    Cititor & X & X & & & & & & & X & X & X & & & & X\\
     \hline
-    Cititori & & & & & & & & X & X & X & X & X & \\
+    Bibliotecar & X & X & X & X & X & & & X & X & X & X & & X & X & \\
     \hline
-    Public & & & & & & & X & X & X & X & X & & X \\
-    \hline
-    Administratori & X & X & X & X & X & X & X & X & X & X & X & X & X\\
-    \hline
-    Șofer & & & & & & & & & & & & X & \\
+    Public & X & & & & & & & & & & X & & & & X \\
     \hline
   \end{tabular}
 \end{center}
@@ -81,35 +74,21 @@ care poate servi drept contact pentru diverse anunțuri.
 \section{Entitățile și modelarea datelor}
 \label{sec:ent-model}
 
-Aplicația servește unei biblioteci moderne, care permite împrumutul
-cărților sau periodicelor, cu oferte speciale pentru profesori,
-cercetători și studenți. Mai mult, ea oferă și legături directe cu
-furnizori, care pot fi edituri sau persoane fizice, constituindu-se
-și într-un fel de anticariat cu închiriere. Toate cărțile și
-periodicele pot fi împrumutate de la sediul bibliotecii sau livrate cu
-ajutorul șoferilor bibliotecii. Șoferii sînt asociați cu anumite
-regiuni în care se pot deplasa.
+Biblioteca este un centru de împrumut care permite și abonamentul la reviste
+pentru cei din mediul academic.
 
-În baza de date, bibliotecarul poate adăuga \emph{cărțile} și \emph{periodicele}
-disponibile. Fiecare dintre acestea pot fi adăugate într-o cantitate arbitrară,
-care constituie \emph{stocul}. O carte poate proveni de la mai mulți
-\emph{furnizori}, deoarece se permit multiple exemplare, care să mărească
-stocul.
+În bibliotecă se pot adăuga \emph{cărți} și \emph{reviste} de diverse
+specializări, în funcție de contractele cu furnizorii. Fiecare
+carte și revistă aparțin unei singure specializări.
 
-Totodată, bibliotecarul poate adăuga cititori, care pot fi \emph{profesori, %
-  studenți} sau din \emph{publicul larg}. Un student nu se poate abona
-la periodice și poate împrumuta maximum 10 cărți, iar un profesor se poate
-abona la maximum 10 periodice și poate împrumuta maximum 10 cărți.
-Publicul larg nu se poate abona la periodice și poate împrumuta maximum
-5 cărți.
+Personalul Edu se poate abona și la reviste de specialitate, în baza
+unei verificări actualizate. Ceilalți cititori cu abonament pot deveni
+Edu printr-o verificare. Publicul larg poate doar să vadă stocul
+de cărți, general sau pe specializări. Toți utilizatorii se pot abona
+la newsletter pentru a afla cînd se actualizează stocul.
 
-Utilizatorii își pot administra datele de plată, pentru a putea să-și
-înnoiască abonamentul automat.
-
-Șoferii pot vizualiza numai adresele cititorilor care au ales să facă acest
-cîmp vizibil, pentru a putea livra cărțile sau periodicele corespunzătoare.
-Aceasta se va face numai dacă metoda de plată este verificată, iar abonamentul,
-activ.
+De asemenea, bibliotecarii sînt asociați specializărilor, fiind
+responsabil de publicațiile dintr-o anumită specializare.
 
 \todo[inline,noline,backgroundcolor=green!40]{diagrama E/R}
 \todo[inline,noline,backgroundcolor=green!40]{diagrama conceptuală}
@@ -120,21 +99,15 @@ activ.
 \label{sec:scheme-rel}
 
 \begin{verbatim}
-CARTE       (cod_carte#, titlu_carte, autor_carte, 
-             editura, furnizor, stoc)
-REVISTA     (cod_revista#, titlu_revista, numar_revista, 
-             an_revista, furnizor, stoc)
-STUDENT     (cod_student#, nume_student, prenume_student, adresa_student,
-             adresa_publica, modalitate_plata, statut_valid, email, afiliere)
-PROFESOR    (cod_prof#, nume_prof, prenume_prof, adresa_prof,
-             adresa_publica, modalitate_plata, statut_valid, email, afiliere)
-CITITOR     (cod_cititor#, nume_cititor, prenume_cititor, adresa_cititor,
-             adresa_publica, modalitate_plata, statut_valid, email)
-PUBLIC      (cod_public#)
-BIBLIOTECAR (cod_bib#, nume_bib, prenume_bib)
-SOFER       (cod_sofer#, nume_sofer, prenume_sofer, regiune)
-ADMIN       (cod_admin#, nume_admin, prenume_admin)
-FURNIZOR    (cod_furnizor#, tip_furnizor, nume_furnizor, prenume_furnizor)
+BIBLIOTECAR     (id_bib#, nume, prenume, id_specializare);
+CITITOR         (id_cit#, nume, prenume, email, newsletter, abonament_activ,
+                 id_carte, id_spec);
+EDU             (id_edu#, nume, prenume, email, newsletter, abonament_activ,
+                 id_carte, id_rev, id_spec);
+PUBLIC          (id_pub#, email, pw);
+CARTE           (id_carte#, autor_n, autor_p, titlu, an, id_spec, stoc);
+REVISTA         (id_rev#, autor_n, autor_p, titlu, numar, id_spec, stoc);
+SPECIALIZARE    (id_spec#, descriere);
 \end{verbatim}
 
 \todo[inline,noline,backgroundcolor=green!40]{cum țin număr de împrumuturi \& termen?}
@@ -146,29 +119,23 @@ FURNIZOR    (cod_furnizor#, tip_furnizor, nume_furnizor, prenume_furnizor)
 
 \begin{center}
   \footnotesize
-  \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
     \hline
-    & P1 & P2 & P3 & P4 & P5 & P6 & P7 & P8 & P9 & P10 & P11 & P12 & P13 \\
+    & P1 & P2 & P3 & P4 & P5 & P6 & P7 & P8 & P9 & P10 & P11 & P12 & P13 & P14 & P15\\
     \hline \hline
-    \texttt{CARTE} & & I,U,D & & & & & & & & S & & & \\
+    \texttt{BIBLIOTECAR} & S & S & I,U,D & I,U,D & I,U,D & & & I,U,D & U & S & S & I,U,D & I,U,D & U & \\
     \hline
-    \texttt{REVISTA} & & & I,U,D & & & & & & & & S & & \\
+    \texttt{CITITOR} & S & S & & & & & & & I,U,D & I,U,D & S & & & & U \\
     \hline
-    \texttt{STUDENT} & I,U,D & & I,U,D & & & & & I,U,D & I,U,D & & & S & \\
+    \texttt{EDU} & S & S & & & & & & & U & I,U,D & S & S & & U & U \\
     \hline
-    \texttt{PROFESOR} & I,U,D & & I,U,D & & & & I,U,D & I,U,D & I,U,D & & & & \\
+    \texttt{PUBLIC} & S & & & & & I,U,D & & & & & & S & & & I,U,D \\
     \hline
-    \texttt{CITITOR} & I,U,D & & I,U,D & & & & & I,U,D & I,U,D & & & & \\
+    \texttt{CARTE} & S & & I,U,D & & & & & & & & S & & & & \\
     \hline
-    \texttt{PUBLIC} & & & I,U,D & & & & & I,U,D & I,U,D & & & & \\
+    \texttt{REVISTA} & & & & & & & & & & & & S & I & & \\
     \hline
-    \texttt{BIBLIOTECAR} & I,U,D & & & & & I,U,D & & & & & & & \\
-    \hline
-    \texttt{SOFER} & I,U,D & & & & I,U,D & & & & & & & & \\
-    \hline
-    \texttt{ADMIN} & I,U,D & & & & & & & & & & & & \\
-    \hline
-    \texttt{FURNIZOR} & I,U,D& & & & & & & & & & & & S \\
+    \texttt{SPECIALIZARE} & & & & & & & & & & & S & S & & & \\
     \hline
   \end{tabular}
 \end{center}
@@ -182,27 +149,23 @@ FURNIZOR    (cod_furnizor#, tip_furnizor, nume_furnizor, prenume_furnizor)
 
 \begin{center}
   \small
-  \begin{tabular}{|l|c|c|c|c|c|c|c|}
+  \begin{tabular}{|l|c|c|c|c|c|}
     \hline
-    & Profesor & Student & Cititor & Bibliotecar & Șofer & Admin & Public \\
+    & Edu & Cititor & Bibliotecar & Admin & Public \\
     \hline\hline
-    \texttt{CARTE} & S & S & S & S, I, U, D & & S, I, U, D & S \\
+    \texttt{BIBLIOTECAR} & S & S & S & S, I, U, D & \\
     \hline
-    \texttt{REVISTA} & S & S & S & S, I, U, D & & S, I, U, D & S \\
+    \texttt{CITITOR} & & S, I, U, D & S, I, U, D & & \\
     \hline
-    \texttt{STUDENT} & & & & S, I, U, D & S & S, I, U, D & \\
+    \texttt{EDU} & & S, I, U, D & S, I, U, D & & \\
     \hline
-    \texttt{PROFESOR} & & & & S, I, U, D & S & S, I, U, D & \\
+    \texttt{PUBLIC} & & & & & \\
     \hline
-    \texttt{CITITOR} & & & & S, I, U, D & S & S, I, U, D & \\
+    \texttt{CARTE} & S & S & S, I, U, D & S, I, U, D & S \\
     \hline
-    \texttt{BIBLIOTECAR} & & & & & & S, I, U, D & \\
+    \texttt{REVISTA} & S & & S, I, U, D & S, I, U, D & S \\
     \hline
-    \texttt{SOFER} & & & & S & & S, I, U, D & \\
-    \hline
-    \texttt{ADMIN} & & & & & & S, I, U, D & \\
-    \hline
-    \texttt{FURNIZOR} & S & S & S & S & S & S, I, U, D & S \\
+    \texttt{SPECIALIZARE} & S & S & S & S, I, U, D & S \\
     \hline
   \end{tabular}
 \end{center}
@@ -218,23 +181,11 @@ Conturile utilizatorilor vor fi definite individual pentru utilizatorii
 identificați de bibliotecă.
 
 În această etapă a dezvoltării aplicației, vor fi disponibile maximum
-10000 de conturi de studenți, 10000 de conturi de profesori, 10000 de
-conturi de cititori (înregistrați), 10 conturi de bibliotecar,
-10 conturi de șofer.
+10000 de conturi Edu, 10000 de conturi de cititori (înregistrați),
+10 conturi de bibliotecar, 1000 conturi de utilizator neabonat
+(\texttt{public}).
 
-De asemenea, se va mai crea un cont de vizitator (\texttt{PUBLIC}).
 
-\textbf{Proprietarul unui obiect al bazei de date} este utilizatorul
-care are drepturi nelimitate de utilizare și administrare a obiectului
-respectiv. Aceste drepturi nu îi pot fi revocate nici chiar de administratorul
-bazei de date.
-
-Un utilizator care este proprietarul cel puțin al unui obiect din baza
-de date nu poate fi șters din sistem.
-
-\textbf{Schema unui utilizator} este totalitatea obiectelor (tabele,
-view-uri, indecși, funcții și proceduri PL/SQL, pachete PL/SQL), care au
-ca proprietar un anume utilizator al bazei de date.
 
 \todo[inline,noline,backgroundcolor=green!40]{clarificare tabele/scheme}
 
