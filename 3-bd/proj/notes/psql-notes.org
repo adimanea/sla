@@ -1,0 +1,1772 @@
+#+TITLE: PostgreSQL Notes
+#+AUTHOR: Adrian
+
+
+* Installation and Startup
+Best Linux setup: see *Juba, Volkov - Learning PostgreSQL 11 2019, pages
+55-57*.
+
+- Setup environment variables in =~/.bashrc=:
+
+#+BEGIN_SRC sh
+  export PGROOT="/var/lib/postgres"
+  export PGDATA="/var/lib/postgres/data"
+  export PGHOST="localhost"
+  export PGPORT="5432"
+  export PGLOG="/var/log/postgres"
+#+END_SRC
+
+- Check the =postgresql.conf= (search for it with =locate= or
+  =find / -name postgresql.conf=) configuration file to accept
+  =localhost=:
+
+#+BEGIN_SRC sh
+  # postgresql.conf
+  listen_address = '*'
+#+END_SRC
+
+- The owner of the =$PGROOT= directory is =postgres=! So switch to that
+  user:
+
+#+BEGIN_SRC sh
+  $ sudo su - postgres
+#+END_SRC
+
+- Initialize database (after logging in as =postgres=):
+
+#+BEGIN_SRC sh
+  initdb --locale en_US.UTF-9 -D /var/lib/postgres/data
+#+END_SRC
+
+Whenever needed, check the status of the =postgresql.service=:
+
+#+BEGIN_SRC sh
+  systemctl status postgresql
+  systemctl restart postgresql
+  systemctl enable postgresql
+#+END_SRC
+
+*Create a role and database for current user!!*, it will be much better.
+See the commands:
+
+#+BEGIN_SRC sql
+  alter user {username};
+  alter role {give him superuser etc};
+#+END_SRC
+
+Then at the command line, initialize a database with his name:
+=createdb {username}=.
+
+See also
+[[https://www.a2hosting.com/kb/developer-corner/postgresql/managing-postgresql-databases-and-users-from-the-command-line][here]].
+
+* Create and delete database
+Create a database with:
+
+#+BEGIN_SRC sql
+  create database test;
+  -- uppercase works as well
+  CREATE DATABASE test;
+#+END_SRC
+
+List the current databases with =\l= under =psql=.
+
+After creating, enter the database (connect to it) with
+=psql {db_name}=, i.e. =psql test= or connect from within =psql= by
+entering =\c {db_name}=, i.e. =\c test=.
+
+To delete the database, enter:
+
+#+BEGIN_SRC sql
+  drop database test;
+#+END_SRC
+
+* Create table
+General syntax:
+
+#+BEGIN_SRC sql
+  create table table_name (
+      column name + data type + constraints
+  )
+#+END_SRC
+
+Example:
+
+#+BEGIN_SRC sql
+  create table person (
+      id int,
+      first_name varchar(50),
+      last_name varchar(50),
+      gender varchar(6),
+      date_of_birth timestamp, -- INCLUDES H:M:S
+      -- simpler
+      date_of_birth date,
+  )
+#+END_SRC
+
+View created tables or entries with =\d=, so for example:
+
+#+BEGIN_SRC sql
+  \d -- shows whole table
+  \d person -- shows the fields of person
+#+END_SRC
+
+** Create table with constraints
+To impose certain constraints to a table created, you can write, for
+example:
+
+#+BEGIN_SRC sql
+  create table person (
+      id bigserial not null primary key,
+      -- bigserial = increments by itself
+      -- primary key = uniquely identifies the person
+      first_name varchar(50) not null,
+      last_name varchar(50) not null,
+      gender varchar(5) not null,
+      date_of_birth date not null,
+      email varchar(150),
+  );
+#+END_SRC
+
+You can =drop= the table and create the new one which contains the
+constraints.
+
+When listing the new table, you get:
+
+#+BEGIN_EXAMPLE
+  List of relations
+      Schema |     Name      |   Type   |  Owner
+     --------+---------------+----------+----------
+      public | person        | table    | postgres
+      public | person_id_seq | sequence | postgres
+  (2 rows)
+#+END_EXAMPLE
+
+Note that =person_id_seq= is due to the primary key, which is =id=:
+
+#+BEGIN_EXAMPLE
+                          Table "public.person"
+      Column     |          Type          | Collation | Nullable |              Default
+  ---------------+------------------------+-----------+----------+------------------------------------
+   id            | bigint                 |           | not null | nextval('person_id_seq'::regclass)
+   first_name    | character varying(50)  |           | not null |
+   last_name     | character varying(50)  |           | not null |
+   gender        | character varying(7)   |           | not null |
+   date_of_birth | date                   |           | not null |
+   email         | character varying(150) |           |          |
+
+  Indexes: "person_pkey" PRIMARY KEY, btree (id)
+#+END_EXAMPLE
+
+The command =\dt= shows only the tables, without the relation, so it
+drops the =person_id_seq=.
+
+* Insert records
+Example:
+
+#+BEGIN_SRC sql
+  insert into person (
+      first_name,
+      last_name,
+      gender,
+      date_of_birth)
+  values ('Anne', 'Smith', 'FEMALE', DATE '1988-01-09');
+#+END_SRC
+
+Note that the example above /does not/ contain email, since it is
+allowed to be null. Another example is:
+
+#+BEGIN_SRC sql
+  insert into person (
+      first_name,
+      last_name,
+      gender,
+      date_of_birth,
+      email)
+  values ('Jake', 'Jones', 'MALE', date '1990-01-10', 'jake@gmail.com');
+#+END_SRC
+
+Query to see what you inserted with:
+
+#+BEGIN_SRC sql
+  select * from person
+#+END_SRC
+
+** Generate 1000 rows with =Mockaroo=
+[[https://mockaroo.com/][Link]].
+
+Generate =sql= file, then load it with =\i {FILE}=.
+
+* Basic operations
+
+** Select
+
+To query the database for a certain entry, use =select=. Example:
+
+#+BEGIN_SRC sql
+  select * from person where first_name = 'Jones';
+  -- this shows all entries for the result
+  -- if you want to just show its name, use:
+  select first_name, last_name from person where first_name = 'Jones';
+#+END_SRC
+
+** Order
+Sort from the table:
+
+#+BEGIN_SRC sql
+  select * from person order by country_of_birth desc; -- descending order
+#+END_SRC
+
+You can also choose multiple criteria to sort:
+
+#+BEGIN_SRC sql
+  select * from person order by id, email asc;
+  -- sorted by id first, then email
+#+END_SRC
+
+** Distinct
+To show unique entries:
+
+#+BEGIN_SRC sql
+  select distinct country_of_birth from person order by country_of_birth;
+  -- shows only one entry for each country
+#+END_SRC
+
+** =where= clause and =and=
+Example:
+
+#+BEGIN_SRC sql
+  select * from person where gender = 'FEMALE';
+  select * from person where gender = 'FEMALE' and email is not null;
+#+END_SRC
+
+* Misc
+- You can enter shell commands while in =psql= with =\!=, so for example
+  clear screen with =\! clear=;
+- You can personalize =psql= by editing =.psqlrc= for better prompt and
+  error handling;
+
+* TutorialsPoint
+[[https://www.tutorialspoint.com/postgresql/postgresql_c_cpp.htm][Link]].
+** Functions
+PostgreSQL functions are also called *stored procedures*. The functions can be created in multiple languages, such as SQL, PL/pgSQL, C, Python, Perl etc.
+
+The basic syntax of a function in SQL is:
+#+BEGIN_SRC sql
+  create [or replace] function function_name (args)
+  returns return_datatype as $var_name$
+		  declare
+			  declaration;
+			  [...]
+		  begin
+			  <function_body>
+			  [...]
+		  return { variable_name | value }
+		  end;
+		  language plpgsql;
+#+END_SRC
+
+Example:
+#+BEGIN_EXAMPLE
+testdb# select * from COMPANY;
+ id | name  | age | address   | salary
+----+-------+-----+-----------+--------
+  1 | Paul  |  32 | California|  20000
+  2 | Allen |  25 | Texas     |  15000
+  3 | Teddy |  23 | Norway    |  20000
+  4 | Mark  |  25 | Rich-Mond |  65000
+  5 | David |  27 | Texas     |  85000
+  6 | Kim   |  22 | South-Hall|  45000
+  7 | James |  24 | Houston   |  10000
+(7 rows)
+#+END_EXAMPLE
+
+The function =totalRecords()= can be written as follows:
+#+BEGIN_SRC sql
+  create or replace function totalRecords()
+  returns integer as $total$
+  declare
+	  total integer;
+  begin
+	  select count(*) into total from company;
+	  return total;
+  end;
+  $total$
+  language plpgsql;
+#+END_SRC
+
+After writing it, it is accepted with the message =CREATE FUNCTION=.
+
+Then it is executed with the =select= keyword:
+#+BEGIN_SRC sh
+  testdb=# select totalRecords();
+#+END_SRC
+
+** C/C++ Interface
+We are going to use the =libpqxx= library, which is the official C++ client API for PostgreSQL. ([[http://pqxx.org/development/libpqxx][link]])
+
+It should be installed:
+#+BEGIN_SRC sh
+  wget [link]
+  tar xvzf [archive.tar.gz]
+  cd [dir]
+  ./configure
+  make
+  make install
+#+END_SRC
+
+Now the =pg_hba.conf= file should be edited:
+#+BEGIN_SRC sh
+  # IPv4 local connections:
+  host    all         all         127.0.0.1/32          md5
+#+END_SRC
+
+and the connection to PostgreSQL should be restarted.
+
+*** Interface API
+#+BEGIN_SRC c++
+  pqxx::connection C(const std::string & dbstring) {
+  // typedef which will be used to connect to the database
+  // dbstring contains the required parameters to connect, for example
+	dbname = testdb;
+	user = postgres;
+	password = pass123;
+	hostaddr = 127.0.0.1;
+	port = 5432;
+  }
+
+  C.is_open() // returns boolean whether the connection is active
+  C.disconnect() // disconnects to an open database connection
+
+  pqxx::work W(C)
+  // typedef which is used to create a transactional object using connection C
+  // if transaction object is created successfully, then it is assigned to C,
+  // which will then be used to access public methods related to the object
+
+  W.exec(const std::string & sql)
+  // public method from the transactional object, used to execute SQL statement
+
+  W.commit()		// commits the transaction
+  W.abort()		// rollbacks the transaction
+
+  pqxx::nontransaction N(C)
+  // typedef to create a non-transactional object, using connection C
+
+  N.exec(const std::string & sql)
+  // executes SQL statement and retursn the object which
+  // is the iterator for all the returned records
+#+END_SRC
+
+**** Examples
+***** Connecting to the Database
+#+BEGIN_SRC c++
+  #include <iostream>
+  #include <pqxx/pqxx>
+
+  using namespace std;
+  using namespace pqxx;
+
+  int main(int argc, char* argv[]) {
+	try {
+	  connection C("dbname = testdb user = postgres password = abcd123 hostaddr = 127.0.0.1 port = 5432");
+	  if (C.is_open()) {
+		cout << "Opened database successfully: " << C.dbname() << endl;
+	  } else {
+		cout << "Can't open database" << endl;
+		return 1;
+	  }
+	  C.disconnect();
+	} catch (const std::exception &e) {
+	  cerr << e.what() << std::endl;
+	  return 1;
+	}
+  }
+#+END_SRC
+
+***** Create a Table
+#+BEGIN_SRC c++
+  #include <iostream>
+  #include <pqxx/pqxx>
+
+  using namespace std;
+  using namespace pqxx;
+
+  int main(int argc, char* argv[]) {
+	char * sql;
+
+	try {
+	  connection C("dbname = testdb user = postgres password = abc hostaddr = 127.0.0.1 port = 5432");
+	  if (C.is_open()) {
+		cout << "Opened database successfully: " << C.dbname() << endl;
+	  } else {
+		cout << "Can't open database" << endl;
+		return 1;
+	  }
+
+	  /* create SQL statement */
+	  sql = "create table company(" \
+		"id int primary key not null," \
+		"name text not null," \
+		"age int not null," \
+		"address char(50)," \
+		"salary real );";
+
+	  /* create transactional object */
+	  work W(C);
+
+	  /* execute SQL query */
+	  W.exec(sql);
+	  W.commit();
+	  cout << "Table created successfully." << endl;
+	  C.disconnect();
+	} catch (const std::exception *e) {
+	  cerr << e.what() << std::endl;
+	  return 1;
+	}
+
+	return 0;
+  }  
+#+END_SRC
+
+***** Insert into table
+#+BEGIN_SRC c++
+  #include <iostream>
+  #include <pqxx/pqxx>
+
+  using namespace std;
+  using namespace pqxx;
+
+  int main(int argc, char* argv[]) {
+	char * sql;
+
+	try {
+	  connection C("dbname = testdb user = postgres password = abc hostaddr = 127.0.0.1 port = 5432");
+	  if (C.is_open()) {
+		cout << "Opened database successfully: " << C.dbname() << endl;
+	  } else {
+		cout << "Can't open database" << endl;
+		return 1;
+	  }
+
+	  /* create SQL statement */
+	  sql = "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) "  \
+		   "VALUES (1, 'Paul', 32, 'California', 20000.00 ); " \
+		   "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) "  \
+		   "VALUES (2, 'Allen', 25, 'Texas', 15000.00 ); "     \
+		   "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)" \
+		   "VALUES (3, 'Teddy', 23, 'Norway', 20000.00 );" \
+		   "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)" \
+		   "VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 );";
+
+	  /* create transactional object */
+	  work W(C);
+
+	  /* execute SQL query */
+	  W.exec(sql);
+	  W.commit();
+	  cout << "Records created successfully" << endl;
+	  C.disconnect();
+	} catch (const std::exception &e) {
+	  cerr << e.what() << std.endl;
+	  return 1;
+	}
+
+	return 0;
+  }
+#+END_SRC
+
+***** Selection operation
+#+BEGIN_SRC C++
+  #include <iostream>
+  #include <pqxx/pqxx>
+
+  using namespace std;
+  using namespace pqxx;
+
+  int main(int argc, char* argv[]) {
+	char * sql;
+
+	try {
+	  connection C("dbname = testdb user = postgres password = abc hostaddr = 127.0.0.1 port = 5432");
+	  if (C.is_open()) {
+		cout << "Opened database successfully: " << C.dbname() << endl;
+	  } else {
+		cout << "Can't open database." << endl;
+		return 1;
+	  }
+
+	  /* create sql statement */
+	  sql = " select * from company";
+
+	  /* create non-transactional object. */
+	  nontransaction N(C);
+
+	  /* execute sql query */
+	  result R(N.exec(sql));
+
+	  /* list all the records */
+	  for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
+		cout << "ID = " << c[0].as<int>() << endl;
+		cout << "Name = " << c.[1].as<string>() << endl;
+		cout << "Age = " << c[2].as<int>() << endl;
+		cout << "Salary = " << c[3].as<float>() << endl;
+	  }
+	  cout << "Operation done successfully." << endl;
+	  C.disconnect ();
+	} catch (const std::exception &e) {
+	  cerr << e.what() << std::endl;
+	  return 1;
+	}
+
+	return 0;
+  }
+#+END_SRC
+
+***** Update operation
+#+BEGIN_SRC c++
+  #include <iostream>
+  #include <pqxx/pqxx> 
+
+  using namespace std;
+  using namespace pqxx;
+
+  int main(int argc, char* argv[]) {
+	 char * sql;
+   
+	 try {
+		connection C("dbname = testdb user = postgres password = cohondob \
+		hostaddr = 127.0.0.1 port = 5432");
+		if (C.is_open()) {
+		   cout << "Opened database successfully: " << C.dbname() << endl;
+		} else {
+		   cout << "Can't open database" << endl;
+		   return 1;
+		}
+      
+		/* Create a transactional object. */
+		work W(C);
+		/* Create  SQL UPDATE statement */
+		sql = "UPDATE COMPANY set SALARY = 25000.00 where ID=1";
+		/* Execute SQL query */
+		W.exec( sql );
+		W.commit();
+		cout << "Records updated successfully" << endl;
+      
+		/* Create SQL SELECT statement */
+		sql = "SELECT * from COMPANY";
+
+		/* Create a non-transactional object. */
+		nontransaction N(C);
+      
+		/* Execute SQL query */
+		result R( N.exec( sql ));
+      
+		/* List down all the records */
+		for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
+		   cout << "ID = " << c[0].as<int>() << endl;
+		   cout << "Name = " << c[1].as<string>() << endl;
+		   cout << "Age = " << c[2].as<int>() << endl;
+		   cout << "Address = " << c[3].as<string>() << endl;
+		   cout << "Salary = " << c[4].as<float>() << endl;
+		}
+		cout << "Operation done successfully" << endl;
+		C.disconnect ();
+	 } catch (const std::exception &e) {
+		cerr << e.what() << std::endl;
+		return 1;
+	 }
+
+	 return 0;
+  }
+#+END_SRC
+
+***** Delete operation
+#+BEGIN_SRC c++
+  #include <iostream>
+  #include <pqxx/pqxx> 
+
+  using namespace std;
+  using namespace pqxx;
+
+  int main(int argc, char* argv[]) {
+	 char * sql;
+   
+	 try {
+		connection C("dbname = testdb user = postgres password = cohondob \
+		hostaddr = 127.0.0.1 port = 5432");
+		if (C.is_open()) {
+		   cout << "Opened database successfully: " << C.dbname() << endl;
+		} else {
+		   cout << "Can't open database" << endl;
+		   return 1;
+		}
+      
+		/* Create a transactional object. */
+		work W(C);
+		/* Create  SQL DELETE statement */
+		sql = "DELETE from COMPANY where ID = 2";
+		/* Execute SQL query */
+		W.exec( sql );
+		W.commit();
+		cout << "Records deleted successfully" << endl;
+      
+		/* Create SQL SELECT statement */
+		sql = "SELECT * from COMPANY";
+
+		/* Create a non-transactional object. */
+		nontransaction N(C);
+      
+		/* Execute SQL query */
+		result R( N.exec( sql ));
+      
+		/* List down all the records */
+		for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
+		   cout << "ID = " << c[0].as<int>() << endl;
+		   cout << "Name = " << c[1].as<string>() << endl;
+		   cout << "Age = " << c[2].as<int>() << endl;
+		   cout << "Address = " << c[3].as<string>() << endl;
+		   cout << "Salary = " << c[4].as<float>() << endl;
+		}
+		cout << "Operation done successfully" << endl;
+		C.disconnect ();
+	 } catch (const std::exception &e) {
+		cerr << e.what() << std::endl;
+		return 1;
+	 }
+
+	 return 0;
+  }
+#+END_SRC
+** Perl Interface
+The library used is =Perl DBI= module, found [[https://dbi.perl.org/][here]].
+
+The prior needed configuration is to edit =pg_hba.conf=:
+#+BEGIN_SRC sh
+  # IPv4 local connections:
+  host    all         all         127.0.0.1/32          md5
+#+END_SRC
+
+And restart the service.
+
+*** Interface API
+#+BEGIN_SRC perl
+  DBI->connect($data_source, "userid", "password", \%attr) {}
+  # establishes a database connection
+
+  $dbh->do($sql) {} # prepares and executes a single SQL statement
+  # returns the number of rows affected or `undef` for error
+
+  $dbh->prepare($sql) {} # prepares a statement for later execution
+  # returns a reference to a statement handle object
+
+  $sth->execute() {} # performs the processing necessary to execute statement
+
+  $sth->fetchrow_array() {} # fetches next row and returns a list with field values
+
+  $DBI::err {} # equivalent to $h->err, where $h is any handle
+  # returns native database engine error code from last driver method called
+
+  $DBI::errstr {}
+  # returns native database engine error from last DBI method called
+
+  $dbh->disconnect() # closes connection
+#+END_SRC
+
+
+**** Examples
+***** Connecting to database
+#+BEGIN_SRC perl
+  #!/usr/bin/perl
+
+  use DBI;
+  use strict;
+
+  my $driver  = "Pg"; 
+  my $database = "testdb";
+  my $dsn = "DBI:$driver:dbname = $database;host = 127.0.0.1;port = 5432";
+  my $userid = "postgres";
+  my $password = "pass123";
+  my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 }) 
+	 or die $DBI::errstr;
+
+  print "Opened database successfully\n";
+#+END_SRC
+
+***** Create a table
+#+BEGIN_SRC perl
+  #!/usr/bin/perl
+
+  use DBI;
+  use strict;
+
+  my $driver   = "Pg"; 
+  my $database = "testdb";
+  my $dsn = "DBI:$driver:dbname=$database;host=127.0.0.1;port=5432";
+  my $userid = "postgres";
+  my $password = "pass123";
+  my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
+	 or die $DBI::errstr;
+  print "Opened database successfully\n";
+
+  my $stmt = qq(CREATE TABLE COMPANY
+		(ID INT PRIMARY KEY     NOT NULL,
+		NAME           TEXT    NOT NULL,
+		AGE            INT     NOT NULL,
+		ADDRESS        CHAR(50),
+		SALARY         REAL););
+  my $rv = $dbh->do($stmt);
+  if($rv < 0) {
+	 print $DBI::errstr;
+  } else {
+	 print "Table created successfully\n";
+  }
+  $dbh->disconnect();
+#+END_SRC
+
+***** Insert operation
+#+BEGIN_SRC perl
+  #!/usr/bin/perl
+
+  use DBI;
+  use strict;
+
+  my $driver   = "Pg"; 
+  my $database = "testdb";
+  my $dsn = "DBI:$driver:dbname = $database;host = 127.0.0.1;port = 5432";
+  my $userid = "postgres";
+  my $password = "pass123";
+  my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
+	 or die $DBI::errstr;
+  print "Opened database successfully\n";
+
+  my $stmt = qq(INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+	 VALUES (1, 'Paul', 32, 'California', 20000.00 ));
+  my $rv = $dbh->do($stmt) or die $DBI::errstr;
+
+  $stmt = qq(INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+	 VALUES (2, 'Allen', 25, 'Texas', 15000.00 ));
+  $rv = $dbh->do($stmt) or die $DBI::errstr;
+
+  $stmt = qq(INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+	 VALUES (3, 'Teddy', 23, 'Norway', 20000.00 ));
+  $rv = $dbh->do($stmt) or die $DBI::errstr;
+
+  $stmt = qq(INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+	 VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 ););
+  $rv = $dbh->do($stmt) or die $DBI::errstr;
+
+  print "Records created successfully\n";
+  $dbh->disconnect();
+#+END_SRC
+
+***** Select operation
+#+BEGIN_SRC perl
+  #!/usr/bin/perl
+
+  use DBI;
+  use strict;
+
+  my $driver   = "Pg"; 
+  my $database = "testdb";
+  my $dsn = "DBI:$driver:dbname = $database;host = 127.0.0.1;port = 5432";
+  my $userid = "postgres";
+  my $password = "pass123";
+  my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
+	 or die $DBI::errstr;
+  print "Opened database successfully\n";
+
+  my $stmt = qq(SELECT id, name, address, salary  from COMPANY;);
+  my $sth = $dbh->prepare( $stmt );
+  my $rv = $sth->execute() or die $DBI::errstr;
+  if($rv < 0) {
+	 print $DBI::errstr;
+  }
+  while(my @row = $sth->fetchrow_array()) {
+		print "ID = ". $row[0] . "\n";
+		print "NAME = ". $row[1] ."\n";
+		print "ADDRESS = ". $row[2] ."\n";
+		print "SALARY =  ". $row[3] ."\n\n";
+  }
+  print "Operation done successfully\n";
+  $dbh->disconnect();
+#+END_SRC
+
+***** Update operation
+#+BEGIN_SRC perl
+  #!/usr/bin/perl
+
+  use DBI;
+  use strict;
+
+  my $driver   = "Pg"; 
+  my $database = "testdb";
+  my $dsn = "DBI:$driver:dbname = $database;host = 127.0.0.1;port = 5432";
+  my $userid = "postgres";
+  my $password = "pass123";
+  my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
+	 or die $DBI::errstr;
+  print "Opened database successfully\n";
+
+  my $stmt = qq(UPDATE COMPANY set SALARY = 25000.00 where ID=1;);
+  my $rv = $dbh->do($stmt) or die $DBI::errstr;
+  if( $rv < 0 ) {
+	 print $DBI::errstr;
+  }else{
+	 print "Total number of rows updated : $rv\n";
+  }
+  $stmt = qq(SELECT id, name, address, salary  from COMPANY;);
+  my $sth = $dbh->prepare( $stmt );
+  $rv = $sth->execute() or die $DBI::errstr;
+  if($rv < 0) {
+	 print $DBI::errstr;
+  }
+  while(my @row = $sth->fetchrow_array()) {
+		print "ID = ". $row[0] . "\n";
+		print "NAME = ". $row[1] ."\n";
+		print "ADDRESS = ". $row[2] ."\n";
+		print "SALARY =  ". $row[3] ."\n\n";
+  }
+  print "Operation done successfully\n";
+  $dbh->disconnect();
+#+END_SRC
+
+***** Delete operation
+#+BEGIN_SRC perl
+  #!/usr/bin/perl
+
+  use DBI;
+  use strict;
+
+  my $driver   = "Pg"; 
+  my $database = "testdb";
+  my $dsn = "DBI:$driver:dbname = $database;host = 127.0.0.1;port = 5432";
+  my $userid = "postgres";
+  my $password = "pass123";
+  my $dbh = DBI->connect($dsn, $userid, $password, { RaiseError => 1 })
+	 or die $DBI::errstr;
+  print "Opened database successfully\n";
+
+  my $stmt = qq(DELETE from COMPANY where ID=2;);
+  my $rv = $dbh->do($stmt) or die $DBI::errstr;
+  if( $rv < 0 ) {
+	 print $DBI::errstr;
+  } else{
+	 print "Total number of rows deleted : $rv\n";
+  }
+  $stmt = qq(SELECT id, name, address, salary  from COMPANY;);
+  my $sth = $dbh->prepare( $stmt );
+  $rv = $sth->execute() or die $DBI::errstr;
+  if($rv < 0) {
+	 print $DBI::errstr;
+  }
+  while(my @row = $sth->fetchrow_array()) {
+		print "ID = ". $row[0] . "\n";
+		print "NAME = ". $row[1] ."\n";
+		print "ADDRESS = ". $row[2] ."\n";
+		print "SALARY =  ". $row[3] ."\n\n";
+  }
+  print "Operation done successfully\n";
+  $dbh->disconnect();
+#+END_SRC
+** Python Interface
+Requires the =psycopg2= module, found [[http://initd.org/psycopg/][here]].
+*** Interface API
+#+BEGIN_SRC python
+  psycopg2.connect(database="testdb", user="postgres", password="abc", host="127.0.0.1", port="5432")
+  # opens a connection to the PostgreSQL database
+
+  connection.cursor() # creates a cursor which will be used
+  cursor.execute(sql [optional parameters]) # executes a SQL statement
+  cursor.executemany(sql, seq_of_parameters) # executes a command against all parameters
+  cursor.callproc(procname [parameters])     # executes a stored database procedure
+  cursor.rowcount # read-only attribute with total number of rows modified since laste exec
+  connection.commit()     # commits current transaction
+  connection.rollback()   # rolls back any changes before last commit
+  connection.close()      # closes database connection (DOES NOT COMMIT AUTOMATICALLY)
+  cursor.fetchone()       # fetch next row of a query result set
+  cursor.fetchmany([size=cursor.arraysize]) # fetch next set of rows, returning a list
+  cursor.fetchall()       # fetch all (remaining) rows of a query result, returning a list
+#+END_SRC
+
+**** Examples
+***** Connecting to database
+#+BEGIN_SRC python
+  #!/usr/bin/python
+
+  import psycopg2
+
+  conn = psycopg2.connect(database="testdb", user = "postgres", \
+						  password = "pass123", host = "127.0.0.1", \
+						  port = "5432")
+
+  print "Opened database successfully"
+#+END_SRC
+
+***** Create a table
+#+BEGIN_SRC python
+  #!/usr/bin/python
+
+  import psycopg2
+
+  conn = psycopg2.connect(database = "testdb", user = "postgres", \
+						  password = "pass123", host = "127.0.0.1", \
+						  port = "5432")
+  print "Opened database successfully"
+
+  cur = conn.cursor()
+  cur.execute('''CREATE TABLE COMPANY
+		(ID INT PRIMARY KEY     NOT NULL,
+		NAME           TEXT    NOT NULL,
+		AGE            INT     NOT NULL,
+		ADDRESS        CHAR(50),
+		SALARY         REAL);''')
+  print "Table created successfully"
+
+  conn.commit()
+  conn.close()
+#+END_SRC
+
+***** Insert operation
+#+BEGIN_SRC python
+  #!/usr/bin/python
+
+  import psycopg2
+
+  conn = psycopg2.connect(database = "testdb", user = "postgres", \
+						  password = "pass123", host = "127.0.0.1", \
+						  port = "5432")
+  print "Opened database successfully"
+
+  cur = conn.cursor()
+
+  cur.execute("INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) \
+		VALUES (1, 'Paul', 32, 'California', 20000.00 )");
+
+  cur.execute("INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) \
+		VALUES (2, 'Allen', 25, 'Texas', 15000.00 )");
+
+  cur.execute("INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) \
+		VALUES (3, 'Teddy', 23, 'Norway', 20000.00 )");
+
+  cur.execute("INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) \
+		VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 )");
+
+  conn.commit()
+  print "Records created successfully";
+  conn.close()
+#+END_SRC
+
+***** Select operation
+#+BEGIN_SRC python
+  #!/usr/bin/python
+
+  import psycopg2
+
+  conn = psycopg2.connect(database = "testdb", user = "postgres", \
+						  password = "pass123", host = "127.0.0.1", \
+						  port = "5432")
+  print "Opened database successfully"
+
+  cur = conn.cursor()
+
+  cur.execute("SELECT id, name, address, salary  from COMPANY")
+  rows = cur.fetchall()
+  for row in rows:
+	 print "ID = ", row[0]
+	 print "NAME = ", row[1]
+	 print "ADDRESS = ", row[2]
+	 print "SALARY = ", row[3], "\n"
+
+  print "Operation done successfully";
+  conn.close()
+#+END_SRC
+
+***** Update operation
+#+BEGIN_SRC python
+  #!/usr/bin/python
+
+  import psycopg2
+
+  conn = psycopg2.connect(database = "testdb", user = "postgres", \
+						  password = "pass123", host = "127.0.0.1", \
+						  port = "5432")
+  print "Opened database successfully"
+
+  cur = conn.cursor()
+
+  cur.execute("UPDATE COMPANY set SALARY = 25000.00 where ID = 1")
+  conn.commit()
+  print "Total number of rows updated :", cur.rowcount
+
+  cur.execute("SELECT id, name, address, salary  from COMPANY")
+  rows = cur.fetchall()
+  for row in rows:
+	 print "ID = ", row[0]
+	 print "NAME = ", row[1]
+	 print "ADDRESS = ", row[2]
+	 print "SALARY = ", row[3], "\n"
+
+  print "Operation done successfully";
+  conn.close()
+#+END_SRC
+
+***** Delete operation
+#+BEGIN_SRC python
+  #!/usr/bin/python
+
+  import psycopg2
+
+  conn = psycopg2.connect(database = "testdb", user = "postgres", \
+						  password = "pass123", host = "127.0.0.1", \
+						  port = "5432")
+  print "Opened database successfully"
+
+  cur = conn.cursor()
+
+  cur.execute("DELETE from COMPANY where ID=2;")
+  conn.commit()
+  print "Total number of rows deleted :", cur.rowcount
+
+  cur.execute("SELECT id, name, address, salary  from COMPANY")
+  rows = cur.fetchall()
+  for row in rows:
+	 print "ID = ", row[0]
+	 print "NAME = ", row[1]
+	 print "ADDRESS = ", row[2]
+	 print "SALARY = ", row[3], "\n"
+
+  print "Operation done successfully";
+  conn.close()
+#+END_SRC
+* JUBA & VOLKOV
+
+The logical objects of PostgreSQL are organized in the server, which contains: 
+- template databases; 
+- databases; 
+- roles; 
+- tablespaces; 
+- settings; 
+- template procedural languages.
+
+*Template databases* are the existing databases which you can see when installing PostgreSQL and which are cloned for your first example. The existing PostgreSQL Server templates are: 
+- =template1=, which is the default to be cloned; 
+- =template0=, which is a safeguard or version database that can be used for restoring corrupt data in =template1=. 
+Note that unlike  =template1=, this database does not contain encoding-specific or locale-specific data. 
+
+*User databases* are those created by the user. One can have as many databases as needed in a database cluster. The client which connects to the PostgreSQL server can access only the data in a single database, which is specified in the connection string. This means that data is not shared between databases.
+
+The =\l= meta-command of =psql= shows the list of databases in the database cluster and the associate attributes. The privileges are the following: 
+- =CREATE= (=-C=): allows the specified role to create new schemas in the database; 
+- =CONNECT= (=-c=): when a role tries to connect to a database, the connect permissions are checked; 
+- =TEMPORARY= (=-T=): temporary tables are destroyed after the user session is terminated.
+
+In general, when listing (=\l=), the privileges are represented like:
+
+#+BEGIN_EXAMPLE
+  <user>=<privileges>/granted by
+#+END_EXAMPLE
+
+If the user is not specified, the settings are applied to the =PUBLIC= role.
+
+*Roles* belong to the PostgreSQL server cluster and not to a certain database. The roles can be endowed with attributes, as follows:
+- =SUPERUSER=: such a user can bypass all permission checks, except for the =LOGIN= attribute;
+- =LOGIN=: the role allows the user to connect to a database;
+- =CREATEDB=: allows the user to ~create database~;
+- =CREATEROLE=: allows the user to create, delete and alter roles;
+- =REPLICATION=: allows the user to stream replication;
+- =PASSWORD=: it can be used with the ~md5~ or ~scram-sha-256~ authentication methods;
+- =CONNECTION LIMIT=: specifies the number of concurrent connections that the user can initiate;
+- =INHERIT=: if set, the role will inherit the privileges assigned to the roles that it is a member of;
+- =BYPASSRLS=: if specified, the role can bypass *row-level security* (RLS).
+
+** Functions
+*** Using C
+- Use =postgresql-sever-development= library;
+- Define the function in C, create a =make= file and compile it as a shared library (=.so=);
+- Specify the location of the shared library that contains the function, e.g. by providing the library absolute path when creating the function or copy the library to the PostgreSQL library directory;
+- Create the function in the database with =CREATE FUNCTION= statement.
+
+For example, if we want to create a factorial function, the =Makefile= is as follows:
+#+BEGIN_SRC sh
+  MODULES = fact
+  PG_CONFIG = pg_config
+  PGXS = $(shell $(PG_CONFIG) --pgxs)
+  INCLUDEDIR = $(shell $(PG_CONFIG) --includedir-server)
+  include $(PGXS)
+
+  fact.so : fact.o
+	  cc -shared -o fact.so fact.o
+  fact.o: fact.c
+	  cc -o fact.o -c fact.c $(CFLAGS) -I$(INCLUDEDIR)	
+#+END_SRC
+
+Now the C code:
+#+BEGIN_SRC C
+  #include "postgres.h"
+  #include "fmgr.h"
+  #ifdef PG_MODULE_MAGIC
+  PG_MODULE_MAGIC;
+  #endif
+
+  Datum fact(PG_FUNCTION_ARGS);
+  PG_FUNCTION_INFO_V1(fact);
+  Datum
+  fact(PG_FUNCTION_ARGS) {
+	int32 fact = PG_GETARG_INT32(0);
+	int32 count = 1, result = 1;
+	for (count = 1; count <= fact; count++)
+	  result = result * count;
+	PG_RETURN_INT32(result);
+  }
+#+END_SRC
+
+Compile and copy the file to the library directory:
+#+BEGIN_SRC sh
+  sudo cp fact.so $(pg_config --pkglibdir)/
+#+END_SRC
+
+Now as a PostgreSQL user, create the function in the =template= library and test it:
+#+BEGIN_SRC sh
+  $ psql -d template1 -c "CREATE FUNCTION fact(INTEGER) RETURNS INTEGER AS 'fact', 'fact' LANGUAGE C STRICT;"
+  CREATE FUNCTION
+  $ psql -d template1 -c "SELECT fact(5);'
+  fact
+  -----
+   120
+  (1 row)
+#+END_SRC
+
+*** Using SQL
+It can be difficult to maintain a function that is written in C, especially when updating tables. The same function in SQL can also be written:
+#+BEGIN_SRC sql
+  create or replace function fact(fact int) returns int as
+  $$
+  declare
+	  count int = 1;
+	  result int - 1;
+  begin
+	  for count in 1..fact loop
+		  result = result* count;
+	  end loop
+	  return result;
+  end;
+  $$ language plpgsql;
+#+END_SRC
+
+*** Function categories
+PostgreSQL functions can fall into one of the following classifications:
+- *volatile*: a volatile function can return different results for successive calls, even if the function argument didn't change. It can also change the data in the database. For example, the =random()= function is volatile;
+- *stable and immutable*: such functions cannot modify the database and they are guaranteed to return the same results for the same arguments. A =stable= function will provide this guarantee within the statement scope, while an =immutable= function provides this guarantee globally, without any scope. For example, the =round()= function is immutable, because it will always give the same result for the same argument. The =now()= function is stable, because it will always give the same result within the statement or transaction.
+
+*** Anonymous functions
+The =do= statement can be used to execute anonymous code blocks. It can be used to reduce the need of maintenance scripts for administration purposes.
+
+For example, we can create a user which can only perform =SELECT=:
+#+BEGIN_SRC sh
+  create user select_only;
+#+END_SRC
+
+Now we can grant =select= permission on each table for the newly created role:
+#+BEGIN_SRC sql
+  do $$
+  declare r record;
+  begin
+  for r in select table_schema, table_name from information_schema.tables
+	  where table_schema = 'car_portal_app' loop
+	  execute 'grant select on ' || quote_ident(r.table_schema) || '.' ||
+		  quote_ident(r.table_name) || ' to select_only';
+	  end loop;
+  end $$;
+#+END_SRC
+
+** User defined datatypes
+- =CREATE DOMAIN= allows to create a user-defined data type with constraints;
+- =CREATE TYPE=: create a composite type.
+
+For example:
+#+BEGIN_SRC sql
+  create domain text_without_space_and_null as text not null check (value!~'\s');
+
+  -- now use it
+  create table test_domain (
+		 test_att text_without_space_and_null
+  );
+#+END_SRC
+
+** Server-Side Programming with =pl/pgsql=
+*** SQL vs PL/pgsql Languages Comparison
+SQL functions can be thought of as wrappers around parametrized =SELECT= statements. SQL functions can thus be inlined into the calling subquery, thus leading to better performance. Note also that the SQL function execution plan is not cached as in PL/pgsql, which gives better performance once again. Moreover, caching in PL/pgsql can have bad side effects, such as the caching of sensitive =timestamp= values.
+
+The caching of function execution plan of PL/pgsql helps reduce execution time, but it can also hurt if the plan is not optimal for the provided function parameters. Strictly from the point of view of power, PL/pgsql is much more powerful, having some features that SQL lacks, such as:
+- raise exceptions and raise messages at different levels, such as "notice" and "debug";
+- construction of dynamic SQL, using the =EXECUTE= command;
+- provides =EXCEPTION= handling;
+- complete set of assignment, control and loop statements;
+- supports cursors;
+- fully integrated with PostgreSQL trigger systems, whereas SQL functions cannot be used with *triggers* (see below);
+
+**** Triggers
+[[https://www.tutorialspoint.com/plsql/plsql_triggers.htm][Details]].
+
+Triggers are stored programs, which are automatically executed or fired when some events occur. In fact, they are executed in response to any of the following events:
+- database manipulation events, DML (=DELETE=, =INSERT=, =UPDATE=);
+- database definition statements, DDL (=CREATE=, =ALTER=, =DROP=);
+- database operations (=SERVERERROR=, =LOGON=, =LOGOFF=, =STARTUP=, =SHUTDOWN=).
+
+Triggers can be defined on the table, view, schema or database for the current event.
+
+Some example uses are for:
+- generating derived column values automatically;
+- enforcing referential integrity;
+- event logging and storing information on table access;
+- auditing;
+- synchronous replication of tables;
+- imposing security autorizations;
+- preventing invalid transactions.
+
+The general syntax is:
+#+BEGIN_SRC sql
+  create or replace trigger trigger_name
+	  {before | after | instead of }
+	  {insert [or] | update [or] | delete}
+	  [of col_name]
+	  on table_name
+	  [referencing old as o new as n]
+	  [for each row]
+  when (condition)
+	   declare
+		  <declaration-statements>
+	  begin
+		  <executable-statements>
+		  exception
+			  <exception-handling-statements>
+	  end;
+#+END_SRC
+Where:
+- =before | after | instead of= specifies when the trigger will be executed. The =instead of= clause is used for creating triggers on a view;
+- =insert [or] | update [or] | delete= specifies the DML operation;
+- =referencing old as o new as n= allows to refer to old and new values for various DML statements;
+
+***** Example
+#+BEGIN_EXAMPLE
+Select * from customers;  
+
++----+----------+-----+-----------+----------+ 
+| ID | NAME     | AGE | ADDRESS   | SALARY   | 
++----+----------+-----+-----------+----------+ 
+|  1 | Ramesh   |  32 | Ahmedabad |  2000.00 | 
+|  2 | Khilan   |  25 | Delhi     |  1500.00 | 
+|  3 | kaushik  |  23 | Kota      |  2000.00 | 
+|  4 | Chaitali |  25 | Mumbai    |  6500.00 | 
+|  5 | Hardik   |  27 | Bhopal    |  8500.00 | 
+|  6 | Komal    |  22 | MP        |  4500.00 | 
++----+----------+-----+-----------+----------+ 
+#+END_EXAMPLE
+
+The following program creates a row-level trigger for the customers table that would fire for INSERT or UPDATE or
+DELETE operations performed on the CUSTOMERS table. This trigger will display the salary difference between the old
+values and new value.
+#+BEGIN_SRC sql
+  CREATE OR REPLACE TRIGGER display_salary_changes 
+  BEFORE DELETE OR INSERT OR UPDATE ON customers 
+  FOR EACH ROW 
+  WHEN (NEW.ID > 0) 
+  DECLARE 
+  sal_diff number; 
+  BEGIN 
+  sal_diff := :NEW.salary  - :OLD.salary; 
+  dbms_output.put_line('Old salary: ' || :OLD.salary); 
+  dbms_output.put_line('New salary: ' || :NEW.salary); 
+  dbms_output.put_line('Salary difference: ' || sal_diff); 
+  END; 
+  / 
+#+END_SRC
+
+The following points need to be considered here:
+- =OLD= and =NEW= references are not available for table-level triggers, rather you can use them for record-level triggers.
+- If you want to query the table in the same trigger, then you should use the =AFTER= keyword, because triggers can query the table or change it again only after the initial changes are applied and the table is back in a consistent state.
+- The above trigger has been written in such a way that it will fire before any =DELETE= or =INSERT= or =UPDATE= operation on the table, but you can write your trigger on a single or multiple operations, for example =BEFORE= =DELETE=, which will fire whenever a record will be deleted using the =DELETE= operation on the table.
+
+*Triggering a trigger*: Let us perform some DML operations on the =CUSTOMERS= table. Here is one =INSERT= statement, which will create a new record in the table:
+
+#+BEGIN_SRC sql
+  INSERT INTO CUSTOMERS (ID,NAME,AGE,ADDRESS,SALARY) 
+  VALUES (7, 'Kriti', 22, 'HP', 7500.00 ); 
+#+END_SRC
+
+When a record is created in the =CUSTOMERS= table, the above create trigger, =display_salary_changes= will be fired and it will display the following result:
+
+#+BEGIN_EXAMPLE
+Old salary: 
+New salary: 7500 
+Salary difference:
+#+END_EXAMPLE
+
+Because this is a new record, old salary is not available and the above result comes as null. Let us now perform one
+more DML operation on the =CUSTOMERS= table. The =UPDATE= statement will update an existing record in the table:
+
+#+BEGIN_SRC sql
+  UPDATE customers 
+  SET salary = salary + 500 
+  WHERE id = 2;
+#+END_SRC
+
+When a record is updated in the =CUSTOMERS= table, the above create trigger, =display_salary_changes= will be fired and it will display the following result:
+
+#+BEGIN_EXAMPLE
+Old salary: 1500 
+New salary: 2000 
+Salary difference: 500
+#+END_EXAMPLE
+
+*** Functions and Procedures Comparison
+The main difference between functions and procedures is *transaction control*:
+- functions are explicitly run in a transaction;
+- a procedure can control transactions. Therefore, in procedures, you can explicitly =COMMIT= and =ROLLBACK= a transaction;
+- functions are called within SQL code, whereas procedures are executed via a =CALL= statement;
+- functions should have a return data type, or else it returns the =VOID= pseudo data type.
+
+**** Example
+Assume we want to index all foreign keys. Using a function is not very practical, because the indexes are created when the function completely finishes the execution. Therefore, if an exception occurs in the middle of the execution, all work is lost. In a stored procedure, we can create one index at a time and we keep iterating through all indexes until the procedure finishes the execution.
+
+As an example, we create a table inside of a function and procedure and deliberately cause an error:
+#+BEGIN_SRC sql
+  create procedure test_procedure_tx() as $$
+		 begin
+		  create table a (id int);
+		  commit;
+		  create index a_id_idx on a(id);
+		  select 1/0;
+		  end;
+	  $$ language plpgsql;
+
+  create function test_function_tx() returns void as $$
+		 begin
+		  create table a (id int);
+		  create index a_id_idx on a(id);
+		  select 1/0;
+		  end;
+	  $$ language plpgsql;
+#+END_SRC
+
+Now execute the function:
+#+BEGIN_SRC sh
+  postgres=# select test_function_tx();
+  ERROR: division by zero
+  CONTEXT: sql statement "select 1/0"
+  PL/pgSQL function test_function_tx() line 5 at SQL statement
+  postgres=# \d a
+  Did not find any relation named "a".
+#+END_SRC
+
+Now execute the procedure:
+#+BEGIN_SRC sh
+  postgres=# call test_procedure_tx();
+  ERROR: division by zero
+  CONTEXT: SQL statement "select 1/0"
+  PL/pgSQL function test_procedure_tx() line 6 at SQL statement
+  postgres=# \d a
+  Table "public.a"
+  Column | Type    | Collation | Nullable | Default
+  -------+---------+-----------+----------+---------
+  id	   | integer |			 |			|
+#+END_SRC
+
+Therefore, the table =a= is created when using the procedure. For the function, it was not created, because the transaction was rolled back.
+
+*** Function authorization parameters
+Aside from *volatile* and *immutable* and *stable*, there are other function parameters that are related to authorization/security, controlling the function privileges context:
+- =SECURITY DEFINER=: the function will be executed using the privileges of the user who created it;
+- =SECURITY INVOKER=: the user must have the permissions to execute the =CRUD= operations that the function implements, otherwise it will raise an error.
+
+For example, =SECURITY DEFINER= functions are used for defining triggers or for temporarily promoting the user to perform tasks only supported by the function.
+
+Let's create 2 dummy functions using the =postgres= user and execute them in different sessions:
+#+BEGIN_SRC sql
+  create function test_security_definer() returns text as $$
+		 select format ('current_user=%s session_user=%s', current_user, session_user);
+  $$ language sql security definer;
+
+  create function test_security_invoker() returns text as $$
+		 select format ('current_user=%s session_user=%s', current_user, session_user);
+  $$ language sql security invoker;
+#+END_SRC
+
+The second function will return the =session_user= as being the user who invoked the function.
+
+*** PL/pgSQL Specific Statements
+**** Declaration Statement
+Variables are declared in a =DECLARE= block. General syntax:
+#+BEGIN_SRC sql
+  name [ CONSTANT ] type [ COLLATE collation_name ] [ NOT NULL ] [ { DEFAULT | := | = } expression ];
+#+END_SRC
+- =name= should follow naming conventions (e.g. not start with an integer);
+- =CONSTANT=: constant;
+- =type=: simple or user-defined;
+- =NOT NULL=: constraint;
+- =DEFAULT=: this causes the initialization of the variable to be delayed until the block is entered. This is default for =timestamp= type variables, for example, to indicate when the function is called, but not the function precompilation time.
+
+Example:
+#+BEGIN_SRC sql
+  create or replace function factorial(integer) returns integer as $$
+  begin
+	  if $1 is null or $1 < 0 then raise notice 'Invalid number';
+		 return null;
+	  elsif $1 = 1 then
+		 return 1;
+	  else
+		  return factorial($1 - 1) * $1;
+	  end if;
+  end;
+  $$ language 'plpgsql';
+#+END_SRC
+The block defines the variable scope. In the case above, the variable is =$1=, so its scope is the whole function. If we explicitly declare the variable:
+#+BEGIN_SRC sql
+  create or replace function factorial(integer) returns integer as $$
+		 declare
+		  fact alias for $1;
+	  begin
+	  if fact is null or fact < 0 then
+		 raise notice 'Invalid number';
+		 return null;
+	  elsif fact = 1 then
+		 return 1;
+	  end if;
+	  declare
+		  result int;
+	  begin
+		  result = factorial(fact - 1) * fact;
+		  return result;
+	  end;
+  end;
+  $$ language plpgsql;
+#+END_SRC
+
+**** Conditionals
+Apart from the =if..then..elsif..else= blocks above, we also have =case=:
+#+BEGIN_SRC sql
+  create or replace function cast_rank_to_text(rank int) returns text as $$
+  declare
+	  rank alias for $1;
+	  rank_result text;
+  begin
+	  case rank
+		   when 3 then rank_result = 'Good';
+		   when 2 then rank_result = 'Fair';
+		   when 1 then rank_result = 'Poor';
+		   when rank is null then raise exception 'Rank should not be NULL';
+		   else rank_result = 'No such rank';
+	  end case;
+	  return rank_result;
+  end;
+  $$ language plpgsql
+#+END_SRC
+
+The function is now tested with ~select cast_rank_to_text(null);~, for example.
+
+** PostgreSQL Security
+*** Authentication
+PostgreSQL supports several authentication methods, such as:
+- *trust*: anyone who can connect to the server is authorized to access the database(s), as specified in the =pg_hba.conf=;
+- *ident*: PostgreSQL gets the client's operating system user name from an ident server and uses it to access the database server. This is recommended for closed networks, where client machines are controlled by admins;
+- *peer*: this works similarly to ident, but the client's OS username is taken from the kernel;
+- *GSSAPI* is an industry standard and it provides automatic authentication (single sign-on);
+- *LDAP* is used only to validate username/password pairs;
+- *password authentication*:
+  + *SCRAM-SHA-256*: strongest method, which prevents password sniffing on untrusted connections. The default password authentication method is MD5 and the user should change =password_encryption= to =scram-sha-256=;
+  + *MD5* is the default method;
+  + *password* is not recommended to be used, since /passwords are sent to the server in clear text/!
+
+To understand authentication, one must know:
+- authentication is controlled by =pg_hba.conf= file, where =hba= stands for *Host-Based Authentication*;
+- the initial authentication settings shipped with the distribution;
+- =pg_hba.conf= is usually located in the data directory, but it can also be specified in the global =postgresql.conf= file;
+- when changing the authentication, you should send a =SIGHUP=, such as:
+#+BEGIN_SRC sh
+  psql -U postgres -c "SELECT pg_reload_conf();"
+  # now depending on the init system
+  sudo service postgresql reload
+  sudo /etc/init.d/postgresql reload
+  sudo kill -HUP <postgres PID>
+  sudo systemctl reload postgresql-11.service
+#+END_SRC
+- the order of the =pg_hba.conf= records is important;
+- check whether the error log contains some errors when reloading the configuration.
+
+*** =pg_hba.conf=
+The general structure is as follows:
+#+BEGIN_SRC sh
+  host_type database user [IP|address] [IP-mask] auth-method [auth-options]
+#+END_SRC
+The =host_type= could be:
+- =Local=: used in Linux systems, to allow users to access the database using Unix domain socket connection;
+- =Host=: allow connections from other hosts, based on the address or IP, using TCP/IP, with or without SSL;
+- =Hostssl=: similar to =Host=, but requires SSL;
+- =Hostnossl=: similar to =Host=, but should not use SSL.
+
+Examples:
+#+BEGIN_SRC sh
+  #TYPE		DATABASE		USER		ADDRESS				METHOD
+  Local		all				all								trust
+
+  #TYPE		DATABASE		USER		ADDRESS				METHOD
+  Host		all				all 		127.0.0.1/32		trust
+  Host		all				all			::1/128				trust
+
+  #TYPE		DATABASE		USER		ADDRESS				METHOD
+  Host		all				all			192.168.0.53/32		reject
+  Host		all				all			192.168.0.1/24		trust
+#+END_SRC
+
+To view the rules, just query:
+#+BEGIN_EXAMPLE
+postgres=# SELECT row_to_json(pg_hba_file_rules, true) FROM pg_hba_file_rules limit 1;
+	row_to_json
+---------------------
+{
+ "line_number": 84, +
+ "type" : "local", +
+ "database": ["all"], +
+ "user_name": ["all"], +
+ "address": null, +
+ "netmask": null, +
+ "auth_method": "trust", +
+ "options": null, +
+ "error": null
+}
+(1 row)
+#+END_EXAMPLE
+
+*** Default access privileges
+By default, PostgreSQL users, known as *roles with the login option*, can access the public schema.
+
+The user cannot access other user objects in the public schema or create databases or schemas. However, they can sniff data about the database objects by querying the system catalog:
+#+BEGIN_SRC sh
+  psql -U postgres -c 'create role test_user login;';
+  psql -U postgres -c 'create database test;';
+  psql -U postgres -d test -c 'create table test_permissions(id serial, name text);'
+#+END_SRC
+Now, =test_user= does not have permissions toa ccess the table itself, but has permissions to query the system catalog:
+#+BEGIN_SRC sh
+  test=# set role test user;
+  SET
+  test=> \d
+	List of relations
+   Schema | Name                    | Type     | Owner
+  --------+-------------------------+----------+----------
+   public | test_permissions        | table    | postgres
+   public | test_permissions_id_seq | sequence | postgres
+   (2 rows)
+#+END_SRC
+
+To prevent the user from accessing the public schema, the public schema privileges should be revoked:
+#+BEGIN_SRC sh
+  test=# select session_user;
+  test=# revoke all privileges on schema public from public;
+  REVOKE
+  test=# set role test_user;
+  SET
+  test=> create table b();
+  ERROR: no schema has been selected to create
+#+END_SRC
+
+*** Security Levels
+**** Database level
+To disallow users from connecting to the database by default, revoke the default database permissions from the public:
+#+BEGIN_SRC sh
+  # in the database
+  mydb=# revoke all on database mydb from public;
+  REVOKE
+  mydb=# \q
+
+  # now in shell
+  $ psql mydb -U web_app_user
+  psql: FATAL: permission denied for database "mydb"
+  DETAIL: User does not have CONNECT privilege
+#+END_SRC
+
+To give the permission back:
+#+BEGIN_SRC sh
+  # in the databse
+  postgres=# grant connect on database mydb to web_app_user;
+  GRANT
+  postgres=# \l mydb
+  List of databases
+  - [ RECORD 1]------------
+  ...entries...
+#+END_SRC
+
+*Remark:* The database access privileges are not restored when restoring the structure of the database, so they should be handled manually.
+
+**** Schema level
+Users can =CREATE= or access objects in a schema. To allow a user access to a certain schema, the usage permissions should be granted:
+#+BEGIN_SRC sql
+  grant usage on schema mydb to web_app_user, public_user;
+#+END_SRC
+
+**** Object level
+The database objects, such as tables, views, sequences, domains, data types and functions can be secured by granting and revoking permissions, which are different for each user.
+
+The sequence has =USAGE= permission and the functions have =EXECUTE= permissions, while the tables have =INSERT, UPDATE, DELETE, TRIGGER, REFERENCES, TRUNCATE= permissions. All can be granted with:
+#+BEGIN_SRC sql
+  grant all on mytable to some_role;
+#+END_SRC
+
+=REFERENCES= and =TRIGGER= allow the creation of foreign key references to the table and triggers.
+
+**** Column level
+Explicit roles for queries can be added:
+#+BEGIN_SRC sql
+  grant select (f1) on test_column_table to test_column_table_user;
+#+END_SRC
+
+
+**** Row level
+*Row-level security* (RLS) is also known as *row security policy* and it is used to control access to table rows, including =INSERT, UPDATE, SELECT= and =DELETE=.
+
+To enable row security for the entire table:
+#+BEGIN_SRC sql
+  alter table table_name enable row level security;
+#+END_SRC
+
+Then, a session could be:
+#+BEGIN_SRC sql
+  create database test_rls;
+  create user admin;
+  create user guest;
+  create table account (
+		 account_name name;
+		 password text
+		 );
+  insert into account values('admin', 'admin'), ('guest', 'guest');
+  grant all on account to admin, guest;
+  alter table account enable row level security;
+#+END_SRC
+
+By default, if no policy is defined, the user will be restricted to access the rows.
+
+The syntax to create a new policy is:
+#+BEGIN_SRC sql
+  create policy policy_name on some_table
+		 [ for { all | select | insert | update | delete } ]
+		 [ to { role_name | public | current_user | session_user } [, ...] ]
+		 [ using ( using_expression ) ]
+		 [ with check ( check_expression ) ]
+#+END_SRC
+
+Example:
+#+BEGIN_SRC sql
+  create policy account_policy_write_protected on account using (true) with
+  check (account_name = current_user);
+  -- the users will see all the content of the account table,
+  -- but only modify their own rows
+#+END_SRC
+
+** Data Encryption
+By default, PostgreSQL encrypts sensitive data, such as roles' passwords. However, users can also encrypt and decrypt whatever data they want, using the =pgcrypto= extension.
+
+*** Role password encryption
+The role details can be viewed in the =pg_shadow= catalog relation.
+
+It is *not* recommended to create a password like so, because the statement will appear in =pg_stat_activity= and in the server logs.
+#+BEGIN_SRC sql
+  create role roleName [ options ] password 'some_pass';
+#+END_SRC
+
+Note also that renaming a role will erase their password:
+#+BEGIN_SRC sql
+  create role a password 'a';
+  alter role a rename to b;
+  -- NOTICE: MD5 password cleared because of role rename
+#+END_SRC
+
+When creating a password, it is recommended to use the =\password= meta command, because it will not appear in the log.
+
+*** =pgcrypto=
+It is installed using the =CREATE EXTENSION= command:
+#+BEGIN_SRC sql
+  create extension pgcrypto;
+#+END_SRC
+
+**** One-way encryption
+This retrieves the data in a clear text form. For example, using MD5:
+#+BEGIN_SRC sql
+  create table account_md5 (id int, password text);
+  insert into account_md5 values (1, md5('my_password'));
+  select (md5('my_password') = password) as authenticated from account_md5;
+  -- authenticated = t
+#+END_SRC
+
+Starting with PostgreSQL 11, SHA algorithms can be used.
+
+Also, =pgcrypto= provides two functions:
+#+BEGIN_SRC sql
+  create table account_crypt (id int, password text);
+  insert into account_crypt values (1, crypt('my_password', gen_salt('md5')));
+  insert into account_crypt values (2, crypt('my_password', gen_salt('md5')));
+  select * from account_crypt;
+  --  id | password
+  -- ----+------------------------------------
+  --   1 | $1$ITT7yisa$FdRe4ihZ9kep1oU6wBr090
+  --   2 | $1$HT2wH3UL$8DRdP6kLz5LvTXF3F2q610
+  -- (2 rows)
+
+  select crypt('my_password', password) = password as authenticated from account_crypt;
+#+END_SRC
+
+**** Two-way encryption
+We have the =encrypt= and =decrypt= functions, which require 3 arguments:
+- the data to encrypt;
+- the key;
+- the encryption algorithm.
+
+For example, for encrypting "Hello World" using AES, we use:
+#+BEGIN_SRC sql
+  select encrypt('Hello World', 'Key', 'aes');
+  select decrypt(encrypt('Hello World', 'Key', 'aes'), 'Key', 'aes');
+
+  -- show in plain text what it's done
+  select convert_from(decrypt(encrypt('Hello World', 'Key', 'aes'), 'Key', 'aes'), 'utf-8');
+  -- ==> Hello World
+#+END_SRC
+
+*Remark:* The statement can appear in =pg_stat_activity= or in the database server log!
+
+The best way is to use =gpg= externally to create better keys:
+1. Use =gpg= in the shell first:
+#+BEGIN_SRC sh
+  [root@host]: gpg --list-secret-key
+  # /root/.gnupg/pubring.kbx
+  # ----------------------------------------
+  # sec rsa3072 2019-01-27 [SC] [expires: 2021-01-26]
+  #      0EE2255C86D09E727E6545F10F8061C2BDF98249
+  # uid [ultimate] salah <juba@example.com>
+  # ssb rsa3072 2019-01-27 [E] [expires: 2021-01-26]
+
+  [root@host]: gpg -a --export \
+			 0EE2255C86D09E727E6545F10F8061C2BDF98249>/var/lib/postgresql/11/main/public.key
+  [root@host]: gpg -a --export-secret-key \
+			 0EE2255C86D09E727E6545F10F8061C2BDF98249>/var/lib/postgresql/11/main/secret.key
+  [root@host]: chown postgres.postgres /var/lib/postgresql/11/main/public.key
+  [root@host]: chown postgres.postgres /var/lib/postgresql/11/main/secret.key
+#+END_SRC
+2. Create a wrapper in PostgreSQL, which basically are wrappers for =pgp= encryption/decryption:
+#+BEGIN_SRC sql
+  create or replace function encrypt(text) returns bytea as
+  $$
+  begin
+	  return pgp_pub_encrypt($1, dearmor(pg_read_file('public.key')));
+  end;
+  $$ language plpgsql;
+
+  create or replace function decrypt(bytea) returns text as
+  $$
+  begin
+	  return pgp_pub_decrypt($1, dearmor(pg_read_file('secret.key')));
+  end;
+  $$ language plpgsql;
+
+  -- test with
+  select substring(encrypt('Hello world'), 1, 50);
+  select decrypt(encrypt('Hello world'));
+#+END_SRC
