@@ -23,3 +23,4 @@ Materia se va finaliza cu 3 rapoarte de cercetare/proiecte în:
 
 ### Partea 3: Elena Burceanu
 - [AI For Good](https://ai4good.org/);
+- [AI For Good @ MS Research](https://www.microsoft.com/en-us/ai/ai-for-good);
