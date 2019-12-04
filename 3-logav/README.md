@@ -5,7 +5,7 @@ Profesori de curs și seminar:
 - Paul Irofti;
 - Elena Burceanu (Bitdefender).
 
-Materia se va finaliza cu 3 (?) rapoarte de cercetare/proiecte în:
+Materia se va finaliza cu 3 rapoarte de cercetare/proiecte în:
 - logică avansată;
 - verificare statică;
 - metode formale în învățare automată.
@@ -21,5 +21,5 @@ Materia se va finaliza cu 3 (?) rapoarte de cercetare/proiecte în:
 - [Static Program Analysis](https://cs.au.dk/~amoeller/spa/);
 - [Value-Range Analysis of C Programs](https://www.springer.com/gp/book/9781848000162);
 
-
 ### Partea 3: Elena Burceanu
+- [AI For Good](https://ai4good.org/);
