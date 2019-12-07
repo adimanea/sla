@@ -7,7 +7,7 @@ Tema: **Reaching Definitions**.
 - [Reaching Definition @ wiki](https://en.wikipedia.org/wiki/Reaching_definition);
 - [Reaching Definitions @ Uni Saarland](http://compilers.cs.uni-saarland.de/teaching/spa/2014/slides/ReachingDefinitions.pdf);
 - [Dataflow Analysis @ Stanford](https://suif.stanford.edu/~courses/cs243-winter07.bak/lectures/l2.pdf);
-- §9.2 **Introduction to Dataflow Analysis** ( §9.2.4 **Reaching Definitions** ) din *Aho, Sethi, Ullman - *Compilers, Principles, Techniques and Tools*;
+- §9.2 **Introduction to Dataflow Analysis** ( §9.2.4 **Reaching Definitions** ) din *Aho, Sethi, Ullman - Compilers, Principles, Techniques and Tools*;
 - §17 **Dataflow Analysis** din *Appel, Ginsburg - Modern Compiler Implementation in C*;
 - §9 **Data-Flow Analysis** din *Cooper, Torczon - Engineering a Compiler*;
 - §8 **Data-Flow Analysis** din *Muchnick - Advanced Compiler Design*;
