@@ -14,6 +14,7 @@ execuție ne permite să aplicăm diverse tehnici de optimizare, precum
 eliminarea bucăților de cod \qq{mort}, care nu este folosit niciodată
 sau eliminarea necesității definirii unor constante, atunci cînd acestea
 se propagă prin cod, înlocuindu-le cu exact valoarea lor.
+\index{abstractizare}\index{stare (a programului)}
 
 Pentru a realiza o analiză a fluxului de date, trebuie să stabilim cîteva
 elemente fundamentale de \emph{abstractizare}. Astfel, vom presupune că
@@ -44,6 +45,7 @@ următoarele fapte:
   urmat de primul punct de dinaintea primei instrucțiuni a blocului $ B_2 $.
 \end{itemize}
 
+\index{cale de execuție}
 De aceea, putem defini în general \emph{o cale (de execuție)} de la un punct
 $ p_1 $ la un punct $ p_n $ ca fiind un șir $ p_1, \dots, p_n $ astfel
 încît pentru orice $ i = 1, 2, \dots n - 1 $ are loc exact una dintre
@@ -93,6 +95,8 @@ pot fi interpretate diferit în funcție de scopul analizei:
 \section{Schema de analiză}
 \label{sec:schema}
 
+\index{flux de date!valoare}
+\index{flux de date!schemă}
 Atunci cînd realizăm o analiză a fluxului de date, asociem fiecărui
 punct al programului o \emph{valoare de flux de date} care reprezintă
 o abstractizare a mulțimilor tuturor stărilor posibile ale programului
@@ -111,6 +115,9 @@ programului vom nota cu \texttt{IN[s]} valorile de flux de date dinaintea
 instrucțiunii și cu \texttt{OUT[s]} valorile de după instrucțiune,
 pentru orice \texttt{s}.
 
+\index{flux de date!problema}
+\index{flux de date!funcții de transfer}
+\index{flux de date!flux de control}
 \emph{Problema fluxului de date} este să găsim o soluție care să satisfacă
 constrîngerile ce pot exista asupra \texttt{IN[s]} și \texttt{OUT[s]}, pentru
 orice \texttt{s}.
