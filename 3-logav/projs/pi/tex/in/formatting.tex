@@ -1,0 +1,37 @@
+% FONTS
+\usepackage[mathscr]{euscript}
+\usepackage[normalem]{ulem}
+\usepackage{eurosym}
+\usepackage{sectsty}
+\allsectionsfont{\rmfamily}
+
+% classic typewriter font instead of Inconsolata
+\renewcommand*\ttdefault{lcmtt}
+
+\usepackage{anyfontsize}
+
+% PAGE SETUP
+\usepackage[portrait]{geometry}
+% geometry for marginpar usage
+\geometry{
+  a4paper,
+  left=10mm,
+  right=10mm,
+  % marginparwidth=20mm,
+  % marginparsep=3mm
+}
+\usepackage{afterpage}
+\newcommand\blankpage{
+  \null
+  \thispagestyle{empty}
+  \addtocounter{page}{-1}
+  \newpage}
+\newenvironment{myenv}[1]
+  {\begin{spacing}{#1}}
+    {\end{spacing}}
+
+% FANCY SETUP
+% \usepackage[Glenn]{fncychap}
+% \usepackage{fancyhdr}
+\titleformat{\chapter}{\normalfont\huge}{\thechapter}{10pt}{\huge\textsc}
+% \addto\captionsromanian{\renewcommand{\chaptername}{\thechapter.}{\Huge}}

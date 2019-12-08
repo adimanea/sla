@@ -1,0 +1,40 @@
+% ! TEX root = ../static.tex
+
+\chapter{Definițiile accesibile}
+
+Vom fi interesați de a afla în ce punct al programului \emph{este posibil}
+ca variabila $ x $ să fi fost definită atunci cînd parcurgem fiecare
+punct $ p $ al programului. O astfel de informație aparent simplă poate fi
+foarte utilă, de exemplu, pentru a determina dacă o anume variabilă este,
+de fapt, constantă și să o înlocuim cu valoarea ei sau dacă o anume variabilă
+este folosită fără a fi definită. De exemplu, putem introduce o
+definiție-fantomă (eng.\ \emph{dummy}) a unei variabile în punctul de la
+începutul programului și să studiem dacă această definiție se propagă pînă la
+un punct în care variabila este utilizată. Dacă da, atunci ea este utilizată
+fără a fi definită, situație care trebuie semnalată.
+
+Ca terminologie, vom spune că o definiție $ d $ \emph{se propagă} pînă la
+un punct $ p $ dacă există un drum de execuție de la punctul ce urmează imediat
+lui $ d $ pînă la $ p $, astfel încît $ d $ să nu fie \emph{distrusă} pe acest
+drum. Spunem că o definiție $ d $ a unei variabile $ x $ este \emph{distrusă}
+dacă există o altă definiție $ d' $ a lui $ x $ în drumul pe care îl studiem.
+
+\begin{remark}\label{rk:def-loop}
+  În analiza drumurilor de propagare a definițiilor, vom ține cont de bucle,
+  astfel că în cadrul unei bucle considerăm că definiția nu este distrusă,
+  iar punctul ce succede definiția va fi cel de ieșire din buclă.
+\end{remark}
+
+Mai adăugăm că variabilele pot apărea ca parametri în proceduri, tablouri
+sau referințe indirecte, care sînt, în general, \emph{alias-uri}, astfel că
+nu putem spune precis dacă o variabilă este sau nu afectată în mod direct
+de o asemenea instrucțiune. Pentru consecvență și pentru a face o analiză
+conservatoare, dacă nu este clar dacă o instrucțiune atribuie sau nu o valoare
+variabilei $ x $, vom presupune că \emph{o poate face}. Dar pentru simplitate,
+vom elimina din studiu cazurile cu alias-uri și vom folosi doar variabile
+locale, scalare.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../static"
+%%% End:

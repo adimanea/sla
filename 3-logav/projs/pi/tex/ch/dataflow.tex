@@ -1,0 +1,152 @@
+% ! TEX root = ../static.tex
+
+\chapter{Analiza fluxului de date}
+\label{ch:dataflow}
+
+\section{Abstractizări, puncte și căi de execuție}
+\label{sec:abstract}
+
+În general, analiza statică se ocupă cu studiul comportamentului programelor,
+fără a le rula. Subiectul pe care îl prezentăm, acela al \emph{definițiilor %
+  accesibile} (eng.\ \textit{reaching definitions}) se încadrează în studiul
+fluxului de date, în lungul unor căi de execuție. Analiza acestor căi de
+execuție ne permite să aplicăm diverse tehnici de optimizare, precum
+eliminarea bucăților de cod \qq{mort}, care nu este folosit niciodată
+sau eliminarea necesității definirii unor constante, atunci cînd acestea
+se propagă prin cod, înlocuindu-le cu exact valoarea lor.
+
+Pentru a realiza o analiză a fluxului de date, trebuie să stabilim cîteva
+elemente fundamentale de \emph{abstractizare}. Astfel, vom presupune că
+execuția programului în\-seam\-nă traversarea unor căi de execuție, care
+schimbă \emph{starea programului}. Această stare este definită de valorile
+tuturor variabilelor din program, inclusiv ale celor din stiva de rulare
+care nu se află la suprafață. Execuția unei instrucțiuni intermediare
+transformă o \emph{stare de intrare} într-o \emph{stare de ieșire},
+corespunzătoare stărilor dinaintea, respectiv de după punctul în care
+se află instrucțiunea intermediară studiată.
+
+Atunci cînd analizăm comportamentul unui program, trebuie să luăm în
+calcul toate secvențele posibile de puncte, alcătuind drumuri, căi de
+execuție, printr-un graf al fluxului pe care îl parcurge programul în
+timpul execuției. Desigur, nu vom putea memora efectiv toate căile posibile
+și toate informațiile asociate acestor căi, mai ales din cauza faptului
+că numărul căilor posibile poate să fie infinit. În schimb, ne concentrăm
+pe informațiile relevante analizei pe care o facem, în funcție de scop.
+
+De asemenea, căile posibile de execuție sînt studiate ținînd cont de
+următoarele fapte:
+\begin{itemize}
+\item În cadrul unui bloc simplu de cod, punctul în care se află programul
+  după o anume instrucțiune coincide cu punctul programului de dinaintea
+  instrucțiunii următoare;
+\item Dacă există un drum de la un bloc $ B_1 $ la un bloc $ B_2 $, atunci
+  punctul programului de după ultima instrucțiune din $ B_1 $ poate fi
+  urmat de primul punct de dinaintea primei instrucțiuni a blocului $ B_2 $.
+\end{itemize}
+
+De aceea, putem defini în general \emph{o cale (de execuție)} de la un punct
+$ p_1 $ la un punct $ p_n $ ca fiind un șir $ p_1, \dots, p_n $ astfel
+încît pentru orice $ i = 1, 2, \dots n - 1 $ are loc exact una dintre
+afirmațiile:
+\begin{enumerate}[(1)]
+\item $ p_i $ este punctul care precede imediat o instrucțiune, iar $ p_{i + 1} $
+  este punctul care urmează imediat aceeași instrucțiune;
+\item $ p_i $ este finalul unui anume bloc, iar $ p_{i+1} $ este începutul
+  blocului care-i urmează imediat.
+\end{enumerate}
+
+Așa cum am spus, însă, căile posibile de execuție pot fi în număr infinit,
+dar putem alege să păstrăm informațiile relevante și scopul este să
+sumarizăm starea programului într-un anume punct folosind un număr finit
+(și, preferabil, cît mai mic) de stări și informații. Analize diferite
+pot alege să folosească abstracțiuni diferite și, în general, nu există
+o analiză perfectă pentru a reprezenta o anume stare.
+
+Două exemple preluate din \cite{aho} ilustrează cum aceleași stări
+pot fi interpretate diferit în funcție de scopul analizei:
+\begin{enumerate}[(1)]
+\item Să presupunem că vrem să facem \emph{debugging} al unui program
+  și vrem să vedem valorile unei variabile la un anumit punct al programului,
+  precum și unde au fost definite aceste valori. De exemplu, într-o stare 5
+  am aflat că valoarea variabilei $ a $ este una dintre $ \{ 1, 243 \} $, care
+  a fost obținută în urma uneia dintre definițiile $ \{ d_1, d_3 \} $.
+  Definițiile care \emph{ar putea} să se propage pînă la un anumit punct al
+  programului în lungul unei anume căi se numesc \emph{definiții accesibile}
+  (eng.\ \emph{reaching definitions}).
+\item Presupunem, în schimb, că sîntem interesați să implementăm eliminarea
+  constantelor (eng.\ \emph{constant folding}). Dacă folosim o variabilă
+  $ x $ accesibilă printr-o singură definiție, iar acea definiție îi atribuie
+  o valoare constantă, atunci putem pur și simplu să înlocuim variabila
+  $ x $ direct cu acea constantă. Pe de altă parte, dacă există mai multe
+  definiții accesibile ale lui $ x $ dintr-un anume punct al programului,
+  atunci nu putem să înlocuim valoarea lui $ x $.
+
+  Așadar, pentru scopul de a elimina constantele, vrem să vedem care
+  definiții ale lui $ x $ fixat sînt \emph{unice} și se propagă pînă la
+  un anumit punct. De aceea, pur și simplu putem împărți analiza variabilelor
+  în \emph{constante} și \emph{neconstante}, folosind o abstractizare
+  binară.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Schema de analiză}
+\label{sec:schema}
+
+Atunci cînd realizăm o analiză a fluxului de date, asociem fiecărui
+punct al programului o \emph{valoare de flux de date} care reprezintă
+o abstractizare a mulțimilor tuturor stărilor posibile ale programului
+care pot fi observate în acel punct. Această mulțime de valori posibile
+se numește \emph{domeniul} aplicației pe care o studiem. De exemplu,
+în cazul definițiilor accesibile, domeniul este mulțimea submulțimilor
+care conțin definiții din program. O anume valoare de flux de date este
+o mulțime de definiții și vrem să asociem fiecărui punct al programului
+mulțimea precisă de definiții care se pot propaga pînă la punctul respectiv.
+
+Cum am precizat deja, alegerea abstracțiunilor depinde de scopul analizei
+și vom încerca să păstrăm doar informațiile relevante.
+
+Preluînd din nou din \cite{aho}, dacă \texttt{s} este o instrucțiune a
+programului vom nota cu \texttt{IN[s]} valorile de flux de date dinaintea
+instrucțiunii și cu \texttt{OUT[s]} valorile de după instrucțiune,
+pentru orice \texttt{s}.
+
+\emph{Problema fluxului de date} este să găsim o soluție care să satisfacă
+constrîngerile ce pot exista asupra \texttt{IN[s]} și \texttt{OUT[s]}, pentru
+orice \texttt{s}.
+
+Constrîngerile pot fi de două tipuri:
+\begin{itemize}
+\item bazate pe semantica instrucțiunilor, numite \emph{funcții de transfer};
+\item bazate pe fluxul controlului.
+\end{itemize}
+
+În ce privește funcțiile de transfer, adăugăm că acestea pot ține cont
+de propagarea înainte sau înapoi a informației. Astfel, dacă notăm $ f_s $
+funcția de transfer asociată instrucțiunii \texttt{s}, putem avea:
+\[
+  \texttt{OUT[s]} = f_s(\texttt{IN[s]}) \text{ sau } %
+  \texttt{IN[s]} = f_s(\texttt{OUT[s]}).
+\]
+
+Constrîngerile bazate pe fluxul controlului se extrag din modul
+în care se propagă informația. De exemplu, în cadrul unui bloc simplu $ B $,
+care conține instrucțiunile \texttt{s(1), s(2),..,s(n)} în această ordine,
+trebuie să avem:
+\[
+  \texttt{IN[s(i+1)]} = \texttt{OUT[s(i)]}, \quad \forall i = 1, 2, \dots, n-1.
+\]
+
+Dar între blocuri, fluxul controlului poate fi mai complex. De exemplu,
+dacă studiem propagarea definițiilor, putem fi interesați de \emph{reuniunea}
+tuturor blocurilor în care s-au făcut definiții, anterioare punctului curent.
+
+\vspace{0.5cm}
+
+Detaliem în continuare studiul propagării definițiilor, folosind contextul
+teoretic stabilit mai sus.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../static"
+%%% End:
