@@ -2,6 +2,8 @@
 
 Tema: **Reaching Definitions**.
 
+Acces direct la PDF [aici](https://github.com/adimanea/sla/blob/master/3-logav/projs/pi/tex/static.pdf).
+
 ## Resurse
 - §5.7 din [Møller & Schwartzbach](https://cs.au.dk/~amoeller/spa/spa.pdf) (+ CFG și curs PI);
 - [Reaching Definition @ wiki](https://en.wikipedia.org/wiki/Reaching_definition);
