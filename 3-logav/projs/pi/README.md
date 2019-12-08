@@ -12,3 +12,4 @@ Tema: **Reaching Definitions**.
 - §9 **Data-Flow Analysis** din *Cooper, Torczon - Engineering a Compiler*;
 - §8 **Data-Flow Analysis** din *Muchnick - Advanced Compiler Design*;
 - §2.1.2 **Reaching Definitions Analysis** din *Nielson - Principles of Program Analysis*;
+- [Dataflow analysis @ CS420.EPFL.CH](https://cs420.epfl.ch/c/06_dataflow-analysis.html);
