@@ -2,6 +2,9 @@
 
 \chapter{Definițiile accesibile}
 
+\index{definiții!accesibile}
+\index{definiții!distruse}
+\index{definiții!generate}
 Vom fi interesați de a afla în ce punct al programului \emph{este posibil}
 ca variabila $ x $ să fi fost definită atunci cînd parcurgem fiecare
 punct $ p $ al programului. O astfel de informație aparent simplă poate fi
@@ -33,6 +36,185 @@ conservatoare, dacă nu este clar dacă o instrucțiune atribuie sau nu o valoar
 variabilei $ x $, vom presupune că \emph{o poate face}. Dar pentru simplitate,
 vom elimina din studiu cazurile cu alias-uri și vom folosi doar variabile
 locale, scalare.
+
+Considerăm exemplul din figura \ref{fig:rdef-ex1}.
+
+\begin{figure}[!htbp]
+  \centering
+  \small
+\begin{BVerbatim}
+          +---------+
+          | INTRARE |
+          +---------+
+               |
+               V
+        +---------------+ B1        
+        | d1: i = m - 1 |           gen(B1)  = { d1, d2, d3 }
+        | d2: j = n     |           kill(B1) = { d4, d5, d6, d7 }
+        | d3: a = u1    |
+        +---------------+
+               |
+               V
+        +---------------+ B2        gen(B2)  = { d4, d5 }
+        | d4: i = i + 1 |           kill(B2) = { d1, d2, d7 }
+        | d5: j = j - 1 |
+        +---------------+
+          /    |    ^
+         /     |    |
+B3      /      |    |
++------------+ |    |               gen(B3)  = { d6 }
+| d6: a = u2 | |    |               kill(B3) = { d3 }
++------------+ |    |
+  |            |    |
+  |            |    |
+  |            V    |
+  |     +------------+ B4           gen(B4)  = { d7 }
+  |---> | d7: i = u3 |              kill(B4) = { d1, d4 }
+        +------------+
+               |
+               |
+               V
+          +--------+
+          | IEȘIRE |
+          +--------+
+\end{BVerbatim}
+  \caption{Exemplu pentru definiții accesibile}
+  \label{fig:rdef-ex1}
+\end{figure}
+
+Să studiem definițiile din blocul \texttt{B2}. Toate definițiile din blocul
+\texttt{B1} ajung la începutul blocului \texttt{B2}. Definiția
+\texttt{d5:\!\!\!\! j = j - 1} din blocul \texttt{B2} ajunge și la începutul blocului
+\texttt{B2}, deoarece nu mai există altă definiție a lui \texttt{j} care să
+se găsească în bucla ce duce înapoi în \texttt{B2}. Această definiție, însă,
+distruge definiția \texttt{d2:\!\!\!\! j = n}, ceea ce o face să nu ajungă la
+\texttt{B3} sau \texttt{B4}.
+
+Pe de altă parte, instrucțiunea \texttt{d4:\!\!\!\! i = i + 1} din blocul \texttt{B2}
+nu ajunge la începutul lui \texttt{B2}, deoarece variabila \texttt{i} este
+mereu redefinită de \texttt{d7:\!\!\!\! i = u3}.
+
+În fine, definiția \texttt{d6:\!\!\!\! a = u2} ajunge și ea la începutul blocului
+\texttt{B2}.
+
+\begin{remark}\label{rk:safe}
+  Prin definirea definițiilor accesibile așa cum am făcut-o, pot exista
+  inadvertențe, însă toate sînt în direcția \emph{conservativă}, adică mai curînd
+  se consideră aspecte redundante, decît să se omită unele. De exemplu, în codul:
+  \begin{center}
+    \begin{BVerbatim}
+      if (a == b) { instrucțiune1 } else if (a == b) { instrucțiune2 }
+    \end{BVerbatim}
+  \end{center}
+  \texttt{instrucțiune2} nu se va atinge niciodată, pentru nicio valoare a lui \texttt{a}.
+
+  Însă în general, problema dacă toate drumurile dintr-un graf de flux al datelor
+  sînt parcurse este indecidabilă, astfel că alegem asumpția că ele sînt efectiv
+  parcurse, chiar dacă acest lucru poate conduce la situații precum cea de mai
+  sus. Eroarea în acest caz este de partea pozitivă, astfel că nu pierdem informație,
+  ci cel mult avem o cantitate redundantă.
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Ecuații de transfer}
+
+Arătăm acum modul în care se pot formula constrîngerile pentru problema
+definițiilor accesibile. Începem prin studiul unei singure instrucțiuni:
+\[
+  \texttt{d: u = v + w}.
+\]
+
+Instrucțiunea generează o definiție \texttt{d} a unei variabile \texttt{u}
+și distruge toate celelalte definiții din program care se adresează
+variabilei \texttt{u}, dar nu afectează nicio altă definiție. Așadar,
+funcția de transfer pentru definiția \texttt{d} poate fi scrisă:
+\begin{equation}
+  \label{eq:gen-kill}
+  f_d(x) = \texttt{gen(d)} \cup (x - \texttt{kill(d)}),
+\end{equation}
+unde \texttt{gen(d) = \{d\}}, este mulțimea definițiilor
+generate de instrucțiune, iar $ \texttt{kill(d)} $ este mulțimea
+celorlalte definiții ale lui \texttt{u} din program.
+
+În general funcția de transfer a unui bloc poate fi aflată prin
+compunerea tuturor funcțiilor de transfer ale instrucțiunilor din interiorul
+blocului. Se poate vedea ușor că prin compunerea a două funcții precum
+cea de mai sus (ecuația~\eqref{eq:gen-kill}, pe care o vom numi ecuație
+\texttt{gen-kill}) se obține tot o funcție cu aceeași formă.
+\index{ecuație!\texttt{gen-kill}}
+
+În general, avem:
+\begin{equation}
+  \label{eq:fb}
+  f_b(x) = \texttt{gen(B)} \cup (x - \texttt{kill(B)},
+\end{equation}
+unde am notat:
+\[
+  \texttt{kill(B)} = \texttt{kill(1)} \cup \texttt{kill(2)} \cup \dots \cup \texttt{kill(n)},
+\]
+iar pentru generare, avem:
+\begin{align*}
+  \texttt{gen(B)} &= \texttt{gen(n)} \cup (\texttt{gen(n-1)} - \texttt{kill(n)}) \cup %
+                    (\texttt{gen(n-2)} - \texttt{kill(n-1)} - \texttt{kill(n)} \cup \\
+                  & \dots \cup (\texttt{gen(1)} - \texttt{kill(2)} - \texttt{kill(3)} - %
+                    \dots - \texttt{kill(n)})
+\end{align*}
+
+\index{definiții!expuse mai jos}
+Mulțimea \texttt{gen} care rezultă dintr-un bloc se va numi mulțimea definițiilor
+\emph{expuse mai jos}, deoarece această mulțime va conține toate definițiile
+din bloc care sînt vizibile și imediat după bloc. Rezultă că o definiție dintr-un
+bloc este expusă mai jos dacă și numai dacă nu este distrusă de o definiție a
+aceleiași variabile în interiorul aceluiași bloc.
+
+De cealaltă parte, mulțimea \texttt{kill} a unui bloc este pur și simplu reuniunea
+tuturor definițiilor distruse de instrucțiuni individuale.
+
+Remarcăm că, în general, o definiție poate apărea atît în mulțimea \texttt{gen},
+cît și în \texttt{kill} ale unui bloc. Dacă acesta este cazul, atunci
+considerăm că ea este generată, deoarece presupunem că mulțimea \texttt{kill}
+acționează după mulțimea \texttt{gen}.
+
+\begin{example}\label{exm:gen-kill}
+  Considerăm blocul simplu \texttt{B}:
+  \begin{align*}
+    \texttt{d1:} \quad & \texttt{a = 3} \\
+    \texttt{d2:} \quad & \texttt{a = 4}
+  \end{align*}
+  În acest caz, \texttt{gen(B) = \{d2\}}, deoarece \texttt{d1} nu este expusă
+  mai jos. De asemenea, tot pentru acest bloc \texttt{kill(B) = \{d1, d2\}}, deoarece \texttt{d1}
+  distruge \texttt{d2} și reciproc. Totuși, din cauza presupunerii de precedență,
+  rezultatul funcției de transfer pentru acest bloc va include mereu \texttt{d2}.
+\end{example}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Ecuațiile fluxului de control}
+
+Considerăm acum constrîngerile care rezultă din fluxul de control dintre
+blocurile de bază. Cum o definiție atinge un punct al programului dacă și numai
+dacă există cel puțin un drum prin care definiția să se propage, avem:
+\[
+  \texttt{OUT[P]} \seq \texttt{IN[B]},
+\]
+unde \texttt{P} este un punct astfel încît să existe un drum de flux al
+controlului pînă la blocul \texttt{B}. Însă, cum o definiție nu poate ajunge la
+un punct decît dacă o face pe un drum, rezultă că \texttt{IN[B]} nu
+depășește reuniunea definițiilor accesibile din toate blocurile ce-l
+precedă pe \texttt{B}. Deci putem presupune că, în general, avem:
+\[
+  \texttt{IN[B]} = \bigcup_{\texttt{P} \downarrow \texttt{B}} \texttt{OUT[P]},
+\]
+unde am notat cu $ \texttt{P} \downarrow \texttt{B} $ faptul că punctul \texttt{P}
+precede blocul \texttt{B}.
+
+Putem privi această reuniune ca pe un operator \emph{meet} pentru
+definițiile accesibile, ca în cazul laticelor.
+\index{definiții!accesibile!meet}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Algoritm iterativ pentru definiții accesibile}
+\index{definiții!accesibile!algoritm}
 
 %%% Local Variables:
 %%% mode: latex
