@@ -216,6 +216,102 @@ definițiile accesibile, ca în cazul laticelor.
 \section{Algoritm iterativ pentru definiții accesibile}
 \index{definiții!accesibile!algoritm}
 
+Vom presupune, ca o convenție de organizare, că orice graf de flux al
+controlului are două blocuri goale: unul care reprezintă nodul de intrare
+în graf (\texttt{ENTRY}), iar celălalt, de ieșire (\texttt{EXIT}), care reprezintă
+punctul prin care trec toate căile de ieșire din graf.
+
+Nicio definiție nu poate ajunge la nodul de intrare, deci funcția
+de transfer pentru acest nod este funcția vidă:
+\[
+  \texttt{OUT[ENTRY]} = \emptyset.
+\]
+
+Pentru toate celelalte blocuri \texttt{B}, în afară de \texttt{ENTRY},
+ecuațiile pe care vrem să le rezolvăm sînt:
+\begin{align*}
+  \texttt{OUT[B]} &= \texttt{gen(B)} \cup (\texttt{IN[B]} - \texttt{kill(B)}) \\
+  \texttt{IN[B]} &= \bigcup_{\texttt{P} \downarrow \texttt{B}} \texttt{OUT[P]}.
+\end{align*}
+
+Algoritmul pe care îl prezentăm rezolvă exact acest sistem de ecuații.
+Soluția sistemului va fi \emph{cel mai mic punct fix al ecuațiilor}, adică
+acea soluție care asociază \texttt{IN} și \texttt{OUT} valorile ce se vor
+regăsi în orice altă soluție. Mai mult, rezultatul algoritmului
+este acceptabil, deoarece orice definiție pentru \texttt{IN} și \texttt{OUT}
+va ajunge la punctul descris. Este, totodată, și o soluție dorită,
+deoarece nu include nicio definiție care sigur nu este accesibilă.
+
+Planul algoritmului este următorul:
+\begin{itemize}
+\item \emph{Date de intrare:} Un graf de flux pentru care s-au calculat
+  \texttt{kill(B)} și \texttt{gen(B)}, asociate tuturor blocurilor \texttt{B};
+\item \emph{Date de ieșire:} \texttt{IN[B]} și \texttt{OUT[B]}, adică
+  mulțimile de definiții care ajung la punctele de intrare, respectiv de ieșire
+  ale fiecărui bloc \texttt{B} din graful fluxului;
+\item \emph{Metoda:} Vom folosi o abordare iterativă, în care începem
+  cu valoarea inițială $ \texttt{OUT[B]} = \emptyset $, pentru orice bloc \texttt{B}
+  și vom ajunge prin convergență la valorile căutate pentru \texttt{IN} și \texttt{OUT}.
+  În principiu, putem folosi o variabilă booleană care să ne arate dacă valorile
+  pentru \texttt{IN} și \texttt{OUT} s-au schimbat la iterația curentă și să ne
+  oprim atunci cînd nu se mai fac schimbări (i.e.\ avem convergență), dar vom
+  presupune că mecanismele de modificare sînt subînțelese, deci putem afla
+  și direct dacă s-au făcut sau nu modificări.
+
+  Vom face referire la Algoritmul \ref{alg:rdef}, a cărui desfășurare urmează
+  întocmai elementele de teorie prezentate pînă acum.
+\end{itemize}
+
+\begin{algorithm}
+  \caption{Algoritm iterativ pentru definiții accesibile}
+  \begin{algorithmic}[1]
+    \Procedure{RDEF}{B}
+    \State $ \texttt{OUT[ENTRY]} = \emptyset $
+    \For{($\texttt{B} \neq \texttt{ENTRY}$)}
+    \State $ \texttt{OUT[B]} = \emptyset $
+    \EndFor
+    \While{(\texttt{OUT} se schimbă)}
+    \For{($\texttt{B} \neq \texttt{ENTRY}$)}
+    \State $ \texttt{IN[B]} = \bigcup_{\texttt{P} \downarrow \texttt{B}} \texttt{OUT[P]} $
+    \State $ \texttt{OUT[B]} = \texttt{gen(B)} \cup (\texttt{IN[B]} - \texttt{kill(B)}) $
+    \EndFor
+    \EndWhile
+    \EndProcedure
+  \end{algorithmic}
+  \label{alg:rdef}
+\end{algorithm}
+
+
+Intuitiv, algoritmul propagă definițiile cît de departe pot ajunge fără a fi
+distruse și prin aceasta, simulează toate execuțiile posibile ale programului.
+Remarcăm că algoritmul se va opri, întrucît pentru orice bloc \texttt{B},
+mulțimea \texttt{OUT[B]} nu se poate micșora --- atunci cînd este adăugată
+o definiție, ea rămîne acolo. Deci în final, această mulțime va conține
+cel mult toate definițiile din program, iar cînd nu se mai adaugă niciuna
+la \texttt{OUT[B]}, programul se oprește. Totodată, această condiție de
+oprire este una bună, deoarece dacă \texttt{OUT[B]} nu s-a schimbat,
+atunci nu se va schimba nici \texttt{IN[B]} la iterația următoare,
+ceea ce va face să nu se schimbe \texttt{OUT[B]} nici la iterația care
+va urma, deci nu se mai schimbă nimic.
+
+Numărul nodurilor din graful de flux este o margine superioară pentru numărul
+de repetări ale buclei \textbf{while}. Aceasta se poate vedea prin faptul
+că, dacă o definiție ajunge la un punct, nu o poate face decît pe o cale
+care nu conține cicluri, iar numărul total de noduri din graf este o margine
+superioară pentru nodurile din afara ciclurilor. Totodată, la fiecare
+repetare a buclei \textbf{while}, definițiile se propagă cu cel puțin un
+nod.
+
+{\color{red}
+  Ceva despre \emph{bit vectors}, pentru optimizare?
+
+  Vezi \cite[p.~607]{aho}, \cite[\S 8.1]{much}.
+
+  Algoritm C++ \href{https://github.com/bhumbers/optcomp/blob/master/asst2/ClassicalDataflow/reaching-definitions.cpp}{aici}
+}
+
+
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../static"
