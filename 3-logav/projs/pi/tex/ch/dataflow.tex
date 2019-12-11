@@ -27,7 +27,7 @@ corespunzătoare stărilor dinaintea, respectiv de după punctul în care
 se află instrucțiunea intermediară studiată.
 
 Atunci cînd analizăm comportamentul unui program, trebuie să luăm în
-calcul toate secvențele posibile de puncte, alcătuind drumuri, căi de
+calcul toate sec\-ven\-țe\-le posibile de puncte, alcătuind drumuri, căi de
 execuție, printr-un graf al fluxului pe care îl parcurge programul în
 timpul execuției. Desigur, nu vom putea memora efectiv toate căile posibile
 și toate informațiile asociate acestor căi, mai ales din cauza faptului
@@ -129,7 +129,7 @@ Constrîngerile pot fi de două tipuri:
 \end{itemize}
 
 În ce privește funcțiile de transfer, adăugăm că acestea pot ține cont
-de propagarea înainte sau înapoi a informației. Astfel, dacă notăm $ f_s $
+de propagarea î\-na\-in\-te sau înapoi a informației. Astfel, dacă notăm $ f_s $
 funcția de transfer asociată instrucțiunii \texttt{s}, putem avea:
 \[
   \texttt{OUT[s]} = f_s(\texttt{IN[s]}) \text{ sau } %
@@ -137,8 +137,8 @@ funcția de transfer asociată instrucțiunii \texttt{s}, putem avea:
 \]
 
 Constrîngerile bazate pe fluxul controlului se extrag din modul
-în care se propagă informația. De exemplu, în cadrul unui bloc simplu $ B $,
-care conține instrucțiunile \texttt{s(1), s(2),..,s(n)} în această ordine,
+în care se propagă in\-for\-mația. De exemplu, în cadrul unui bloc simplu $ B $,
+care conține instrucțiunile \texttt{s(1), s(2)} pînă la \texttt{s(n)} în această ordine,
 trebuie să avem:
 \[
   \texttt{IN[s(i+1)]} = \texttt{OUT[s(i)]}, \quad \forall i = 1, 2, \dots, n-1.
