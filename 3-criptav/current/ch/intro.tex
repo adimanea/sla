@@ -2,8 +2,40 @@
 
 \chapter*{Introducere}
 
+\indent\indent Lucrarea de față urmărește să prezinte o introducere într-un subiect
+foarte important în domeniul criptării pe curbe eliptice. Este vorba
+despre un algoritm de numărarea punctelor de pe curbe eliptice,
+algoritm care poartă numele lui Ren\'e Schoof, cel care l-a introdus
+în anul 1985 în \cite{Schoof1985EllipticCO} și publicat în forma 
+rafinată în articolul \cite{JTNB_1995__7_1_219_0}.
 
-\todo[inline,noline,backgroundcolor=green!40]{de scris introducere}
+Aparatul matematic utilizat se bazează pe o teoremă care mărginește
+superior numărul posibil de puncte, rezultat care a apărut mai întîi
+în lucrările lui Emil Artin în 1924 și demonstrat de Helmut Hasse
+în 1933 (teorema \ref{thm:hasse}).
+
+Lucrarea conține cîteva generalități pentru introducere în studiul
+curbelor eliptice și familiarizarea cu noțiunile fundamentale.
+Aceste generalități sînt conținute în secțiunea \ref{ch:curbe}
+și folosesc totodată și drept preliminarii pentru abordarea
+matematică ce urmează.
+
+În partea a doua, conținînd a doua secțiune, introducem problema
+numărului de puncte ale unei curbe eliptice peste corpul $ \FF_q $
+și prezentăm două rezultate care ajută atît la facilitarea punerii
+problemei, cît și la rezolvarea acesteia. Este vorba despre
+teorema lui Hasse (teorema \ref{thm:hasse}) și algoritmul
+Baby Step, Giant Step pentru calculul logaritmului discret
+(Algoritmul \ref{alg:bsgs} pe cazul general, respectiv Algoritmul
+\ref{alg:bsgs-fq} pentru cazul particular peste $ \FF_q $).
+
+În fine, ultima parte a lucrării conține algoritmul lui Schoof
+(Algoritmul \ref{alg:schoof}), împreună cu introducerea matematică
+ce îl motivează și o demonstrație a convergenței sale, împreună
+cu un calcul grosier al complexității-timp.
+
+Lucrarea se încheie cu un exemplu de aplicare și cîteva observații
+privitoare la optimizările ulterioare ale algoritmului Schoof.
 
 %%% Local Variables:
 %%% mode: latex
