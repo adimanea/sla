@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex def"] 1576406641 "def.aux" "def.bbl" "def" 1576406660
+["bibtex def"] 1576406824 "def.aux" "def.bbl" "def" 1576406827
   "/usr/share/texmf-dist/bibtex/bst/base/apalike.bst" 1572595918 24635 604dafcc79f521a11ea73e506e1fbd98 ""
-  "def.aux" 1576406642 2613 563f2c5e8595d4be4f815337dd91dfa0 "pdflatex"
+  "def.aux" 1576406825 2613 563f2c5e8595d4be4f815337dd91dfa0 "pdflatex"
   "def.bib" 1576406634 573 4abf2bcef4cceb8df1842d6cf1cf0c11 ""
   (generated)
   "def.bbl"
   "def.blg"
-["pdflatex"] 1576406641 "def.tex" "def.pdf" "def" 1576406660
+["pdflatex"] 1576406824 "def.tex" "def.pdf" "def" 1576406827
   "/usr/share/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-0.enc" 1572568373 7631 5169ff1acd97ff1c4ab83563c99f96f4 ""
   "/usr/share/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc" 1572568373 2921 8ca0eb0831f9bc5da080d3697cfe67bf ""
   "/usr/share/texmf-dist/fonts/enc/dvips/libertine/lbtn_omcwp2.enc" 1572568373 3293 a078e2f25d1217d5cce548c137460bf1 ""
@@ -263,16 +263,16 @@
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1572595918 33301 a3134070eacafb10b1f371612ce2650d ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1576001999 4572998 f9631eebba48c3ee98e5d310044b0a09 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1576001995 8044940 81c6b81128f8cd15b33d3dc8f4c4882b ""
-  "def.aux" 1576406642 2613 563f2c5e8595d4be4f815337dd91dfa0 "pdflatex"
-  "def.bbl" 1576406641 544 c35d86d938abb0a30bdec2f90311320f "bibtex def"
-  "def.nav" 1576406642 835 b5c49ba28d3d2049d1773682fb2767a8 "pdflatex"
-  "def.out" 1576406642 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "def.tex" 1576406639 8326 748b04cf7a78f1a78dd593e213e57700 ""
+  "def.aux" 1576406825 2613 563f2c5e8595d4be4f815337dd91dfa0 "pdflatex"
+  "def.bbl" 1576406824 544 c35d86d938abb0a30bdec2f90311320f "bibtex def"
+  "def.nav" 1576406825 835 b5c49ba28d3d2049d1773682fb2767a8 "pdflatex"
+  "def.out" 1576406824 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "def.tex" 1576406822 8323 4ebd71094ff54a5b3a128c9ee59d2a1e ""
   (generated)
-  "def.pdf"
-  "def.snm"
   "def.toc"
+  "def.aux"
   "def.log"
+  "def.snm"
+  "def.pdf"
   "def.nav"
   "def.out"
-  "def.aux"
