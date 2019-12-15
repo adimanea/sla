@@ -2,9 +2,6 @@
 
 \chapter{Algoritmul lui Schoof}
 
-\todo[inline,noline,backgroundcolor=green!40]{de clarificat pașii}
-\todo[inline,noline,backgroundcolor=green!40]{de uniformizat descrierea}
-
 Există o abordare algoritmică pentru a număra punctele unei curbe
 eliptice definită peste un corp finit. Știm din teorema lui Hasse
 (teorema \ref{thm:hasse}) că:
@@ -176,7 +173,7 @@ $ \ell \leq \ell_{\max} $ astfel încît:
             Teorema de distribuție a numerelor prime poate fi rescrisă în forma:
             \[
                 \lim_{x \to \infty} \dfrac{1}{x} %
-                \sum_{\stackrel{\ell \leq x}{l\text{ prim }}} \log \ell = 1.
+                \sum_{\substack{\ell \leq x \\ l\text{ prim }}} \log \ell = 1.
             \]
             Rezultă $ \ds\prod_{\ell < x} \ell \simeq e^x $, deci pentru a face
             ca produsul să fie mai mare decît $ 4 \sqrt{q} $, este suficient
@@ -258,10 +255,11 @@ de rulare de asemenea exponențial.
 Ulterior, în anii `90, s-au adus îmbunătățiri algoritmului lui Schoof, de
 către Noam Elkies și A.\ O.\ Atkin, prin considerarea unor prime $ \ell $
 de o anumită formă și folosind rezultate teoretice mult mai puternice,
-precum formele modulare.
+precum formele modulare. O descriere suficient de clară este dată, de exemplu,
+în \cite{galin}.
 
 Varianta îmbunătățită rulează în aproximativ $ O(\log^6 q) $, cu presupunerea
-că aproximativ jumătate dintre primele mai mici decît $ O(\log q) $ au
+că aproximativ ju\-mă\-ta\-te dintre primele mai mici decît $ O(\log q) $ au
 proprietatea dorită. Însă această presupunere este una euristică și nu
 a fost demonstrată, nici măcar în cazul în care ipoteza lui Riemann ar fi
 adevărată.

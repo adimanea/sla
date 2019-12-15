@@ -1,9 +1,24 @@
 \begin{thebibliography}{}
 
+\bibitem[Galin, 2007]{galin}
+Galin, B. (2007).
+\newblock {S}choof--{E}lkies--{A}tkin algorithm.
+\newblock Master's thesis, Stanford University.
+
 \bibitem[Husemoller, 2004]{hus}
 Husemoller, D. (2004).
 \newblock {\em Elliptic Curves}.
 \newblock Springer.
+
+\bibitem[Schoof, 1985]{Schoof1985EllipticCO}
+Schoof, R. (1985).
+\newblock Elliptic curves over finite fields and the computation of square
+  roots mod p.
+
+\bibitem[Schoof, 1995]{JTNB_1995__7_1_219_0}
+Schoof, R. (1995).
+\newblock Counting points on elliptic curves over finite fields.
+\newblock {\em Journal de th\'eorie des nombres de Bordeaux}, 7(1):219--254.
 
 \bibitem[Silverman, 1994]{sil94}
 Silverman, J. (1994).
