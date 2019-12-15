@@ -1,0 +1,24 @@
+\begin{thebibliography}{}
+
+\bibitem[Chollet, 2017]{chollet}
+Chollet, F. (2017).
+\newblock A ten-minute introduction to sequence-to-sequence learning in
+  {K}eras.
+\newblock Articol disponibil la
+  \url{https://blog.keras.io/a-ten-minute-introduction-to-sequence-to-sequence-learning-in-keras.html},
+  accesat decembrie 2019.
+
+\bibitem[Davis, 2019]{davis2019use}
+Davis, E. (2019).
+\newblock The use of deep learning for symbolic integration: A review of
+  ({L}ample and {C}harton, 2019).
+\newblock {\em arXiv}.
+\newblock \url{https://arxiv.org/abs/1912.05752}.
+
+\bibitem[Lample \c{s}i Charton, 2019]{lample2019deep}
+Lample, G. \c{s}i Charton, F. (2019).
+\newblock Deep learning for symbolic mathematics.
+\newblock {\em ICLR 2020}.
+\newblock \url{https://arxiv.org/abs/1912.01412}.
+
+\end{thebibliography}
