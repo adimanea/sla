@@ -41,9 +41,11 @@ prin arbore binar în forma din figura \ref{fig:mat-polish1}.
 
 \begin{figure}[!htbp]
     \centering
-    \begin{tikzpicture}[
-        every node/.style = {minimum width = 2em, draw, circle},
-        ]
+    \begin{tikzpicture}[level distance=0.5cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=2cm},
+        level 3/.style={sibling distance=2cm},
+        level 4/.style={sibling distance=2cm}]
         \node {\texttt{+}}
             child {node {\texttt{2}}}
             child {node {\texttt{*}}
@@ -64,15 +66,103 @@ Similar se pot coda și expresii mai complicate, precum, de exemplu (v.\ fig. \r
 
 \begin{figure}[!htbp]
     \centering
-    \begin{tikzpicture}[
-        every node/.style = {minimum width = 2em, draw, circle},
-        ]
-        % \node {-}
-        %     child {node {$\partial$}
-        %         child {node {$\partial$} child {node {$u$}}
-
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=7cm},
+        level 2/.style={sibling distance=5cm},
+        level 3/.style={sibling distance=3cm},
+        level 4/.style={sibling distance=1.5cm}]
+        \node {$-$}
+            child {node {$\partial$}
+                child {node {$\partial$}
+                    child {node {$f$}}
+                    child {node {$x$}}
+                }
+            child {node {$x$}}}
+            child {node {$\times$}
+                child {node {$/$}
+                    child {node {$1$}}
+                    child {node {\texttt{pow}}
+                        child {node {$u$}}
+                child {node {$2$}}}}
+                child {node {$\partial$}
+                    child {node {$\partial$}
+                        child {node {$f$}}
+                    child {node {$t$}}}
+            child {node {$t$}}}};
     \end{tikzpicture}
     \caption{Arbore binar pentru expresia %
     $ \dfrac{\partial^2 u}{\partial x^2} - \dfrac{1}{c^2} \dfrac{\partial^2 u}{\partial t^2}$}
     \label{fig:arbore-pder}
 \end{figure}
+
+Cu ajutorul arborilor, înțelesurile expresiilor sînt imediate și în plus,
+folosind notația poloneză, avem o legătură directă între expresia scrisă
+în limbaj matematic și arborele său sintactic.
+
+Evident, o primă problemă remarcată este că un arbore sintactic nu poate
+identifica expresiile matematice fără sens, precum împărțirile la zero
+sau expresii de forma $ \log 0 $ sau $ \sqrt{-\ln (-3)} $.
+
+Însă scopul principal al articolului este să genereze un corpus de funcții
+și expresii matematice complexe, care apoi pot fi testate dacă sînt soluții
+pentru probleme complicate, precum ecuații cu derivate parțiale sau ecuații
+integrale.
+
+Inferența formulelor generate din arbori se face folosind o tehnică
+specifică, des utilizată împreună cu metoda seq2seq, numită
+\emph{beam search}, cu mărimi de 1, 10 și 50.
+
+Reluăm pe scurt prezentarea metodei, din \cite{chollet}. Cazul general
+este acela al traducerilor automate, deci cînd se pornește cu o expresie
+de o anumită lungime și se dorește obținerea unei expresii care poate avea
+o altă lungime.
+
+Pentru aceasta, avem nevoie de:
+\begin{itemize}
+    \item O rețea neuronală recursivă (RNN), care \qq{codează} secvența de
+        intrare și returnează o stare internă, specifică. Nu vom fi
+        interesați de codarea propriu-zisă, ci de starea specifică returnată,
+        folosită mai departe ca un context;
+    \item O rețea neuronală recursivă de \qq{decodare}, care va fi
+        antrenată să prezică următorul caracter din secvență, dacă i se
+        dau caracterele anterioare.
+\end{itemize}
+
+Pentru \emph{inferență}, adică atunci cînd se dorește să se decodeze
+secvențe de intrare necunoscute, procedura este cumva diferită:
+\begin{enumerate}[(1)]
+    \item Se codează secvența de intrare folosind vectori de stare;
+    \item Se pornește cu o secvența de lungime 1, alcătuită doar
+        din primul caracter al secvenței de intrare;
+    \item Se transmit vectorii de stare și primul caracter către
+        decodor, care va produce predicții pentru caracterul ce
+        urmează;
+    \item Se estimează următorul caracter folosind metoda
+        argmax și se adaugă rezultatul la șir;
+    \item Se repetă pînă se ajunge fie la ultimul caracter din
+        șir, fie la o lungime prestabilită.
+\end{enumerate}
+
+Astfel că, în cazul seq2seq aplicat expresiilor matematice reprezentate
+ca arbori binari, se generează un arbore de căutare de tip \emph{breadth-first}
+și se caută succesorii, sortîndu-i după cost, dar păstrînd doar un
+număr de succesori egal cu mărimea razei de căutare (1, 10, 50 în
+cazul curent).
+
+De îndată ce s-a stabilit metoda de generare și de înțelegere a expresiilor
+generate (i.e.\ folosind arbori binari și \emph{beam search}), se poate analiza exact
+dimensiunea spațiului soluțiilor, care va conține:
+\begin{itemize}
+    \item arbori cu cel mult $ n $ noduri, pentru un anume $ n $;
+    \item o multime de operatori unari (e.g.\ $ \sin, \cos, \exp, \log $);
+    \item o mulțime de operatori binari (e.g.\ $ +, -, \times $, \texttt{pow});
+    \item o multime de frunze care să conțină variabile, constante și numere
+        reale (sau întregi, pentru simplitate).
+\end{itemize}
+
+Mulțimile operatorilor unari, respectiv binari au cardinalele bine stabilite,
+determinate de numerele Catalan, respectiv Schr\"{o}der, care se pot găsi,
+de exemplu, și în \cite{sloane}.
+
+În continuare, prezentăm problemele abordate și soluțiile propuse, folosind
+instrumentele teoretice de mai sus.
