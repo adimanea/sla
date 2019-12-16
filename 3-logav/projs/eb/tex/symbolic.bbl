@@ -21,4 +21,9 @@ Lample, G. \c{s}i Charton, F. (2019).
 \newblock {\em ICLR 2020}.
 \newblock \url{https://arxiv.org/abs/1912.01412}.
 
+\bibitem[Sloane, 1964]{sloane}
+Sloane, N. (1964).
+\newblock The on-line encyclopedia of integer sequences.
+\newblock Disponibil online la \url{https://oeis.org/}, accesat decembrie 2019.
+
 \end{thebibliography}
