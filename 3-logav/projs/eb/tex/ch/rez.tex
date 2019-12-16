@@ -1,0 +1,92 @@
+%! TEX root = ../symbolic.tex
+
+\chapter{Rezultate și concluzii}
+
+\section{Rezultate}
+
+Modelul pe care l-au folosit autorii a conținut:
+\begin{itemize}
+    \item expresii cu cel mult $ n = 15 $ noduri interne (fără rădăcină
+        și frunze);
+    \item $ L = 11 $ frunze, cu valori din $ \{ x \} \cup \{-5, \dots, 5 \} - \{0\} $;
+    \item $ p_2 = 4 $ operatori binari: adunare, scădere, înmulțire, împărțire;
+    \item $ p_1 = 15 $ operatori unari: $ \exp, \log, \sqrt{} $, funcțiile trigonometrice
+        directe, inverse, hiperbolice și hiperbolice inverse.
+\end{itemize}
+
+Rezultatele sînt detaliate în \cite[\S4]{lample2019deep}. Totodată, sînt
+prezentate și comparații cu software specializat, precum Mathematica, Maple
+și Matlab, cu care modelul concurează în ce privește complexitatea-timp,
+abaterea fiind de aproximativ $ \pm 10\% $.
+
+Un rezultat interesant este faptul că modelul a atribuit scoruri identice
+expresiilor echivalente în unele situații, fără a fi antrenat pentru a o face.
+Astfel, dacă două expresii reprezintă aceeași funcție, ca soluție a unei ecuații
+diferențiale sau integrale, modelul a returnat scoruri identice, fără a avea o
+metodă programată de simplificare a expresiilor.
+
+\vspace{0.5cm}
+
+În ansamblu, principalul merit al articolului este de a fi arătat că se pot folosi
+metode din procesarea limbajului natural pentru a genera expresii matematice. Pentru
+acestea, operația de eliminare a expresiilor fără sens poate fi făcută destul de
+simplu, astfel că metoda poate fi considerată eficientă. Mai mult decît atît,
+abordarea găsită de autori poate fi folosită pentru rezolvarea unor probleme
+extrem de complicate din matematică, mai precis din analiza reală. În fine,
+deși modelul găsit de ei nu este verificat formal, autorii speră ca proiectul
+SymPy sau altele să producă un cadru de verificare formală a expresiilor
+matematice, care poate fi folosit apoi nu doar pentru validarea modelelor
+găsite pînă acum, ci și pentru eficientizarea lor.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Critici}
+
+Cea mai mare parte a criticilor, formulate atît pe platforma
+\href{https://openreview.net/forum?id=S1eZYeHFDS}{OpenReview}, cît și
+în articolul \cite{davis2019use}, sînt îndreptate spre faptul că
+modelul găsit în \cite{lample2019deep} (LC, pe scurt), nu 
+\qq{știe matematică}, nici măcar la nivel elementar. Astfel,
+de exemplu, modelul nu poate face simplificări nici măcar ale unor
+expresii elementare, precum:
+\[
+    \int \sin^2(\exp(\exp(x))) + \cos^2(\exp(\exp(x))) dx,
+\]
+integrand care este egal cu $ 1 $, din formula fundamentală a
+trigonometriei. Evident că exemplul de mai sus poate fi făcut
+de o complexitate sintactică arbitrară sau să se folosească
+alte formule matematice elementare, dar subtile, într-o expresie
+oricît de complicată. 
+
+Faptul că modelul LC nu face simplificări nu doar că dăunează 
+timpului de execuție, dar există posibilitatea de a rata soluții
+elementare. Dată fiind complexitatea sintactică a integrandului,
+este puțin probabil ca modelul LC să încerce $ f(x) = x $ ca o primă
+variantă de răspuns, deși acesta este cel corect. Chiar mai mult,
+autorii LC remarcă drept \qq{surprinzător} faptul că modelul face
+simplificări fără a fi antrenat să o facă. Deci în mod evident,
+cel puțin în această etapă a dezvoltării, programul nu poate găsi
+expresii echivalente cu consecvență.
+
+Autorul \cite{davis2019use} remarcă o altă situație cînd simplificarea
+ar fi crucială: presupunem că pornim cu o funcție pentru care LC a
+calculat integrala. Apoi facem o mică schimbare în funcție. În multe
+cazuri, integrala va fi mult mai greu de calculat sau poate chiar nu
+va exista (e.g.\ $\exp(x) \to \exp(x^2) $). Dar modelul LC este făcut
+astfel încît să producă mereu un rezultat. Neavînd posibilitatea de
+simplificare, se va verifica dacă derivata rezultatului este egală
+cu integrandul inițial. Cu cît expresiile sînt mai complicate, cu atît
+procedura este mai laborioasă.
+
+Un alt caz în care LC ar fi fost bine să \qq{știe matematică} este cel al
+derivării funcțiilor compuse. Dată o expresie de forma $ f(g(h(j(x)))) $,
+modelul LC nu are o ordine preferată a produslui care apare în derivată.
+Acest lucru, coroborat cu faptul că nu face simplificări, poate avea
+o influență semnificativă asupra performanței.
+
+În fine, o ultimă critică adresată în \cite{davis2019use} este că, deși
+LC a fost comparat cu Mathematica, Matlab și Maple, putem afirma că
+însăși construcția modelului se bazează pe tehnici deja implementate de
+ani buni în sistemele CAS. Astfel că o comparație poate să fie utilă,
+însă o abordare mai eficientă și cu adevărat nouă ar trebui să facă mai
+mult decît să \emph{implementeze} metode simbolice dezvoltate în ultimii
+50 de ani în cadrul învățării automate.
