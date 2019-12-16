@@ -1,0 +1,89 @@
+%! TEX root = ../symbolic.tex
+
+\chapter{Probleme și soluții}
+
+Autorii și-au propus să ajute la rezolvarea ecuațiilor diferențiale
+(eventual cu derivate parțiale) și a ecuațiilor integrale. Ideea de
+bază este că astfel de probleme sînt foarte greu de rezolvat folosind
+instrumente matematice standard, însă operațiile în sine, de derivare
+și integrare, sînt relativ simple, chiar și într-o formă algoritmică.
+
+De aceea, abordarea propusă este să se genereze seturi foarte mari
+de funcții și expresii matematice, cu zeci de milioane de membri, iar
+fiecare element să fie apoi testat dacă satisface ecuația dată. Din nou,
+ideea de bază este că, în locul rezolvării ecuației propriu-zise, se poate
+doar deriva sau integra, ambele proceduri fiind relativ ieftine din
+punct de vedere computațional.
+
+Pe lîngă dificultatea eliminării expresiilor fără sens, apare, totodată,
+și problema funcțiilor ale căror primitive sînt foarte greu sau imposibil
+de calculat, precum $ \exp(x^2) $ sau $ \dfrac{\sin x}{x} $. Aceste
+neajunsuri sînt asumate de autori.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Generarea funcțiilor și a primitivelor}
+
+Autorii propun trei metode de abordare:
+\begin{enumerate}[(1)]
+    \item \textbf{Generarea directă} (\texttt{FWD}): se generează funcții
+        aleatorii cu pînă la $ n $ operatori și se calculează primitivele
+        lor folosind software specializat (Computer Algebra System, CAS).
+        Dacă programul CAS nu poate calcula primitiva, se elimină funcția
+        generată din mulțime;
+    \item \textbf{Generarea inversă} (\texttt{BWD}): se generează
+        funcții care se derivează folosind un CAS sau altă metodă, care
+        este mult mai ieftină computațional și se poate calcula mereu.
+        Astfel, se înregistrează rezultatul invers: funcția generată
+        de program va fi primitiva celei care se calculează prin derivare;
+    \item \textbf{Generare inversă și integrare prin părți} (\texttt{IBP}):
+        folosind formula de integrare prin părți:
+        \[
+              \int Fg = FG - \int fG,
+        \]
+        cu notațiile standard $ F' = f $ și $ G' = g $, putem face o combinație
+        a metodelor de mai sus: se dau două funcții generate $ F $ și $ G $.
+        Se calculează derivatele, folosind \texttt{BWD} și se verifică dacă
+        $ fG $ se găsește deja în mulțime. Dacă da, știm deja integrala sa
+        (din metoda \texttt{FWD}) și atunci putem obține integrala $ Fg $ din
+        formula de integrare prin părți. Similar dacă $ Fg $ a fost deja
+        generată, îi știm integrala din \texttt{FWD} și putem obține integrala $ fG $.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Generarea soluțiilor EDO I}
+
+Se pot genera ecuații diferențiale ordinare de ordinul I în felul următor.
+Se pornește cu o funcție $ F(x, y) $ astfel încît ecuația (problema Cauchy) 
+$ F(x, y) = c $ să poată fi rezolvată pentru $ y $, dată o constantă $ c $.
+Cu alte cuvinte, există o funcție $ f $ astfel încît pentru orice $ (x, c)$,
+are loc $ F(x, f(x, c)) = c $.
+
+Calculăm derivata în raport cu $ x $ a acestei expresii și se obține:
+\[
+    \frac{\partial F(x, f_c(x))}{\partial x} + f'_c(x) \cdot %
+    \frac{\partial F(x, f_c(x))}{\partial y} = 0,
+\]
+unde am notat prin $ f_c $ funcția $ x \mapsto f(x, c) $. Rezultă că,
+pentru orice constantă $ c $, funcția $ f_c $ este o soluție pentru
+ecuația diferențială de ordinul întîi:
+\[
+      F_x + y' F_y = 0,
+\]
+unde $ F_x = \dfrac{\partial F(x, y)}{\partial x} $ și similar pentru $ F_y $.
+
+De exemplu:
+\begin{enumerate}[(1)]
+    \item Se generează o funcție aleatorie: $ f(x) = x \log(c/x) $;
+    \item Se rezolvă ecuația $ c = x\exp\left( \dfrac{f(x)}{x} \right) = F(x, f(x)) $;
+    \item Se calculează derivata în raport cu $ x $:
+        \[
+            \exp\left( \frac{f(x)}{x} \right) \left(1 + f'(x) - \frac{f(x)}{x} \right) = 0;
+        \]
+    \item Prin simplificare, ajungem la $ xy' - y + x = 0 $.
+\end{enumerate}
+
+\begin{remark}\label{rk:ode2}
+    Se poate proceda similar pentru ecuații diferențiale de ordinul al doilea,
+    rezultat pe care îl omitem, indicînd referința \cite[\S 3.3]{lample2019deep}.
+\end{remark}
+
