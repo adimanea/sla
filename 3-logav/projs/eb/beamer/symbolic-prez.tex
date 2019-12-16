@@ -1,0 +1,189 @@
+\documentclass[xcolor=dvipsnames,handout]{beamer}
+
+% font setup
+\usepackage{libertine}
+\renewcommand*\familydefault{\sfdefault}    % Linux Libertine = default sans serif
+\usepackage{inconsolata}                    % Inconsolata = monospaced
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage[style=german]{csquotes}
+\newcommand\qq{\enquote}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritm}
+\makeatother
+\algrenewcommand\algorithmicprocedure{\textbf{procedură}}
+\algrenewcommand\algorithmicend{\textbf{final}}
+
+% Graphics and other packages
+\usepackage[romanian]{babel}
+\usepackage{graphicx}
+\addto\captionsromanian{\renewcommand{\figurename}{Ilustrație}}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[style=german]{csquotes}
+
+% Custom macros
+\newcommand{\bloc}[3]{\begin{bl}<#1->{{\large\color{Gray}{\hrulefill}}\\ \color{bleumarin}{\large \emph{#2}}}\\ \vspace*{-2mm}{\color{Gray}{\hrulefill}}\\ #3 \end{bl}} 
+\newcommand{\fr}[1]{\frame{#1}}
+\newcommand{\ft}[1]{\frametitle{\color{bleumarin}{\hfill #1 \hfill}}}
+\newcommand{\lin}[3]{\uncover<#1->{\alert<#1>{#2}}{\vspace*{#3 ex}}}
+\newcommand{\ite}[2]{\uncover<#1->{\alert<#1>{\item #2}}}
+\newcommand{\vs}[1]{\vspace*{#1 ex}}
+\definecolor{bleumarin}{RGB}{30,30,150} 
+\definecolor{firebrick}{RGB}{178,34,34}
+
+% Theme setup
+\useoutertheme{shadow} 
+\usetheme{CambridgeUS} 
+\usecolortheme[named=bleumarin]{structure} 
+\useoutertheme[compress]{smoothbars}
+
+% Theme finetuning
+\setbeamertemplate{items}[ball]
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}  
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TITLE PAGE
+\title[ML4SymbMath]{Învățare automată \\ pentru matematică simbolică}
+\author{Adrian Manea}
+\institute{510, SLA}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% SLIDES START HERE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\fr{
+    \ft{Scopul și metoda}
+
+    \lin{1}{Generarea expresiilor matematice folosind tehnici de NLP.}{4}
+
+    \lin{2}{Odată obținut un corpus de expresii matematice, pot fi
+    testate dacă satisfac ecuații complicate (ODE, PDE, int).}{4}
+
+    \lin{3}{Metoda: traducere automată (seq2seq) + beam search (\cite{chollet}).}{4}
+
+    \lin{4}{Expresii în forma prefixată (poloneză):
+        \[
+            2 + 3 \cdot (5 + 2) \mapsto \texttt{[+ 2 * 3 + 5 2]}.
+    \]}{4}
+}
+
+\fr{
+    \ft{Scopul și metoda}
+\begin{figure}[!htbp]
+    \centering
+    \begin{tikzpicture}[level distance=0.5cm,
+        level 1/.style={sibling distance=2cm},
+        level 2/.style={sibling distance=2cm},
+        level 3/.style={sibling distance=2cm},
+        level 4/.style={sibling distance=2cm}]
+        \node {\texttt{+}}
+            child {node {\texttt{2}}}
+            child {node {\texttt{*}}
+                child {node {\texttt{3}}}
+                child {node {\texttt{+}}
+                    child {node {\texttt{5}}}
+            child {node {\texttt{2}}}}};
+    \end{tikzpicture}
+    \caption{Arbore binar pentru expresia \texttt{[+ 2 * 3 + 5 2]}}
+    \label{fig:mat-polish1}
+\end{figure}
+}
+
+\fr{
+    \ft{Scopul și metoda}
+\begin{figure}[!htbp]
+    \centering
+    \small
+    \begin{tikzpicture}[level distance=1cm,
+        level 1/.style={sibling distance=5cm},
+        level 2/.style={sibling distance=2cm},
+        level 3/.style={sibling distance=1cm},
+        level 4/.style={sibling distance=0.5cm}]
+        \node {$-$}
+            child {node {$\partial$}
+                child {node {$\partial$}
+                    child {node {$u$}}
+                    child {node {$x$}}
+                }
+            child {node {$x$}}}
+            child {node {$\times$}
+                child {node {$/$}
+                    child {node {$1$}}
+                    child {node {\texttt{pow}}
+                        child {node {$c$}}
+                child {node {$2$}}}}
+                child {node {$\partial$}
+                    child {node {$\partial$}
+                        child {node {$u$}}
+                    child {node {$t$}}}
+            child {node {$t$}}}};
+    \end{tikzpicture}
+    \caption{Arbore binar pentru expresia %
+    $ \dfrac{\partial^2 u}{\partial x^2} - \dfrac{1}{c^2} \dfrac{\partial^2 u}{\partial t^2}$}
+    \label{fig:arbore-pder}
+\end{figure}
+}
+
+\fr{
+    \ft{Probleme și soluții: EDO \& EI}
+    
+    \lin{1}{\textbf{Generare directă} (\texttt{FWD}):
+        \[
+            LC \to f(x) \xrightarrow{CAS} \int f(x) dx.
+    \]}{1}
+
+    \lin{2}{\textbf{Generare inversă} (\texttt{BWD}):
+        \[
+            LC \to f(x) \xrightarrow{CAS} f'(x).
+    \]}{1}
+    
+    \lin{3}{\textbf{Generare inversă și integrare prin părți} (\texttt{IBP}):
+        \[
+            \int Fg = FG - \int fG.
+    \]}{1}
+
+    \lin{4}{
+        \[
+            F, G \xrightarrow{\texttt{BWD}} f, g \rightarrow fG \xrightarrow{\texttt{FWD}} Fg.
+    \]}{1} 
+}
+
+\fr{
+    \ft{Rezultate, concluzii și critici \cite{davis2019use}}
+
+    \lin{1}{Rezultatele sînt comparabile cu Mathematica, Matlab, Maple ($\pm 10\%$).}{4}
+
+    \lin{2}{Nu \qq{știe matematică}: simplificări, expresii echivalente,
+    \underline{expresii fără sens}.}{4}
+
+    \lin{3}{Modelul nu este verificat formal (se speră la dezvoltarea SymPy).}{4}
+
+    \lin{4}{Algoritmii se bazează pe CAS $ \Rightarrow $ comparația nu are sens și
+    elementul de noutate este minimizat.}{0}
+}
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Bibliography
+\fr{
+    \ft{Bibliografie}
+    \bibliography{symbolic-prez.bib}
+    \bibliographystyle{apalike}
+    \nocite{*}
+}
+
+\end{document}
+
