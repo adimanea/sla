@@ -1,0 +1,294 @@
+%! TEX root = ../tamarin.tex
+
+\chapter{Fundamente teoretice}
+
+\section{Teoria urmelor}
+
+Vom prelua din prezentarea \cite{mazu}, autorul fiind fondatorul teoriei.
+Carl Petri este citat ca avînd o influență foarte importantă în dezvoltarea
+teoriei urmelor, prin introducerea (la vîrsta de 13 ani!) a
+\emph{rețelelor Petri}, utilizate în primă fază pentru reacții chimice,
+dar dezvoltate apoi pentru modelarea sistemelor computaționale concurente.
+
+Teoria urmelor a venit ca o încercare de a înțelege sistemele concurente
+folosind limbaje formale. În primă fază, la apariția teoriei în 1970, ea a
+fost folosită pentru a muta accentul de pe concurența în execuție pe
+non-determinism. Principalele dificultăți de depășit se legau de:
+\begin{itemize}
+    \item \emph{intercalarea proceselor} (eng.\ \emph{interleaving});
+    \item \emph{rafinarea} comportamentului unui sistem, prin rafinarea
+        proceselor concurente ce se execută;
+    \item \emph{inevitabilitatea} unui anume comportament --- aspect
+        care intra în contradicție cu non-determinismul;
+    \item \emph{serializarea impusă} a tranzacțiilor.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Obiecte de lucru și notații}
+
+Prezentăm acum cîteva elemente de bază din teoria urmelor. Pornim cu
+o mulțime $ X $, o relație binară $ R $ definită pe $ X $ care va avea
+anumite proprietăți (e.g.\ ordine totală). Vom nota mulțimea numerelor
+naturale $ \{ 0, 1, 2, \dots, n, \dots, \} $ cu $ \omega $. Printr-un
+\emph{alfabet} vom înțelege o colecție finită de simboluri, iar
+alfabetele se vor nota cu majuscule grecești.
+
+Dacă $ \Sigma $ este un alfabet, șirurile de simboluri cu număr finit
+de elemente se vor nota cu $ \Sigma^\ast $, iar șirul de lungime
+zero se va nota $ \epsilon $.
+
+Mulțimea șirurilor peste un alfabet, împreună cu operația de concatenare
+formează un monoid, care se va numi \emph{monoidul liber} generat de
+(alfabetul) $ \Sigma $.
+
+Dacă $ w $ este un șir, vom nota cu $ \dr{Alph}(w) $ mulțimea
+simbolurilor din $ w $ (\emph{alfabetul} lui $ w $), iar prin
+$ w(a) $ vom înțelege numărul de apariții ale simbolului $ a $ în
+șirul $ w $.
+
+Fie $ \Sigma $ un alfabet și $ w $ un șir, posibil definit peste
+un alt alfabet. Se definește \emph{proiecția} lui $ w $ peste $ \Sigma $
+funcția:
+\[
+    \pi_\Sigma(w) = %
+    \begin{cases}
+        \epsilon, & w = \epsilon \\
+        \pi_\Sigma(u), & w = ua, a \notin \Sigma \\
+        \pi_\Sigma(u)a, & w = ua, a \in \Sigma
+    \end{cases}
+\]
+În esență, proiecția pe $ \Sigma $ șterge dintr-un șir toate simbolurile
+care nu se găsesc în $ \Sigma $.
+
+\emph{Reducerea la dreapta} a simbolului $ a $ din șirul $ w $ este
+un șir notat cu $ w \div a $ și definit prin:
+\begin{align*}
+    \epsilon \div a &= \epsilon \\
+    (wb) \div a &= %
+    \begin{cases}
+        w, & a = b \\
+        (w \div a) b, &\text{altfel}
+    \end{cases},
+\end{align*}
+definiție care are sens pentru orice șir $ w $ și simboluri $ a, b $.
+
+Se poate verifica ușor că proiecția și reducerea comută, adică avem:
+\[
+    \pi_\Sigma(w)\div a = \pi_\Sigma(w \div a),
+\]
+pentru orice șir $ w $ și simbol $ a $.
+
+Vom defini un \emph{limbaj} printr-un alfabet $ \Sigma $ și o
+mulțime de șiruri definite peste $ \Sigma $, adică o submulțime a
+$ \Sigma^\ast $. Formal, vom deosebi două limbaje care au aceeași
+mulțime de șiruri, dar sînt definite peste alfabete diferite. În
+particular, două limbaje care conțin doar simbolurile vide, dar
+definite peste alfabete diferite, vor fi considerate diferite.
+
+Limbajele se vor nota cu majuscule din alfabetul latin.
+
+Dacă $ A, B $ sînt două limbaje definite peste același alfabet,
+se poate defini \emph{concatenarea} lor $ AB $, care conține
+$ \{ uv \mid u \in A, v \in B \} $, peste același alfabet.
+
+\emph{Puterea unui limbaj} $ A $ se definește inductiv:
+\[
+    A^0 = \{ \epsilon \}, \quad A^{n+1} = A^n A, \forall n \in \NN,
+\]
+iar iterația $ A^\ast $ se definește prin:
+\[
+    A^\ast = \bigcup_{n \geq 0} A^n.
+\]
+
+În general, putem extinde funcția de proiecție de la șiruri
+la limbaje. Fie $ A $ un limbaj, $ \Sigma $ un alfabet. Se definește
+proiecția lui $ A $ pe $ \Sigma $ ca fiind limbajul $ \pi_\Sigma(A) $
+dat de:
+\[
+    \pi_\Sigma(A) = \{ \pi_\Sigma(u) \mid u \in A \}.
+\]
+
+Dacă $ w $ este un șir, mulțimea:
+\[
+    \dr{Pref}(w) = \{ u \mid \exists v, uv = w \}
+\]
+se va numi \emph{mulțimea prefixelor} lui $ w $. Evident,
+$ \epsilon, w \in \dr{Pref}(w) $, iar dacă $ A $ este un limbaj
+peste $ \Sigma $, definim:
+\[
+    \dr{Pref}(A) = \bigcup_{w \in A} \dr{Pref}(w).
+\]
+
+În general, are loc $ A \seq \dr{Pref}(A) $, iar dacă și incluziunea
+reciprocă este adevărată, limbajul se numește \emph{închis la prefixe}.
+Rezultă că, pentru orice limbaj $ A $, $ \dr{Pref}(A) $ este un limbaj
+închis la prefixe.
+
+Se definește \emph{relația de prefix} ca fiind o relație binară
+$ \sqsubseteq {} \in \Sigma^\ast \times \Sigma^\ast $ definită prin:
+\[
+    u \sqsubseteq w \Leftrightarrow u \in \dr{Pref}(w),
+\]
+
+Se poate arăta simplu că relația de prefix este o relație de ordine
+pentru orice mulțime de șiruri.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Dependență și urme}
+
+Vom numi o \emph{dependență} orice relație finită, reflexivă și simetrică,
+adică o mulțime finită de perechi ordonate $ D $, astfel încît, dacă
+$ (a, b) \in D $, atunci $ (b,a) \in D $ și $ (a, a) \in D $.
+
+Fie acum $ D $ o dependență. Domeniul lui $ D $ se va nota $ \Sigma_D $
+și se va numi \emph{alfabetul} lui $ D $. Dacă $ D $ este o dependență,
+atunci relația $ I_D = (\Sigma_D \times \Sigma_D) - D $ se numește
+\emph{independența} indusa de $ D $. Evident, această relație este
+simetrică și nereflexivă. În particular, relația vidă, relația de
+identitate și relația completă pe $ \Sigma $ (aceasta din urmă fiind
+$ \Sigma \times \Sigma $) sînt dependențe. Prima are alfabetul vid,
+a doua este cea mai mică dependență în $ \Sigma $, iar ultima este
+cea mai mare dependență în $ \Sigma $.
+
+De exemplu, fie relația:
+\[
+    D = \{ a, b \}^2 \cup \{ a,c \}^2.
+\]
+Aceasta este o dependență și avem:
+\[
+    \Sigma_D = \{ a, b, c \}, \quad I_D = \{ (b,c), (c,b) \}.
+\]
+
+Teoria urmelor va avea dependențele ca noțiuni primare. De asemenea,
+se mai pot folosi și \emph{alfabete concurente} ca noțiuni primare,
+alcătuite din orice pereche $ (\Sigma, D) $, unde $ \Sigma $ este un
+alfabet, iar $ D $ este o dependență sau \emph{alfabete suport}
+(eng.\ \emph{reliance alphabet}), alcătuite dintr-un triplet format
+dintr-un alfabet $ \Sigma $, o dependență $ D $ și independența $ I $
+indusă de $ D $.
+
+Ajungem în fine la definiția principală.
+
+\begin{definition}\label{def:trace}
+    Fie $ D $ o dependență. Se definește \emph{echivalența de urmă}
+    (eng.\ \emph{trace equivalence}) pentru $ D $ ca fiind cea mai
+    mică congruență $ \equiv_D $ în monoidul $ \Sigma^\ast_D $ astfel
+    încît, pentru orice $ a, b \in \Sigma $ să avem:
+    \[
+        (a, b) \in I_D \Rightarrow ab \equiv_D ba.
+    \]
+    Clasele de echivalență din $ \Sigma^\ast_D/\equiv_D $ se numesc
+    \emph{urme} (eng.\ \emph{traces}) peste $ D $.
+
+    Urma reprezentată de șirul $ w $ se va nota $ [w]_D $, iar prin
+    $ \left[ \Sigma^\ast \right]_D $ vom nota mulțimea factor,
+    respectiv $ \left[ \Sigma \right]_D $ va nota mulțimea claselor care
+    include și clasa vidă ($\{ [a]_D \mid a \in \Sigma_D \}$).
+\end{definition}
+
+Reluînd exemplul de mai sus, pentru dependența:
+\[
+    D = \{ a, b \}^2 \cup \{ a, c \}^2,
+\]
+urma peste $ D $ dată de șirul $ abbca $ este:
+\[
+    [abbca]_D = \{ abbca, abcba, acbba \}.
+\]
+
+În general, din definiție, toate șirurile care diferă numai prin ordinea
+a două simboluri consecutive determină o singură urmă.
+
+Se definește \emph{monoidul urmelor} $ \mathbb{M}(D) $ ca avînd mulțimea
+suport dată de mulțimea factor $ \Sigma^\ast_D / \equiv_D $, iar operația
+definită în mod natural. Amintim că există aplicația de proiecție canonică
+de la mulțimea $ \Sigma^\ast $ la mulțimea factor, care de fapt induce un
+morfism natural de monoizi:
+\[
+    \varphi_D : \Sigma^\ast \to \mathbb{M}(D), \quad \varphi_D(w) = [w]_D.
+\]
+
+Presupunem în continuare că lucrăm cu o dependență fixată $ D $, astfel că
+vom omite indicele în cele ce urmează. De asemenea, $ I $ va fi independența
+indusă de $ D $ (fixată), $ \Sigma $ va fi domeniul lui $ D $, toate
+simbolurilor vor fi din $ \Sigma_D $, toate șirurile vor fi peste $ \Sigma_D $,
+iar toate urmele vor fi peste $ D $, dacă nu se specifică altfel.
+
+Implicația $ u \equiv v \Rightarrow \dr{Alph}(u) = \dr{Alph}(v) $ este clară.
+Rezultă că definiția $ \dr{Alph}([w]) = \dr{Alph}(w) $ este corectă.
+
+Fie $ \sim : \Sigma^\ast \times \Sigma^\ast $ o relație binară definită
+astfel încît $ u \sim v $ dacă și numai dacă există $ x, y \in \Sigma^\ast $
+și $ (a,b) \in I $ cu $ u = xaby $ și $ v = xbay $. Cu această definiție,
+se poate vedea că $ \equiv $ este închiderea simetrică, reflexivă și
+tranzitivă a $ \sim $. Cu alte cuvinte, obținem:
+\[
+    u \equiv v \Leftrightarrow \exists (w_0, \dots, w_n), w_0 = u, w_n = v,
+\]
+iar pentru toți $ 0 < i \leq n $ are loc $ w_{i-1} \sim w_i $.
+
+Fie $ [u], [v] $ două urme peste aceeași dependență. Urma $ [u] $ se numește
+\emph{prefix} al urmei $ [v] $ (iar $ [v] $ se numește un \emph{dominant}
+al lui $ [u] $) dacă există o urmă $ [x] $ astfel încît $ [ux] = [u] $.
+
+E important de știut că:
+\begin{proposition}\label{prop:lcm}
+    Fie $ [w] $ o urmă, iar $ [u], [v] $ prefixe ale lui $ [w] $. Atunci
+    există cel mai mare prefix comun și cel mai mic dominant comun al lui
+    $ [u] $, respectiv $ [v] $.
+\end{proposition}
+
+\begin{proof}
+    \cite[Prop.\ 1.3.5]{mazu}.
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Sisteme de rescriere}
+
+Preluăm o prezentare sumară a subiectului din \cite{10.1007/10721959_21},
+indicînd pentru mult mai multe detalii Capitolul 3 din \cite{handbook}.
+
+Fie $ \kal{F} $ o mulțime finită de simboluri, care conține și o funcție
+de aritate definită pe $ \kal{F} $. Fie $ \kal{X} $ o mulțime numărabilă
+de variabile, $ \kal{T}(\kal{F}, \kal{X}) $ o mulțime de termeni, iar
+$ \kal{T}(\kal{F}) $ mulțimea termenilor fără variabile. Mulțimea
+pozițiilor dintr-un termen $ t $, notată $ \dr{Pos}(t) $, este ordonată
+lexicografic. Șirul vid $ \epsilon $ ține poziția cea mai de sus. Dacă
+$ p \in \dr{Pos}(t) $, atunci $ t\mid_p $ este subtermenul lui $ t $
+de la poziția $ p $, iar $ t[s]_p $ este termenul obținut prin
+înlocuirea subtermenului $ t\mid_P $ la poziția $ p $ cu
+termenul $ s $. Mulțimea variabilelor din termeul $ t $ se va nota cu
+$ \dr{Var}(t) $.
+
+O \emph{substituție} este o aplicație 
+\[
+    \sigma : \kal{X} \to \kal{T}(\kal{F}, \kal{X}),
+\]
+care poate fi extinsă în mod unic la un endomorfism al mulțimii
+termenilor (cu concatenarea). Domeniul său se definește prin:
+\[
+    \dr{Dom}(\sigma) = \{ x \in \kal{X} \mid x\sigma \neq x \}.
+\]
+
+Un \emph{sistem de rescriere a termenilor} $ \kal{R} $ este o mulțime
+de reguli de rescriere de forma $ l \to r $, unde
+$ l, r \in \kal{T}(\kal{F}, \kal{X}), l \notin \kal{X} $, iar
+$ \dr{Var}(l) \supseteq \dr{Var}(r) $.
+
+Relația $ \to_\kal{R} $ indusă de un sistem de rescriere $ \kal{R} $
+pe o mulțime de termeni $ \kal{T}(\kal{F}, \kal{X}) $ se definește
+astfel:
+\[
+    s \to_\kal{R} t \Leftrightarrow \left( \exists l \to r \in \kal{R}, %
+        \exists p \in \dr{Pos}(s), \exists \sigma \text{ subst. a.î. } %
+    (l\sigma = s\mid_p \land t = s [r\sigma]_p) \right).
+\]
+
+Închiderea tranzitivă a relației se va nota $ \to^\ast_\kal{R} $.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Analiza automată a protocoalelor}
+
+Preluăm acum din \cite[Cap.\ 3]{schmidt} pentru un exemplu general de
+analiză formală a protocoalelor de criptare care folosesc exponențierea
+Diffie-Hellman.
