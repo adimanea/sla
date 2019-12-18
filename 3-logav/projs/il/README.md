@@ -2,6 +2,8 @@
 
 Proiect: **Introducere în Tamarin**.
 
+Acces direct la [PDF](https://github.com/adimanea/sla/blob/master/3-logav/projs/il/tex/tamarin.pdf).
+
 ## Resurse
 - [Site Tamarin](https://tamarin-prover.github.io/);
 - [Articol @ HAL](https://hal.archives-ouvertes.fr/hal-01622110/document).
