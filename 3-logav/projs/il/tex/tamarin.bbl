@@ -10,11 +10,17 @@ Diekert, V. \c{s}i M{\'e}tivier, Y. (1997).
 \newblock Partial commutation and traces.
 \newblock In {\em Handbook of Formal Languages}.
 
+\bibitem[Genet \c{s}i Klay, 2000]{10.1007/10721959_21}
+Genet, T. \c{s}i Klay, F. (2000).
+\newblock Rewriting for cryptographic protocol verification.
+\newblock In McAllester, D., editor, {\em Automated Deduction - CADE-17}, pages
+  271--290, Berlin, Heidelberg. Springer Berlin Heidelberg.
+
 \bibitem[Mazurkiewicz, 1995]{mazu}
 Mazurkiewicz, A. (1995).
 \newblock Introduction to trace theory.
 \newblock In Diekert, V. \c{s}i Rozenberg, G., editors, {\em The Book of
-  Traces}, chapter~1, pages 3--41.
+  Traces}, chapter~1, pages 3--41. World Scientific.
 
 \bibitem[Meier, 2013]{meier}
 Meier, S. (2013).
@@ -31,5 +37,11 @@ Schmidt, B. (2012).
 Tamarin, T. (2019).
 \newblock Tamarin-prover manual.
 \newblock \url{tamarin-prover.github.io}.
+
+\bibitem[van Leeuwen~(ed.), 1990]{handbook}
+van Leeuwen~(ed.), J. (1990).
+\newblock {\em Handbook of Theoretical Computer Science. Volume B: Formal
+  Models and Semantics}.
+\newblock Elsevier; MIT Press.
 
 \end{thebibliography}

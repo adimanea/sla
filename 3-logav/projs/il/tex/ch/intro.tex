@@ -1,3 +1,48 @@
 %! TEX root = ../tamarin.tex
 
 \chapter{Introducere}
+
+Tamarin este un produs software care este folosit în modelarea simbolică
+și analiza protocoalelor de securitate. Modul de operare este dat de
+\begin{itemize}
+    \item introducerea unui model de protocol de securitate, ca date de intrare,
+        prin specificarea acțiunilor pe care agenții participanți la protocol
+        le iau;
+    \item o specificație a adversarului;
+    \item o specificație a proprietăților dorite ale protocolului.
+\end{itemize}
+
+Tamarin oferă o modalitate de a raționa asupra protocoalelor de securitate
+prin specificații, atît ale protocolului, cît și ale adversarului, într-un
+limbaj expresiv bazat pe reguli de rescriere asupra unor multi-seturi
+(i.e.\ într-o logică multi-sortată). Prin aceste reguli, se definește un
+sistem de tranziții eticetat, ale cărui stări sînt reprezentate de
+cunoștințele adversarului, de mesajele existente pe rețea, informații
+despre valorile proaspăt generate (variabilele \emph{fresh}) și
+generarea de noi mesaje.
+
+Totodată, putem specifica și ecuațional unii operatori criptografici,
+precum logaritmul (sau exponențierea) discret(ă) Diffie-Hellman.
+
+Se oferă două moduri de a construi demonstrații:
+\begin{enumerate}[(1)]
+    \item Un mod \emph{complet automat}, în care se combină reguli
+        de deducție și raționamente ecuaționale, împreună cu argumente
+        euristice pentru a ghida demonstrația. Dacă operația se finalizează,
+        se returnează fie o demonstrație a corectitudinii, fie un
+        contraexemplu, care reprezintă un atac ce încalcă proprietățile
+        dorite.
+    \item Cum problemele de corectitudine sînt, în general, indecidabile,
+        se oferă și un mod \emph{asistat}, interactiv, în care utilizatorul
+        ghidează demonstrația pas cu pas, inspectînd graful stărilor și
+        luînd decizii combinate cu abordarea automată.
+\end{enumerate}
+
+Descrierea formală a metodelor de funcționare a Tamarin este dată
+în \cite{schmidt} și \cite{meier}, din care vom prelua cîteva elemente
+de bază în capitolul următor. Ideea fundamentală este următoarea:
+fie $ E $ o teorie cu egalitate care definește operatori criptografici,
+un sistem de rescriere $ R $ asupra unui multi-set, care definește un
+protocol și $ \phi $ o formulă care definește o proprietate trasabilă.
+Tamarin poate să verifice validitatea sau satisfiabilitatea lui $ \phi $
+pentru urmele lui $ R $ modulo $ E $.
