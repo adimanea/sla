@@ -1,0 +1,242 @@
+\documentclass[xcolor=dvipsnames,handout]{beamer}
+
+% font setup
+\usepackage{libertine}
+\renewcommand*\familydefault{\sfdefault}    % Linux Libertine = default sans serif
+\usepackage{inconsolata}                    % Inconsolata = monospaced
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritm}
+\makeatother
+\algrenewcommand\algorithmicprocedure{\textbf{procedură}}
+\algrenewcommand\algorithmicend{\textbf{final}}
+
+% Graphics and other packages
+\usepackage[romanian]{babel}
+\usepackage{graphicx}
+\addto\captionsromanian{\renewcommand{\figurename}{Ilustrație}}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[style=german]{csquotes}
+
+% Custom macros
+\newcommand{\bloc}[3]{\begin{bl}<#1->{{\large\color{Gray}{\hrulefill}}\\ \color{bleumarin}{\large \emph{#2}}}\\ \vspace*{-2mm}{\color{Gray}{\hrulefill}}\\ #3 \end{bl}} 
+\newcommand{\fr}[1]{\frame{#1}}
+\newcommand{\ft}[1]{\frametitle{\color{bleumarin}{\hfill #1 \hfill}}}
+\newcommand{\lin}[3]{\uncover<#1->{\alert<#1>{#2}}{\vspace*{#3 ex}}}
+\newcommand{\ite}[2]{\uncover<#1->{\alert<#1>{\item #2}}}
+\newcommand{\vs}[1]{\vspace*{#1 ex}}
+\definecolor{bleumarin}{RGB}{30,30,150} 
+\definecolor{firebrick}{RGB}{178,34,34}
+
+% Theme setup
+\useoutertheme{shadow} 
+\usetheme{CambridgeUS} 
+\usecolortheme[named=bleumarin]{structure} 
+\useoutertheme[compress]{smoothbars}
+
+% Theme finetuning
+\setbeamertemplate{items}[ball]
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}  
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% TITLE PAGE
+\title{\textsc{Tamarin}}
+\author{Adrian Manea}
+\institute{510, SLA}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% SLIDES START HERE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\fr{
+  \ft{Teorie}
+
+  \lin{1}{Analizăm formal protocoalele de securitate, pe baza specificării:}{0}
+  \begin{itemize}
+    \ite{2}{acțiunilor protocolului;}
+    \ite{3}{adversarului (tip Dolev--Yao);}
+    \ite{4}{proprietăților dorite (leme).}
+  \end{itemize}
+}
+
+\begin{frame}[fragile]
+  \ft{Sintaxă (stări inițiale)}
+
+  \lin{1}{Declararea funcțiilor definite sau importate:}{0}
+  {\footnotesize
+\begin{verbatim}
+builtins: hashing, asymmetric-encryption
+functions: mac/2, g/0, shk/0 [private]
+\end{verbatim}
+  }
+
+  \lin{2}{Regula de înregistrare a cheii publice:}{0}
+
+  {\footnotesize
+\begin{verbatim}
+rule Register_pk: [ Fr(~ltk) ] --> [ ~Ltk($A, ~ltk), ~Pk($A, pk(~ltk)) ]
+\end{verbatim}
+  }
+
+  \lin{3}{Tipuri (sorturi):}{0}
+
+  \begin{itemize}
+    \ite{4}{\texttt{\~{}x} = variabilă nouă = \texttt{x:fresh};}
+    \ite{5}{\texttt{\$x} = variabilă publică = \texttt{x:pub};}
+    \ite{6}{\texttt{\#i} = variabilă temporală = \texttt{i:temporal};}
+    \ite{7}{\texttt{m} = mesaj = \texttt{m:msg}.}
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \ft{Sintaxă (stări inițiale)}
+  \lin{1}{Propagarea cheii în rețea:}{0}
+  {\footnotesize
+\begin{verbatim}
+rule Get_pk: [ !Pk(A, pubkey) ] --> [ Out(pubkey) ]
+/* !Pk = acțiune persistentă, se poate repeta oricînd e nevoie */
+\end{verbatim}
+  }
+
+  \lin{2}{Compromiterea cheii (dezvăluirea de către adversar) este reprezentată
+    ca un fapt în acțiune = urmă $ \neq $ stare:}{0}
+
+  {\footnotesize
+\begin{verbatim}
+rule Reveal_ltk: [ !Ltk(A, ltk) ] --[ LtkReveal(A) ]-> [ Out(ltk) ]
+\end{verbatim}
+  }
+\end{frame}
+
+\begin{frame}[fragile]
+  \ft{Sintaxă (funcționare)}
+
+  \lin{1}{Creează fir pentru client, alege server non-determinist:}{0}
+
+  {\footnotesize
+\begin{verbatim}
+rule Client_1: [ Fr(~k), ~Pk($S, pkS) ] --> [ Client_1($S, ~k), Out(aenc(~k, pkS)) ]
+\end{verbatim}
+  }
+
+  \lin{2}{Folosind cheia, se menționează pe urmă că s-a stabilit o legătură cu
+    serverul \texttt{S}, pe baza cheii \texttt{k}:}{0}
+
+  {\footnotesize
+\begin{verbatim}
+rule Client_2: [ Client_1(S, k), In(h(k)) ] --[ SessKeyC(S,k) ]-> []
+\end{verbatim}
+  }
+
+  \lin{3}{Răspunsul serverului (menționat tot pe urmă):}{0}
+
+  {\footnotesize
+\begin{verbatim}
+rule Serv_1: [ ~Ltk($S, ~ltkS), In(request) ]
+     --[ AnswerRequest($S, adec(request, ~ltkS)) ]->
+    [ Out(h(adec(request, ~ltkS))) ]
+\end{verbatim}
+  }
+\end{frame}
+
+\begin{frame}[fragile]
+  \ft{Proprietăți (leme)}
+
+  {\footnotesize
+\begin{verbatim}
+lemma Client_session_key_secrecy:
+  " not( /* nu este cazul ca */
+        Ex S k #i #j.
+          /* clientul a stabilit o cheie de sesiune k cu serverul S */
+          SessKeyC(S, k) @ #i
+          /* iar adversarul să cunoască cheie */
+          & K(k) @ #j
+          /* fără a fi aplicat o dezvăluire pe S */
+          & not(Ex #r. LtkReveal(S) @ r)
+        )
+  "
+\end{verbatim}
+  }
+\end{frame}
+
+\begin{frame}[fragile]
+  \ft{Proprietăți (leme)}
+
+  {\footnotesize
+\begin{verbatim}
+lemma Client_auth:
+  " /* Pentru toate cheile de sesiune 'k'
+       stabilite de clienți cu serverul 'S' */
+    ( All S k #i. SessKeyC(S, k) @ #i
+        ==>
+      /* există un server care a răspuns la cerere */
+        ( (Ex #a. AnswerRequest(S, k) @ a)
+      /* sau adversarul a aflat cheia înainte de a fi stabilită */
+          | (Ex #r. LtkReveal(S) @ r & r < i)
+        )
+    )
+  "
+\end{verbatim}
+  }
+
+  {\footnotesize
+\begin{verbatim}
+/* Execuție nevidă */
+lemma Client_session_key_honest_setup:
+  exists-trace
+    " Ex S k #i.
+        SessKeyC(S, k) @ #i
+        & not(Ex #r. LtkReveal(S) @ r)
+    "
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}[fragile]
+  \ft{Proprietate suplimentară: autorizare injectivă}
+
+  {\footnotesize
+\begin{verbatim}
+lemma Client_auth_injective:
+  " /* Pentru toate cheile de sesiune 'k' stabilite cu serverul 'S' */
+    ( All S k #i. SessKeyC(S, k) @ #i
+        ==>
+        /* există un server care a răspuns */
+      ( (Ex #a. AnswerRequest(S, k) @ a
+        /* și niciun alt client n-a avut exact aceeași cerere */
+        & (All #j. SessKeyC(S, k) @ #j ==> #i = #j)
+        ) /* sau adversarul a aflat cheia înainte de a fi stabilită */
+        | (Ex #r. LtkReveal(S) @ r & r < i)
+      )
+    )
+  "
+\end{verbatim}
+  }
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+% Bibliography
+\fr{
+  \ft{Bibliografie}
+  \bibliography{tamarin-prez.bib}
+  \bibliographystyle{apalike}
+  \nocite{*}
+}
+\end{document}
+

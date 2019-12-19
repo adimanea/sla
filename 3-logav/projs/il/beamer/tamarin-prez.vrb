@@ -1,0 +1,19 @@
+\ft{Proprietate suplimentară: autorizare injectivă}
+
+  {\footnotesize
+\begin{verbatim}
+lemma Client_auth_injective:
+  " /* Pentru toate cheile de sesiune 'k' stabilite cu serverul 'S' */
+    ( All S k #i. SessKeyC(S, k) @ #i
+        ==>
+        /* există un server care a răspuns */
+      ( (Ex #a. AnswerRequest(S, k) @ a
+        /* și niciun alt client n-a avut exact aceeași cerere */
+        & (All #j. SessKeyC(S, k) @ #j ==> #i = #j)
+        ) /* sau adversarul a aflat cheia înainte de a fi stabilită */
+        | (Ex #r. LtkReveal(S) @ r & r < i)
+      )
+    )
+  "
+\end{verbatim}
+  }
