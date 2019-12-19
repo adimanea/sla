@@ -286,9 +286,104 @@ astfel:
 Închiderea tranzitivă a relației se va nota $ \to^\ast_\kal{R} $.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Sisteme etichetate de tranziții}
+
+Un sistem etichetat de tranziții (eng.\ \emph{labelled transition system, LTS})
+este un cvadruplu notat $ (S, L, \to, s_0) $, care conține:
+\begin{itemize}
+\item o mulțime de stări $ S $;
+\item o mulțime de etichete $ L $;
+\item $ \to : S \times L \times S $ este o operație de tranziție de
+  aritate 3;
+\item $ s_0 \in S $ este o stare inițială, fixată.
+\end{itemize}
+
+Tranziția $ (p, \alpha, q) $ se va nota pe scurt $ p \xrar{\alpha} q $.
+
+Păstrînd notațiile de mai sus, se numește \emph{execuție finită} a unui
+sistem de tranziții etichetate $ P $ un șir alternant $ \sigma $ de stări
+și etichete, care începe cu $ s_0 $ și se termină într-o stare $ s_n $,
+astfel încît:
+\[
+  \sigma = \left[ s_0, \alpha_1, s_1 \alpha_2, \dots, \alpha_n, s_n \right] %
+  \Rightarrow s_i \xrar{\alpha_{i+1}} s_{i + 1}, \forall 0 \leq i < n.
+\]
+
+Pentru o execuție finită $ \sigma $ ca mai sus, șirul fără primul
+termen $ s_0 $ (starea inițială) se numește \emph{o urmă finită} a lui $ P $.
+
+Un sistem de tranziții etichetate poate fi definit printr-o serie de reguli
+de tranziție. Aceasta înseamnă un număr de premize $ Q_1, \dots Q_n $,
+cu $ n \geq 0 $, care au loc pentru ca o concluzie de forma $ p \xrar{\alpha} q $
+să poată fi trasă, notația fiind ca în cazul unei derivări logice:
+\[
+  \begin{prooftree}
+    \hypo{Q_1}
+    \hypo{Q_2}
+    \hypo{\dots}
+    \hypo{Q_n}
+    \infer4{p \xrightarrow{\alpha} q}
+  \end{prooftree}
+\]
+
+Un exemplu simplu este al unui sistem etichetat de tranziții pentru a
+controla un contor. Fie $ S = \mathbb{B} \times \NN $, unde
+$ \mathbb{B} = \{ \top, \bot \} $ este mulțimea booleană. Dacă într-o
+stare, prima poziție este $ \bot $, spunem că a avut loc o eroare.
+Starea inițială este $ s_0 = (\top, 0) $. Mulțimea etichetelor se
+definește:
+\[
+  L = \{ \texttt{inc, dec, err, reset} \},
+\]
+iar relația de tranziție este definită prin regulile:
+
+\begin{center}
+  \begin{tabular}{cc}
+    % need extra braces, since prooftree uses & behind the scenes
+    { \begin{prooftree}
+        \hypo{b = \top}
+        \infer1{(b, n) \xrar{\texttt{inc}} (b, n + 1)}
+      \end{prooftree} } & %
+                          { \begin{prooftree}
+                              \hypo{b = \top}
+                              \hypo{n > 0}
+                              \infer2{(b, n) \xrar{\texttt{dec}} (b, n-1)}
+                            \end{prooftree} } \\
+                        & \\
+    { \begin{prooftree}
+        \infer0{(b, n) \xrar{err} (\bot, n)}
+      \end{prooftree} } & %
+                          { \begin{prooftree}
+                              \infer0{(b, n) \xrar{\texttt{reset}} (\top, 0)}
+                            \end{prooftree} }
+  \end{tabular}
+\end{center}
+
+Semnificația relației este clară. Un exemplu de execuție în acest sistem
+ar fi:
+\begin{align*}
+  (\top, 0) &\xrar{\texttt{inc}} (\top, 1) \xrar{\texttt{inc}} (\top, 2) %
+              \xrar{\texttt{dec}} (\top, 1) \\
+            &\xrar{\texttt{err}} (\bot, 1) \xrar{\texttt{reset}} (\top, 0) %
+              \xrar{\texttt{inc}} (\top, 1),
+\end{align*}
+care conduce la urma:
+\[
+  \left[ \texttt{inc, inc, dec, err, reset, inc} \right].
+\]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Analiza automată a protocoalelor}
 
 Preluăm acum din \cite[Cap.\ 3]{schmidt} pentru un exemplu general de
 analiză formală a protocoalelor de criptare care folosesc exponențierea
 Diffie-Hellman.
+
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../tamarin"
+%%% End:
