@@ -1,0 +1,25 @@
+theory dh
+
+begin
+
+builtins: diffie-hellman
+functions: mac/2, shk/0, g/0 [private]
+
+rule Step1: [ Fr(tid:fresh), Fr(x:fresh) ] --[ ]->
+	 		[ Out(<g^(x:fresh), mac(shk, <g^(x:fresh), A:pub, B:pub>)>)
+			, Step1(tid:fresh, A:pub, B:pub, x:fresh) ]
+
+rule Step2: [ Step1(tid, A, B, x:fresh), In(<Y, mac(shk, <Y, B, A>)>) ]
+	 		  --[ Accept(tid, Y^(x:fresh)) ]-> []
+
+rule RevealKey: [] --[ Reveal() ]-> [ Out(shk) ]
+
+lemma Accept_Secret:
+	  " /* If the adversary knows the key, it must have been
+	  	   revealed at a moment n, which is previous to current i */
+	  	  (
+		  All #i #j tid key. Accept(tid,key) @ #i & K(key) @ #j ==>
+	  	  		Ex #n . Reveal() @ #n & n < i
+     	  )
+	  "
+end
