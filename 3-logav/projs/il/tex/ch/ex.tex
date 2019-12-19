@@ -157,7 +157,7 @@ Modelul adversarului este de tip Dolev-Yao, adică este omniprezent
 doar de criptografia folosită.
 
 În continuare, detaliem sursa care se distribuie cu manualul Tamarin,
-în fișierul \texttt{FirstExample.spthy}.
+în fișierul denumit \texttt{FirstExample.spthy}.
 
 După declararea teoriei ce se va defini, se începe codul propriu-zis.
 Astfel, primele linii de sintaxă sînt, în acest caz:
@@ -218,7 +218,7 @@ standard înseamnă că este vorba despre o variabilă nouă (\emph{fresh}).
 De asemenea, se folosesc următoarele prefixe în sintaxa standard, pentru
 diversele tipuri de variabile:
 \begin{itemize}
-\item \texttt{~x} înseamnă variabilă nouă, scrisă pe larg \texttt{x:fresh};
+\item \texttt{\~{}x} înseamnă variabilă nouă, scrisă pe larg \texttt{x:fresh};
 \item \texttt{\$x} notează o variabilă publică, \texttt{x:pub};
 \item \texttt{\#i} notează o variabilă temporală (un moment de timp din evoluția
   stărilor sistemului), adică \texttt{i:temporal};
@@ -234,8 +234,8 @@ Regula definită mai sus arată că: se generează un nume nou \texttt{~ltk}, de
 de sort \texttt{fresh}, care este noua cheie privată. Se alege (în mod nedeterminist)
 un nume public \texttt{A} pentru agentul căruia i se generează perechea de chei.
 
-Faptul care urmează, \texttt{!Ltk(\$A, ~ltk)} arată că se definește o asociere
-între agentul \texttt{A} și cheia sa privată \texttt{~ltk}, iar semnul
+Faptul care urmează, \texttt{!Ltk(\$A, \~{}ltk)} arată că se definește o asociere
+între agentul \texttt{A} și cheia sa privată \texttt{\~{}ltk}, iar semnul
 de exclamare din fața faptului arată că acesta se poate genera de oricîte
 ori este nevoie (este \emph{persistent}).
 
@@ -267,7 +267,7 @@ rule Client_1:
     [ Client_1 ($S, ~k), Out( aenc(~k, pkS) ) ]
 \end{verbatim}
 
-Se generează o cheie nouă (\texttt{Fr(~k)}) și se caută cheia publică
+Se generează o cheie nouă (\texttt{Fr(\~{}k)}) și se caută cheia publică
 pentru sever, iar apoi se stochează serverul și cheia pentru pasul următor
 și se trimite cheia de sesiune criptată către server.
 
