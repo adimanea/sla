@@ -3,6 +3,7 @@
 Proiect: **Introducere în Tamarin**.
 
 Acces direct la [PDF](https://github.com/adimanea/sla/blob/master/3-logav/projs/il/tex/tamarin.pdf).
+Acces direct la [prezentare](https://github.com/adimanea/sla/blob/master/3-logav/projs/il/beamer/tamarin-prez.pdf).
 
 ## Resurse
 - [Site Tamarin](https://tamarin-prover.github.io/);
