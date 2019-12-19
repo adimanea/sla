@@ -1,3 +1,140 @@
 %! TEX root = ../tamarin.tex
 
 \chapter{Exemple}
+
+\section{Sintaxă și elemente specifice}
+
+Preluăm din articolul \cite{DBLP:journals/siglog/BasinCDS17} cîteva
+elemente introductive privitoare la funcționarea Tamarin.
+
+Studiul de caz prezentat este acela al schimbului de chei Diffie-Hellman (DH).
+
+\begin{remark}\label{rk:sintaxa}
+  Sintaxa folosită în cele de mai jos este imprecisă, deoarece am
+  preferat lizibilitatea și claritatea. Sintaxa exactă este dată în
+  fișierele-sursă conținute în directorul proiectului, în interiorul
+  directorului \texttt{src}.
+\end{remark}
+
+Sursa de cod va fi un fișier cu extensia \texttt{spthy}, care reprezintă
+o teorie pe care compilatorul o va testa. Fișierul de teorie conține
+următoarele elemente:
+
+\textbf{Date de intrare: Teoria ecuațională:} Specificăm mesajele pentru
+protocol sub forma:
+
+\begin{verbatim}
+builtins: diffie-hellman
+functions: mac/2, g/0, shk/0 [private]
+\end{verbatim}
+
+Astfel, elementele specifice protocolului DH (care este inclus în biblioteca
+standard, lucru menționat prin sintaxa \texttt{builtins}) sînt încărcate.
+În particular, avem definit operatorul \texttt{\^}, folosit pentru exponențiere.
+
+Se mai definește o funcție de 2 variabile \texttt{mac}, care modelează un
+cod de autentificare a mesajelor (eng.\ \emph{Message Authentication Code})
+și două constante, \texttt{g} pentru a modela generatorul grupului în care
+are loc problema, respectiv \texttt{shk} pentru o cheie secretă partajată
+(eng.\ \emph{shared secret key}). Acestea sînt declarate \texttt{private},
+deci nu pot fi obținute direct de către adversar.
+
+De asemenea, cum Tamarin este implementat în Haskell, avem suport inclus
+pentru func\-ți\-i\-le specifice perechilor, \texttt{<\_,\_>, fst, snd}.
+
+\textbf{Date de intrare: Protocolul:} Pentru modelarea protocolului vom
+utiliza 3 reguli de rescriere într-un sistem bazat pe un multiset.
+Fiecare regulă este un triplet, alcătuit din șiruri de fapte în membrul
+stîng, etichete și membrul drept. Faptele sînt de forma $ F(t_1, \dots, t_k) $,
+pentru un simbol specific $ F $ și termenii $ t_i $. Regulile protocolului
+folosesc simboluri unare de fapte \texttt{Fr} și \texttt{In} pentru a
+obține constante noi (eng.\ \emph{fresh names}) și mesajele de pe
+rețea.
+
+Un mesaj este trimis pe rețea folosind un simbol unar de fapte \texttt{Out}
+în membrul drept.
+
+Prima regulă creează un fir de execuție pentru protocol \texttt{tid}
+care alege un exponent nou \texttt{x} și trimite participanților \texttt{g\^{}x},
+concatenat cu \texttt{mac} aplicat acestei valori:
+
+\begin{verbatim}
+rule Step1: [ Fr(tid:fresh), Fr(x:fresh) ] -[ ]->
+            [ Out(<g^(x:fresh), mac(shk, <g^(x:fresh), A:pub, B:pub>)>)
+            , Step1(tid:fresh, A:pub, B:pub, x:fresh) ]
+\end{verbatim}
+
+În aceste linii de sintaxă se specifică explicit ca variabilele utilizate
+să fie instanțiate doar cu sorturile \texttt{fresh}, respectiv \texttt{pub},
+acolo unde este cazul.
+
+Spunem că o instanță a regulii \texttt{Step1} \emph{consumă} două fapte
+\texttt{Fr} pentru a obține constantele noi \texttt{tid} și \texttt{x}
+și \emph{generează} un fapt \texttt{Out} care conține mesajul trimis
+și un fapt \texttt{Step1} care arată că firul de execuție a finalizat
+primul pas cu parametrii dați.
+
+Remarcăm că regula nu are etichete, deci ea nu va afecta urma sistemului
+de rescriere.
+
+A doua regulă este pasul al doilea din protocol:
+
+\begin{verbatim}
+rule Step2: [ Step1(tid, A, B, x:fresh), In(<Y, mac(Y, B, A>)>) ]
+              -[ Accept(tid, Y^(x:fresh)) ]-> []
+\end{verbatim}
+
+Aici se folosește faptul din pasul 1 și se verifică MAC-ul.
+Eticheta din final, \texttt{Accept(tid, Y\^{}(x:fresh))}, arată
+că firul de execuție \texttt{tid} a acceptat cheia de sesiune
+\texttt{Y\^{}(x:fresh)}.
+
+Regula a treia arată cheia secretă adversarului:
+\begin{verbatim}
+rule RevealKey: [] -[ Reveal() ]-> [ Out(shk) ]
+\end{verbatim}
+
+Eticheta \texttt{Reveal()} asigură că se va vedea pe urma sistemului
+dacă și cînd a avut loc dezvăluirea.
+
+\textbf{Date de intrare: Proprietăți:} În continuare, trebuie
+specificate proprietățile pe care să le satisfacă sistemul, sub
+forma unor leme. Acestea vor fi verificate și admise sau respinse
+de către Tamarin. Un exemplu este:
+
+\begin{verbatim}
+lemma Accept_Secret:
+    ∀ i j tid key. Accept(tid,key)@i & K(key)@j =>
+        ∃ n. Reveal()@n & n < i
+\end{verbatim}
+
+Această lemă cuantifică peste momentele de timp \texttt{i, j, n} și mesajele
+\texttt{tid, key}. Predicatele folosite sînt de forma \texttt{F \@ i}, care
+arată că faptul \texttt{F} are loc la momentul \texttt{i}. În total, lema
+arată că dacă un fir de execuție \texttt{tid} a acceptat o cheie \texttt{key}
+la momentul \texttt{i}, iar cheia este cunoscută și adversarului, atunci
+trebuie să existe un moment de timp \texttt{n} anterior lui \texttt{i} cînd
+a avut loc dezvăluirea (\texttt{Reveal()}).
+
+\textbf{Date de ieșire} În fine, dacă rulăm Tamarin pe informațiile
+de mai sus, salvate în fișierul-sursă \texttt{example.spthy}, invocat în
+linia de comandă cu:
+\begin{verbatim}
+$ tamarin-prover example.spthy
+\end{verbatim}
+rezultă următorul mesaj:
+
+\begin{verbatim}
+analyzed example.spthy: Accept_Secret (all-traces) verified (9 steps)
+\end{verbatim}
+
+Acest lucru arată că Tamarin a analizat cu succes că toate urmele protocolului
+satisfac proprietatea din lema \texttt{Accept\_Secret}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\texttt{FirstExample.spthy}}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../tamarin"
+%%% End:
