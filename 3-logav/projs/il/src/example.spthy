@@ -1,25 +1,36 @@
-theory dh
+theory ex1 begin
 
-begin
+/*
+ * Protocol:	 Diffie-Hellman with MAC
+ * Modeler: 	 Benedikt Schmidt
+ * Source: https://github.com/tamarin-prover/manual/blob/master/code/example.spthy
+ */
+
 
 builtins: diffie-hellman
-functions: mac/2, shk/0, g/0 [private]
+functions: mac/2, g/0, shk/0 [private]
 
-rule Step1: [ Fr(tid:fresh), Fr(x:fresh) ] --[ ]->
-	 		[ Out(<g^(x:fresh), mac(shk, <g^(x:fresh), A:pub, B:pub>)>)
-			, Step1(tid:fresh, A:pub, B:pub, x:fresh) ]
+rule Step1:
+  [ Fr(tid:fresh), Fr(x:fresh) ]
+  --[ ]->
+  [ Out(<g^(x:fresh), mac(shk, <g^(x:fresh), A:pub, B:pub>)>)
+  , Step1(tid:fresh, A:pub, B:pub, x:fresh) ]
 
-rule Step2: [ Step1(tid, A, B, x:fresh), In(<Y, mac(shk, <Y, B, A>)>) ]
-	 		  --[ Accept(tid, Y^(x:fresh)) ]-> []
+rule Step2:
+  [ Step1(tid, A, B, x:fresh), In(<Y, mac(shk, <Y, B, A>)>) ]
+    --[ Accept(tid, Y^(x:fresh)) ]-> []
 
-rule RevealKey: [] --[ Reveal() ]-> [ Out(shk) ]
+rule RevealKey: [ ] --[ Reveal() ]-> [ Out(shk) ]
+
 
 lemma Accept_Secret:
-	  " /* If the adversary knows the key, it must have been
-	  	   revealed at a moment n, which is previous to current i */
-	  	  (
-		  All #i #j tid key. Accept(tid,key) @ #i & K(key) @ #j ==>
-	  	  		Ex #n . Reveal() @ #n & n < i
-     	  )
-	  "
+  /* if there exists a moment when the adversary knows (K) the key,
+  	 it must have been revealed at a prior moment */
+  " All #j tid key. Accept(tid, key) @ i & K(key) @ j
+  ==> Ex #l. Reveal() @ l & l < i "
+
+lemma Accept_Secret_Counter:
+  /* it is impossible (F = false) for the adversary to know the key by default */
+  " All #i #j tid key. Accept(tid, key) @ i & K(key) @ j ==> F "
+
 end
