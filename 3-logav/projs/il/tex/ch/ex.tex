@@ -1,4 +1,4 @@
-%! TEX root = ../tamarin.tex
+% ! TEX root = ../tamarin.tex
 
 \chapter{Exemple}
 
@@ -16,7 +16,8 @@ Studiul de caz prezentat este acela al schimbului de chei Diffie-Hellman (DH).
   directorului \texttt{src}.
 \end{remark}
 
-Sursa de cod va fi un fișier cu extensia \texttt{spthy}, care reprezintă
+Sursa de cod va fi un fișier cu extensia \texttt{spthy} (abreviere de la
+\emph{Security Protocol THeorY}), care reprezintă
 o teorie pe care compilatorul o va testa. Fișierul de teorie conține
 următoarele elemente:
 
@@ -131,8 +132,232 @@ analyzed example.spthy: Accept_Secret (all-traces) verified (9 steps)
 Acest lucru arată că Tamarin a analizat cu succes că toate urmele protocolului
 satisfac proprietatea din lema \texttt{Accept\_Secret}.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \section{\texttt{FirstExample.spthy}}
+
+Preluăm acum prezentarea unui exemplu ceva mai sofisticat, din
+manualul oficial Tamarin (\cite{taman}). O notație generică
+pe care o vom folosi pentru schimbul de mesaje este de felul
+următor:
+
+\begin{verbatim}
+C -> S: aenc(k, pkS)
+C <- S: h(k)
+\end{verbatim}
+
+Această notație arată că în protocolul considerat, clientul
+\texttt{C} generează o cheie simetrică nouă (\emph{fresh}) \texttt{k},
+o criptează cu o cheie publică \texttt{pkS} a unui server \texttt{S}
+(notația \texttt{aenc} înseamnă \emph{criptare asimetrică}) și o
+trimite serverului \texttt{S}. Serverul confirmă primirea cheii și
+trimite un hash al acesteia înapoi la client.
+
+Modelul adversarului este de tip Dolev-Yao, adică este omniprezent
+în rețea și poate șterge, modifica și intercepta mesaje, fiind limitat
+doar de criptografia folosită.
+
+În continuare, detaliem sursa care se distribuie cu manualul Tamarin,
+în fișierul \texttt{FirstExample.spthy}.
+
+După declararea teoriei ce se va defini, se începe codul propriu-zis.
+Astfel, primele linii de sintaxă sînt, în acest caz:
+
+\begin{verbatim}
+theory FirstExample
+begin
+\end{verbatim}
+
+Apoi se declară primitivele (variabilele, funcțiile și orice alte entități
+prezente deja în biblioteca standard) ce se vor folosi, iar la final,
+proprietățile ce vrem să fie respectate, adică lemele.
+
+Obiectele folosite din biblioteca standard se declară astfel:
+
+\begin{verbatim}
+builtins: hashing, asymmetric-encryption
+\end{verbatim}
+
+Aceste variabile aduc cu sine următoarele funcții utile:
+\begin{itemize}
+\item o funcție unară \texttt{h}, care este funcție de hashing;
+\item o funcție binară \texttt{aenc}, pentru criptare asimetrică;
+\item o funcție binară \texttt{adec}, pentru decriptare asimetrică;
+\item o funcție unară \texttt{pk}, care reprezintă cheia publică, asociată
+  unei chei private.
+\end{itemize}
+
+Totodată, modulele respective conțin și reguli de simplificare potrivite,
+adică o teorie ecuațională care conține, de exemplu, ecuația care arată
+că funcțiile de criptare și decriptare sînt inverse una celeilalte:
+\[
+  \texttt{adec(aenc(m, pk(sk)), sk) = m}.
+\]
+
+În continuare, avem de specificat regulile de funcționare. Protocolul și mediul
+în care acesta se desfășoară sînt modelate folosind reguli de rescriere pe
+multiseturi. Stările sistemului sînt multiseturi (eng. \qq{\emph{bags}}) de
+fapte. Aceste fapte sînt predicate care arată informațiile relevante privitoare
+la starea sistemului. De exemplu, un fapt de forma \texttt{Out(h(k))} arată
+că protocolul a trimis mesajul \texttt{h(k)} pe un canal public, iar faptul
+\texttt{In(x)} arată că protocolul a primit mesajul \texttt{x} pe canalul
+public.\footnotemark
+
+\footnotetext{Implicit, Tamarin folosește doar canale de comunicație publice,
+  dar se pot defini de către utilizator și canale private. În acest exemplu
+  simplu, însă, vom presupune că folosim doar canale publice.}
+
+Prima regulă arată cum se înregistrează o cheie publică:
+
+\begin{verbatim}
+rule Register_pk:
+    [ Fr(~ltk) ] --> [ ~Ltk($A, ~ltk), ~Pk($A, pk(~ltk)) ]
+\end{verbatim}    
+
+Singura premisă este să existe un fapt de tip \texttt{Fr}, care în sintaxa
+standard înseamnă că este vorba despre o variabilă nouă (\emph{fresh}).
+De asemenea, se folosesc următoarele prefixe în sintaxa standard, pentru
+diversele tipuri de variabile:
+\begin{itemize}
+\item \texttt{~x} înseamnă variabilă nouă, scrisă pe larg \texttt{x:fresh};
+\item \texttt{\$x} notează o variabilă publică, \texttt{x:pub};
+\item \texttt{\#i} notează o variabilă temporală (un moment de timp din evoluția
+  stărilor sistemului), adică \texttt{i:temporal};
+\item \texttt{m} simplu notează un mesaj, adică \texttt{m:msg}.
+\end{itemize}
+
+Vom mai folosi, ca o convenție, numele \texttt{c} pentru o constantă publică,
+globală. Practic, avem sorturile \texttt{msg, fresh, pub, temporal},
+cu proprietatea că $ \texttt{fresh, pub} \subseteq \texttt{msg} $, iar elementele
+sortului \texttt{temporal} sînt incomparabile cu celelalte.
+
+Regula definită mai sus arată că: se generează un nume nou \texttt{~ltk}, deci
+de sort \texttt{fresh}, care este noua cheie privată. Se alege (în mod nedeterminist)
+un nume public \texttt{A} pentru agentul căruia i se generează perechea de chei.
+
+Faptul care urmează, \texttt{!Ltk(\$A, ~ltk)} arată că se definește o asociere
+între agentul \texttt{A} și cheia sa privată \texttt{~ltk}, iar semnul
+de exclamare din fața faptului arată că acesta se poate genera de oricîte
+ori este nevoie (este \emph{persistent}).
+
+Propagarea cheii publice în rețea se face cu regula următoare:
+
+\begin{verbatim}
+rule Get_pk:
+    [ !Pk(A, pubkey) ] --> [ Out(pubkey) ]
+\end{verbatim}
+
+Compromiterea cheii, adică descoperirea ei de către adversar, este formalizată
+în regula următoare, unde apare și un \emph{fapt în acțiune} (eng.\
+\emph{actionfact}), care nu este prezent în stările sistemului, ci doar pe
+urmele sale:
+
+\begin{verbatim}
+rule Reveal_ltk:
+    [ !Ltk(A, ltk) ] --[ LtkReveal(A) ]-> [ Out(ltk) ]
+\end{verbatim}
+
+Funcționarea propriu-zisă a protocolului este acum modelată de următoarele
+trei reguli:
+
+\begin{verbatim}
+// Începe un nou fir de execuție pentru client,
+// prin alegerea unui server în mod non-determinist.
+rule Client_1:
+    [ Fr(~k), !Pk($S, pkS)] -->
+    [ Client_1 ($S, ~k), Out( aenc(~k, pkS) ) ]
+\end{verbatim}
+
+Se generează o cheie nouă (\texttt{Fr(~k)}) și se caută cheia publică
+pentru sever, iar apoi se stochează serverul și cheia pentru pasul următor
+și se trimite cheia de sesiune criptată către server.
+
+\begin{verbatim}
+rule Client_2:
+    [ Client_1(S, k), In( h(k) ) ] --[ SessKeyC( S, k ) ]-> []
+\end{verbatim}
+
+În acest pas, se apelează la sesiunea anterioară pentru server și cheie,
+se primește cheia căreia i s-a aplicat funcția hash și se menționează
+(pe urmă, deci ca fapt în acțiune) că s-a stabilit o cheie de sesiune \texttt{k}
+cu serverul \texttt{S}.
+
+\begin{verbatim}
+// Răspunsul unui server într-un fir de execuție la cererea
+// din partea unui client.
+rule Serv_1:
+    [ !Ltk($S, ~ltkS), In( request ) ]
+    --[ AnswerRequest($S, adec(request, ~ltkS)) ]->
+    [ Out( h(adec(request, ~ltkS)) ) ]
+\end{verbatim}
+
+Practic, se caută cheia privată după primirea unei cereri, se înregistrează
+(ca fapt în acțiune) răspunsul la această cerere și se returnează hash-ul
+cererii decriptate.
+
+Regulile pe care trebuie să le satisfacă protocolul sînt descrise prin
+următoarele leme.
+
+\begin{verbatim}
+lemma Client_session_key_secrecy:
+  " not( /* nu este cazul ca */
+        Ex S k #i #j.
+          /* clientul a stabilit o cheie de sesiune k cu serverul S */
+          SessKeyC(S, k) @ #i
+          /* iar adversarul să cunoască cheie */
+          & K(k) @ #j
+          /* fără a fi aplicat o dezvăluire pe S */
+          & not(Ex #r. LtkReveal(S) @ r)
+        )
+  "
+
+lemma Client_auth:
+  " /* Pentru toate cheile de sesiune 'k'
+       stabilite de clienți cu serverul 'S' */
+    ( All S k #i. SessKeyC(S, k) @ #i
+        ==>
+      /* există un server care a răspuns la cerere */
+        ( (Ex #a. AnswerRequest(S, k) @ a)
+      /* sau adversarul a aflat cheia înainte de a fi stabilită */
+          | (Ex #r. LtkReveal(S) @ r & r < i)
+        )
+    )
+  "
+\end{verbatim}
+
+Putem întări autorizarea, cerînd ca aceasta să fie injectivă, adică să
+nu existe doi clienți care au avut aceeași cerere la server:
+
+\begin{verbatim}
+lemma Client_auth_injective:
+  " /* Pentru toate cheile de sesiune 'k' stabilite cu serverul 'S' */
+    ( All S k #i. SessKeyC(S, k) @ #i
+        ==>
+        /* există un server care a răspuns */
+      ( (Ex #a. AnswerRequest(S, k) @ a
+        /* și niciun alt client n-a avut exact aceeași cerere */
+        & (All #j. SessKeyC(S, k) @ #j ==> #i = #j)
+        ) /* sau adversarul a aflat cheia înainte de a fi stabilită */
+        | (Ex #r. LtkReveal(S) @ r & r < i)
+      )
+    )
+  "
+\end{verbatim}
+
+Mai putem adăuga încă o proprietate pentru a ne asigura că proprietățile
+nu se execută pe un model vid:
+\begin{verbatim}
+lemma Client_session_key_honest_setup:
+  exists-trace
+    " Ex S k #i.
+        SessKeyC(S, k) @ #i
+        & not(Ex #r. LtkReveal(S) @ r)
+    "
+\end{verbatim}
+
+Întregul exemplu este conținut în fișierul sursă din proiect.
+
+Evaluarea fișierului se face din linia de comandă sau se poate apela la
+unelte cu interfață grafică, detaliate în \cite[pp.\ 20--26]{taman}.
 
 %%% Local Variables:
 %%% mode: latex
