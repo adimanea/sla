@@ -48,49 +48,72 @@ cititor oarecare poate deveni Edu în timp, dacă adaugă verificarea.
 De exemplu, \textbf{descompunerea funcțională} a procesului (P14),
 de administrare a abonamentului la o revistă, poate fi reprezentat ca în
 figura \ref{fig:proc-abonare-rev}.
-\begin{figure}[!htbp]
-    \small
-    \begin{verbatim}
-+-------+     +------------------+     +------------+
-| Login | --> | Verif. abonament | --> | Verif. edu |--> CONFIRMARE
-+-------+     +------------------+     +------------+
-                                            |
-                                            V
-                        +--------------------------------------------+
-                        | Căutare rev. -----> Verif. abonament activ |
-                        |                           |                |
-                        |                           V                |
-                        |                     Verif. # abonamente    |
-                        | ABONARE REV.              |                |
-                        |                           V                |
-                        |                        Abonare             |
-                        +--------------------------------------------+
-    \end{verbatim}
-    \caption{Descompunerea funcțională a procesului de abonare la revistă}
-    \label{fig:proc-abonare-rev}
-\end{figure}
 
+\begin{figure}[!htbp]
+  \centering
+  \usetikzlibrary{positioning}
+  \usetikzlibrary{shapes.geometric}
+  \begin{tikzpicture}[
+    node distance=1cm,
+    startstop/.style={rectangle,rounded corners,text centered,fill=blue!30},
+    process/.style={rectangle,minimum width=2.5cm, draw=black},
+    ok/.style={rectangle,rounded corners,text centered, fill=green!30},
+    nob/.style={minimum width=2.5cm},
+    arr/.style={thick,-latex}
+    ]
+    \node (login) [startstop] {Login};
+    \node (vab) [process,right=of login] {Verificare abonament};
+    \node (ved) [process,right=of vab] {Verificare Edu};
+    \node (ok) [ok,right=of ved] {Confirmare};
+    \draw[arr] (login) -- (vab);
+    \draw[arr] (vab) -- (ved);
+    \draw[arr] (ved) -- (ok);
+    \draw [draw=black!50, below=of ved, xshift=1em,yshift=-2em,dashed] rectangle +(30em,-12em);
+    \node (crev) [process,below=of vab] {Căutare revistă};
+    \node (vaba) [process,right=of crev] {Verificare abonament activ};
+    \node (vnab) [process,below=of vaba] {Verificare număr abonamente};
+    \node (abo) [ok,below=of vnab] {Abonare};
+    \node (abr) [nob,below=of crev,yshift=-2em] {ABONARE REVISTĂ};
+    \draw[arr] (crev) -- (vaba);
+    \draw[arr] (vaba) -- (vnab);
+    \draw[arr] (vnab) -- (abo);
+    \draw[arr] (ved) -- (vaba);
+  \end{tikzpicture}
+  \caption{Descompunerea funcțională a procesului de abonare la revistă}
+  \label{fig:proc-abonare-rev}
+\end{figure}
 
 Similar, procesul (P9) de verificare a statutului Edu se poate reprezenta
 ca în figura \ref{fig:verif-edu}.
+
 \begin{figure}[!htbp]
-    \small
-    \centering
-    \begin{verbatim}
-    +-------+     +-------------------------+
-    | Login | --> | Pregătire upload dovadă | --> PROCESARE UPLOAD
-    +-------+     +-------------------------+           |
-                                                        V
-                    +------------------------------------------------+
-                    | Verif. dovadă Edu ---> Actualizare dată verif. |
-                    |       |                                        |
-                    |       V                                        |
-                    | Actualizare privilegii        PROCESARE EDU    |
-                    |     (+ reviste)                                |
-                    +------------------------------------------------+
-    \end{verbatim}
-    \caption{Descompunerea funcțională a procesului de verificare Edu}
-    \label{fig:verif-edu}
+  \centering
+  \usetikzlibrary{positioning}
+  \usetikzlibrary{shapes.geometric}
+  \begin{tikzpicture}[
+    node distance=1cm,
+    startstop/.style={rectangle,rounded corners,text centered,fill=blue!30},
+    process/.style={rectangle,minimum width=2.5cm, draw=black},
+    ok/.style={rectangle,rounded corners,text centered, fill=green!30},
+    nob/.style={minimum width=2.5cm},
+    arr/.style={thick,-latex}
+    ]
+    \node (login) [startstop] {LOGIN};
+    \node (up) [process,right=of login] {Pregătire upload dovadă};
+    \node (pu) [nob,right=of up] {PROCESARE UPLOAD};
+    \draw [draw=black!50, below=of pu, xshift=1em,yshift=-2em,dashed] rectangle +(30em,-12em);
+    \node (ved) [process, below=of up, yshift=-2em] {Verificare dovadă edu};
+    \node (adv) [process, right=of ved] {Actualizare dată verificare};
+    \node (actp) [process, below=of ved] {Actualizare privilegii (+ reviste)};
+    \node (ped) [nob, right=of actp] {PROCESARE EDU}
+    \draw[arr] (login) -- (up);
+    \draw[arr] (up) -- (pu);
+    \draw[arr] (pu) -- (9.37,-0.85);
+    \draw[arr] (ved) -- (adv);
+    \draw[arr] (ved) -- (actp);
+  \end{tikzpicture}
+  \caption{Descompunerea funcțională a procesului de verificare Edu}
+  \label{fig:verif-edu}
 \end{figure}
 
 Și un ultim exemplu pe care îl prezentăm este acela al procesului (P16),
@@ -98,20 +121,29 @@ de scriere a feedback-ului pentru un bibliotecar. Descompunerea
 funcțională este prezentată în figura \ref{fig:+fb}.
 
 \begin{figure}[!htbp]
-    \small
-    \centering
-    \begin{verbatim}
-    +-------+     +-----------------+
-    | Login | --> | Verif. tip cont | 
-    +-------+     +-----------------+
-                        |
-                        V
-            +-------------------+     +---------------------+
-            | Verif. activitate | --> | Verif. specializare | --> +FEEDBACK
-            +-------------------+     +---------------------+
-    \end{verbatim}
-    \caption{Descompunerea funcțională a procesului de adăugare feedback}
-    \label{fig:+fb}
+  \centering
+  \usetikzlibrary{positioning}
+  \usetikzlibrary{shapes.geometric}
+  \begin{tikzpicture}[
+    node distance=1cm,
+    startstop/.style={rectangle,rounded corners,text centered,fill=blue!30},
+    process/.style={rectangle,minimum width=2.5cm, draw=black},
+    ok/.style={rectangle,rounded corners,text centered, fill=green!30},
+    nob/.style={minimum width=2.5cm},
+    arr/.style={thick,-latex}
+    ]
+    \node (login) [startstop] {LOGIN};
+    \node (vc) [process,right=of login] {Verificare tip cont};
+    \node (va) [process,below=of vc] {Verificare activitate};
+    \node (vs) [process,right=of va] {Verificare specializare};
+    \node (fd) [ok,right=of vs] {+FEEDBACK}
+    \draw[arr] (login) -- (vc);
+    \draw[arr] (vc) -- (va);
+    \draw[arr] (va) -- (vs);
+    \draw[arr] (vs) -- (fd);
+  \end{tikzpicture}
+  \caption{Descompunerea funcțională a procesului de adăugare feedback}
+  \label{fig:+fb}
 \end{figure}
 
 
