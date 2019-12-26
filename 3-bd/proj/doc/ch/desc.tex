@@ -11,11 +11,11 @@ oferind roluri speciale pentru clienți din mediul academic.
 
 Utilizatorii aplicației, identificați prin IP-uri specifice sînt:
 \begin{itemize}
-    \item \textbf{Administratori} ai bazei de date;
-    \item \textbf{Personal educațional} (\texttt{EDU});
-    \item \textbf{Cititori} din afara mediului educațional (\texttt{NEDU});
-    \item \textbf{Bibliotecari};
-    \item \textbf{Cititori înregistrați, dar neabonați} (\texttt{PUBLIC}).
+\item \textbf{Administratori} ai bazei de date;
+\item \textbf{Personal educațional} (\texttt{EDU});
+\item \textbf{Cititori} din afara mediului educațional (\texttt{NEDU});
+\item \textbf{Bibliotecari};
+\item \textbf{Cititori înregistrați, dar neabonați} (\texttt{PUBLIC}).
 \end{itemize}
 
 Considerăm că studenții și profesorii fac parte din personalul educațional
@@ -27,22 +27,22 @@ cititor oarecare poate deveni Edu în timp, dacă adaugă verificarea.
 \label{sec:procese}
 
 \begin{enumerate}[(P1)]
-    \item Vizualizarea cărților în stoc;
-    \item Vizualizarea bibliotecarilor, cu specializările lor;
-    \item Adăugarea unei cărți;
-    \item Adăugarea unui cititor;
-    \item Adăugarea unui abonat Edu;
-    \item Înregistrarea unui cont public;
-    \item Actualizarea stocului unor cărți;
-    \item Verificarea statutului Edu;
-    \item Administrarea abonamentului;
-    \item Vizualizarea cărților de o anumită specializare;
-    \item Vizualizarea revistelor de o anumită specializare;
-    \item Adăugare reviste;
-    \item Administrare abonament revistă;
-    \item Administrare abonament la newsletter;
-    \item Împrumut carte;
-    \item Feedback bibliotecar.
+\item Vizualizarea cărților în stoc;
+\item Vizualizarea bibliotecarilor, cu specializările lor;
+\item Adăugarea unei cărți;
+\item Adăugarea unui cititor;
+\item Adăugarea unui abonat Edu;
+\item Înregistrarea unui cont public;
+\item Actualizarea stocului unor cărți;
+\item Verificarea statutului Edu;
+\item Administrarea abonamentului;
+\item Vizualizarea cărților de o anumită specializare;
+\item Vizualizarea revistelor de o anumită specializare;
+\item Adăugare reviste;
+\item Administrare abonament revistă;
+\item Administrare abonament la newsletter;
+\item Împrumut carte;
+\item Feedback bibliotecar.
 \end{enumerate}
 
 De exemplu, \textbf{descompunerea funcțională} a procesului (P14),
@@ -153,22 +153,22 @@ funcțională este prezentată în figura \ref{fig:+fb}.
 \label{sec:matrice-pu}
 
 \begin{center}
-    \small
-    \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-        \hline
+  \small
+  \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline
     & P1 & P2 & P3 & P4 & P5 & P6 & P7 & P8 & P9 & P10 & P11 & P12 & P13 & P14 & P15 & P16 \\
     \hline \hline
-        Administrator & X & X & X & X & X & X & X & X & X & X & X & X & X & X & X & X \\
-        \hline
-        Edu & X & X & & & & & & X & X & X & X & & & X & X & X \\
-        \hline
-        NEdu & X & X & & & & & & X & X & X & & & & X & X & X \\
-        \hline
-        Bibliotecar & X & X & X & X & X & & & & X & X & X & X & X & X & & \\
-        \hline
-        Public & X & & & & & & & & & X & & & & X & & \\
-        \hline
-    \end{tabular}
+    Administrator & X & X & X & X & X & X & X & X & X & X & X & X & X & X & X & X \\
+    \hline
+    Edu & X & X & & & & & & X & X & X & X & & & X & X & X \\
+    \hline
+    NEdu & X & X & & & & & & X & X & X & & & & X & X & X \\
+    \hline
+    Bibliotecar & X & X & X & X & X & & & & X & X & X & X & X & X & & \\
+    \hline
+    Public & X & & & & & & & & & X & & & & X & & \\
+    \hline
+  \end{tabular}
 \end{center}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -255,8 +255,8 @@ Diagrama ER se poate prezenta ca în figura \ref{fig:erd}.
 \end{tikzpicture}
 
 \begin{figure}[!htbp]
-    \small
-    \begin{verbatim}
+  \small
+\begin{verbatim}
                            +-------------+
                            | BIBLIOTECAR |
                            +-------------+
@@ -278,12 +278,106 @@ Diagrama ER se poate prezenta ca în figura \ref{fig:erd}.
        |după      (M:1)   +--------------+    (M:1)           după|
        +------------------| SPECIALIZARE |------------------------+
                           +--------------+
-    \end{verbatim}
-    \caption{Diagrama ER}
-    \label{fig:erd}
+\end{verbatim}
+
 \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\begin{landscape}
+  \centering
+  \begin{figure}[!h]
+    \small
+    \usetikzlibrary{positioning,shapes.multipart,shapes,cd,arrows.meta}
+    \tikzset{basic/.style={
+        draw,
+        rectangle split,
+        rectangle split parts=2,
+        rectangle split part fill={blue!20,white},
+        minimum width=3cm,
+        % text width=2cm,
+        align=center,
+        font=\ttfamily
+      },
+      Diamond/.style={ rectangle, 
+        draw, 
+        shape aspect=3, 
+        inner sep = 1pt,
+        text centered,
+        fill=orange!10!white,
+        font=\itshape
+      }}
+    \begin{tikzpicture}
+      \node[basic] (bib) {BIBLIOTECAR
+        \nodepart{second}
+        \underline{id\_bib}\\
+        nume\\
+        prenume\\
+        id\_spec};
+      \node[basic,below=of bib,xshift=-7em] (edu) {EDU
+        \nodepart{second}
+        \underline{id\_edu}\\
+        nume\\
+        prenume\\
+        ...};
+            \node[basic,below=of bib,xshift=7em] (nedu) {NEDU
+        \nodepart{second}
+        \underline{id\_nedu}\\
+        nume\\
+        prenume\\
+        ...};
+      \node[basic,below=of bib,xshift=25em,yshift=-3em] (pub) {PUBLIC
+        \nodepart{second}
+        \underline{id\_pub}\\
+        email\\
+        pw};
+      \node[basic,left=7em of edu] (rev) {REVISTĂ
+        \nodepart{second}
+        \underline{id\_rev}\\
+        autor\_n;\\
+        autor\_p;\\
+        ...};
+      \node[basic,below=of pub] (carte) {CARTE
+        \nodepart{second}
+        \underline{id\_carte}\\
+        autor\_n;\\
+        autor\_p;\\
+        ...};
+      \node[basic,below=20em of bib] (fdb) {FEEDBACK
+        \nodepart{second}
+        \underline{id\_fb}\\
+        id\_bib\\
+        ...};
+      \node[basic,below=of fdb] (spec) {SPECIALIZARE
+        \nodepart{second}
+        \underline{id\_spec}\\
+        descriere};
+      \draw[-{Rays[n=4,length=5mm]}] (bib) -- (edu) node[midway,Diamond]{servește};
+      \draw[-{Rays[n=4,length=5mm]}] (edu) -- (bib) node[midway,Diamond]{servește};
+      \draw[-{Rays[n=4,length=5mm]}] (bib) -- (nedu) node[midway,Diamond]{servește};
+      \draw[-{Rays[n=4,length=5mm]}] (nedu) -- (bib) node[midway,Diamond]{servește};
+      \draw[-{Rays[n=4,length=5mm]}] (edu) -- (rev) node[midway,Diamond]{se abonează};
+      \draw[-{Rays[n=4,length=5mm]}] (rev) -- (edu) node[midway,Diamond]{se abonează};;
+      \draw[-{Rays[n=4,length=5mm]}] (edu) -- (fdb) node[midway,Diamond]{lasă};
+      \draw[-{Rays[n=4,length=5mm]}] (nedu) -- (fdb) node[midway,Diamond]{lasă};
+      \draw[-{Rays[n=4,length=5mm]}] (pub) -- (carte) node[midway,Diamond]{vizualizează};
+      \draw[-{Rays[n=4,length=5mm]}] (carte) -- (pub) node[midway,Diamond]{vizualizează};
+      \draw (carte) -- (spec) node[midway,Diamond]{se clasifică după};
+      \draw[-{Rays[n=4,length=5mm]}] (spec) -- (carte) node[midway,Diamond]{se clasifică după};
+      \draw (rev) -- (spec) node[midway,Diamond]{se clasifică după};
+      \draw[-{Rays[n=4,length=5mm]}] (rev) -- (spec) node[midway,Diamond]{se clasifică după};
+      \draw[-{Rays[n=4,length=5mm]}] (edu) -- (carte) node[midway,Diamond]{împrumută};
+      \draw[-{Rays[n=4,length=5mm]}] (carte) -- (edu) node[midway,Diamond]{împrumută};
+      \draw[-{Rays[n=4,length=5mm]}] (nedu) -- (carte) node[midway,Diamond]{împrumută};
+      \draw[-{Rays[n=4,length=5mm]}] (carte) -- (nedu) node[midway,Diamond]{împrumută};
+    \end{tikzpicture}
+    \caption{Diagrama ER}
+    \label{fig:erd}
+  \end{figure}
+\end{landscape}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 \section{Schemele relaționale}
 \label{sec:scheme-rel}
@@ -303,71 +397,71 @@ FEEDBACK        (id_fb#, id_bib, id_cit, id_edu, id_spec, rating, text, data);
 
 \todo[inline,noline,backgroundcolor=green!40]{cum țin număr de împrumuturi \& termen?}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 \section{Matricea entitate-proces}
 \label{sec:matr-ep}
 
 \begin{center}
-    \footnotesize
-    \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-        \hline
+  \footnotesize
+  \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline
     & P1 & P2 & P3 & P4 & P5 & P6 & P7 & P8 & P9 & P10 & P11 & P12 & P13 & P14 & P15 & P16 \\
     \hline \hline
-        \texttt{BIBLIOTECAR} & S & S & IUD & IUD & IUD & & U & IUD & U & S & S & IUD & IUD & U & U & \\
-        \hline
-        \texttt{NEDU} & S & S & & & & & & & IUD & IUD & S & & & & U & \\
-        \hline
-        \texttt{EDU} & S & S & & & & & & & U & IUD & S & S & & U & U & \\
-        \hline
-        \texttt{PUBLIC} & S & & & & & IUD & & & & & & S & & IUD & & \\
-        \hline
-        \texttt{CARTE} & S & & IUD & & & & & & & & S & & & & U & \\
-        \hline
-        \texttt{REVISTA} & & & & & & & & & & & & S & I & & & \\
-        \hline
-        \texttt{SPECIALIZARE} & & & & & & & & & & & S & S & & & & \\
-        \hline
-        \texttt{FEEDBACK} & & & & & & & & & & & & & & & & I \\
-        \hline
-    \end{tabular}
+    \texttt{BIBLIOTECAR} & S & S & IUD & IUD & IUD & & U & IUD & U & S & S & IUD & IUD & U & U & \\
+    \hline
+    \texttt{NEDU} & S & S & & & & & & & IUD & IUD & S & & & & U & \\
+    \hline
+    \texttt{EDU} & S & S & & & & & & & U & IUD & S & S & & U & U & \\
+    \hline
+    \texttt{PUBLIC} & S & & & & & IUD & & & & & & S & & IUD & & \\
+    \hline
+    \texttt{CARTE} & S & & IUD & & & & & & & & S & & & & U & \\
+    \hline
+    \texttt{REVISTA} & & & & & & & & & & & & S & I & & & \\
+    \hline
+    \texttt{SPECIALIZARE} & & & & & & & & & & & S & S & & & & \\
+    \hline
+    \texttt{FEEDBACK} & & & & & & & & & & & & & & & & I \\
+    \hline
+  \end{tabular}
 \end{center}
 
 \emph{Legenda:} I = Insert, U = update, D = delete, S = select.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 \section{Matricea entitate-utilizator}
 \label{sec:matr-eu}
 
 \begin{center}
-    \small
-    \begin{tabular}{|l|c|c|c|c|c|}
-        \hline
+  \small
+  \begin{tabular}{|l|c|c|c|c|c|}
+    \hline
     & Edu & NEdu & Bibliotecar & Admin & Public \\
     \hline\hline
-        \texttt{BIBLIOTECAR} & S & S & S & S, I, U, D & \\
-        \hline
-        \texttt{NEDU} & & S, I, U, D & S, I, U, D & & \\
-        \hline
-        \texttt{EDU} & & S, I, U, D & S, I, U, D & & \\
-        \hline
-        \texttt{PUBLIC} & & & & & \\
-        \hline
-        \texttt{CARTE} & S & S & S, I, U, D & S, I, U, D & S \\
-        \hline
-        \texttt{REVISTA} & S & & S, I, U, D & S, I, U, D & S \\
-        \hline
-        \texttt{SPECIALIZARE} & S & S & S & S, I, U, D & S \\
-        \hline
-        \texttt{FEEDBACK} & I & I & S & S,I,U,D & \\
-        \hline
-    \end{tabular}
+    \texttt{BIBLIOTECAR} & S & S & S & S, I, U, D & \\
+    \hline
+    \texttt{NEDU} & & S, I, U, D & S, I, U, D & & \\
+    \hline
+    \texttt{EDU} & & S, I, U, D & S, I, U, D & & \\
+    \hline
+    \texttt{PUBLIC} & & & & & \\
+    \hline
+    \texttt{CARTE} & S & S & S, I, U, D & S, I, U, D & S \\
+    \hline
+    \texttt{REVISTA} & S & & S, I, U, D & S, I, U, D & S \\
+    \hline
+    \texttt{SPECIALIZARE} & S & S & S & S, I, U, D & S \\
+    \hline
+    \texttt{FEEDBACK} & I & I & S & S,I,U,D & \\
+    \hline
+  \end{tabular}
 \end{center}
 
 \emph{Legenda:} I = Insert, U = update, D = delete, S = select.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 \section{Utilizatori și conturi}
 \label{sec:ut-cont}
