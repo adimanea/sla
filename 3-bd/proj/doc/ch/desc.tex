@@ -197,90 +197,29 @@ bibliotecarilor cu care au lucrat anterior într-o anumită specializare.
 
 Diagrama ER se poate prezenta ca în figura \ref{fig:erd}.
 
-\textbf{EXEMPLE}
-
-% Entity-relationship diagram
-% Author: Leonard König
-\begin{tikzpicture}[auto,node distance=1.5cm]
-  % Create an entity with ID node1, label "Fancy Node 1".
-  % Default for children (ie. attributes) is to be a tree "growing up"
-  % and having a distance of 3cm.
-  % 
-  % 2 of these attributes do so, the 3rd's positioning is overridden.
-  \node[entity] (node1) {Fancy Node 1}
-  [grow=up,sibling distance=3cm]
-  child {node[attribute] {Attribute 1}}
-  child {node[attribute] {Attribute 2}}
-  child[grow=left,level distance=3cm] {node[attribute] {Attribute 3}};
-  % Now place a relation (ID=rel1)
-  \node[relationship] (rel1) [below right = of node1] {Relation 1};
-  % Now the 2nd entity (ID=rel2)
-  \node[entity] (node2) [above right = of rel1]	{Fancy Node 2};
-  % Draw an edge between rel1 and node1; rel1 and node2
-  \path (rel1) edge node {1-\(m\)} (node1)
-  edge	 node {\(n\)-\(m\)}	(node2);
-\end{tikzpicture}
-
-\usetikzlibrary{positioning,shapes.multipart,shapes}
-\tikzset{basic/.style={
-    draw,
-    rectangle split,
-    rectangle split parts=2,
-    rectangle split part fill={blue!20,white},
-    minimum width=2.5cm,
-    text width=2cm,
-    align=left,
-    font=\itshape
-  },
-  Diamond/.style={ diamond, 
-    draw, 
-    shape aspect=2, 
-    inner sep = 2pt,
-    text centered,
-    fill=blue!10!white,
-    font=\itshape
-  }}
-\begin{tikzpicture}
-  \node[basic] (instructor) {instructor
-    \nodepart{second}
-    \underline{ID}\\
-    name\\
-    salary};
-  \node[basic,right=5cm of instructor] (department) {department
-    \nodepart{second}
-    \underline{dept\_name}\\
-    building\\
-    budget};
-  \draw (instructor) -- (department) node[midway,Diamond]{member};
-\end{tikzpicture}
-
-\begin{figure}[!htbp]
-  \small
-\begin{verbatim}
-                           +-------------+
-                           | BIBLIOTECAR |
-                           +-------------+
-                            |           |
-                            |servește   |servește              +--------+ 
-                            | (M:M)     | (M:M)                | PUBLIC |
-                            |           |                      +--------+
-  +---------+ se abonează +-----+    +------+                      |
-  | REVISTĂ |-------------| EDU |    | NEDU |                      |vizualizează
-  +---------+    (M:M)    +-----+    +------+                      |(M:M)
-       |                   |    \     |    \                       |
-       |                   |lasă \    |lasă \                      |
-       |                   |(1:M) \   |(1:M) \     (M:M)      +-------+
-       |                   |       \--|-------\---------------| CARTE |
-       |                  +------------+          împrumută   +-------+
-       |                  |  FEEDBACK  |                          |
-       |                  +------------+                          |
-       |se clasifică                                  se clasifică|
-       |după      (M:1)   +--------------+    (M:1)           după|
-       +------------------| SPECIALIZARE |------------------------+
-                          +--------------+
-\end{verbatim}
-
-\end{figure}
+% \begin{verbatim}
+%                            +-------------+
+%                            | BIBLIOTECAR |
+%                            +-------------+
+%                             |           |
+%                             |servește   |servește              +--------+ 
+%                             | (M:M)     | (M:M)                | PUBLIC |
+%                             |           |                      +--------+
+%   +---------+ se abonează +-----+    +------+                      |
+%   | REVISTĂ |-------------| EDU |    | NEDU |                      |vizualizează
+%   +---------+    (M:M)    +-----+    +------+                      |(M:M)
+%        |                   |    \     |    \                       |
+%        |                   |lasă \    |lasă \                      |
+%        |                   |(1:M) \   |(1:M) \     (M:M)      +-------+
+%        |                   |       \--|-------\---------------| CARTE |
+%        |                  +------------+          împrumută   +-------+
+%        |                  |  FEEDBACK  |                          |
+%        |                  +------------+                          |
+%        |se clasifică                                  se clasifică|
+%        |după      (M:1)   +--------------+    (M:1)           după|
+%        +------------------| SPECIALIZARE |------------------------+
+%                           +--------------+
+% \end{verbatim}
 
 
 \newpage
@@ -376,6 +315,8 @@ Diagrama ER se poate prezenta ca în figura \ref{fig:erd}.
     \label{fig:erd}
   \end{figure}
 \end{landscape}
+
+\newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
