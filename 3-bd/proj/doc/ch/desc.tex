@@ -186,8 +186,9 @@ carte și revistă aparțin unei singure specializări.
 Personalul Edu se poate abona și la reviste de specialitate, în baza
 unei verificări actualizate. Ceilalți cititori cu abonament pot deveni
 Edu printr-o verificare. Publicul larg poate doar să vadă stocul
-de cărți, general sau pe specializări. Toți utilizatorii se pot abona
-la newsletter pentru a afla cînd se actualizează stocul.
+de cărți, general sau pe specializări și să adauge cărțile dorite
+în wishlist. Toți utilizatorii se pot abona la newsletter pentru a
+afla cînd se actualizează stocul.
 
 De asemenea, bibliotecarii sînt asociați specializărilor, fiind
 responsabil de publicațiile dintr-o anumită specializare.
@@ -198,7 +199,8 @@ bibliotecarilor cu care au lucrat anterior într-o anumită specializare.
 Diagrama ER se poate prezenta ca în figura \ref{fig:erd}.
 
 De menționat că toate relațiile M:M ($\infty : \infty$) vor fi rezolvate
-cu \emph{tabele asociative}.
+cu \emph{tabelele asociative} \texttt{BIB\_SPEC}, \texttt{BIB\_CIT} și
+\texttt{PUB\_CARTE}, listate la \S\ref{sec:scheme-rel}.
 
 % \begin{verbatim}
 %                            +-------------+
@@ -273,7 +275,8 @@ cu \emph{tabele asociative}.
         \nodepart{second}
         \underline{id\_pub}\\
         email\\
-        pw};
+        pw \\
+        wishlist};
       \node[basic,left=7em of edu] (rev) {REVISTĂ
         \nodepart{second}
         \underline{id\_rev}\\
@@ -300,15 +303,15 @@ cu \emph{tabele asociative}.
       \draw[-{Rays[n=4,length=5mm]}] (bib) -- (nedu) node[midway,Diamond]{servește};
       \draw[-{Rays[n=4,length=5mm]}] (nedu) -- (bib) node[midway,Diamond]{servește};
       \draw[-{Rays[n=4,length=5mm]}] (edu) -- (rev) node[midway,Diamond]{se abonează};
-      \draw[-{Rays[n=4,length=5mm]}] (rev) -- (edu) node[midway,Diamond]{se abonează};;
-      \draw[-{Rays[n=4,length=5mm]}] (edu) -- (fdb) node[midway,Diamond]{lasă};
-      \draw[-{Rays[n=4,length=5mm]}] (nedu) -- (fdb) node[midway,Diamond]{lasă};
-      \draw[-{Rays[n=4,length=5mm]}] (pub) -- (carte) node[midway,Diamond]{vizualizează};
-      \draw[-{Rays[n=4,length=5mm]}] (carte) -- (pub) node[midway,Diamond]{vizualizează};
+      \draw[-{Rays[n=4,length=5mm]}] (rev) -- (edu) node[midway,Diamond]{se abonează};
+      \draw (edu) -- (fdb) node[midway,Diamond]{lasă};
+      \draw (nedu) -- (fdb) node[midway,Diamond]{lasă};
+      \draw[-{Rays[n=4,length=5mm]}] (pub) -- (carte) node[midway,Diamond]{adaugă};
+      \draw[-{Rays[n=4,length=5mm]}] (carte) -- (pub) node[midway,Diamond]{adaugă};
       \draw (carte) -- (spec) node[midway,Diamond]{se clasifică după};
       \draw[-{Rays[n=4,length=5mm]}] (spec) -- (carte) node[midway,Diamond]{se clasifică după};
-      \draw (rev) -- (spec) node[midway,Diamond]{se clasifică după};
-      \draw[-{Rays[n=4,length=5mm]}] (rev) -- (spec) node[midway,Diamond]{se clasifică după};
+      \draw[-{Rays[n=4,length=5mm]}] (spec) -- (rev) node[midway,Diamond]{se clasifică după};
+      \draw[-{Rays[n=4,length=5mm]}] (spec) -- (rev) node[midway,Diamond]{se clasifică după};
       \draw[-{Rays[n=4,length=5mm]}] (edu) -- (carte) node[midway,Diamond]{împrumută};
       \draw[-{Rays[n=4,length=5mm]}] (carte) -- (edu) node[midway,Diamond]{împrumută};
       \draw[-{Rays[n=4,length=5mm]}] (nedu) -- (carte) node[midway,Diamond]{împrumută};
@@ -332,11 +335,14 @@ NEDU            (id_cit#, nume, prenume, email, newsletter, abonament_activ,
                  id_carte, id_spec);
 EDU             (id_edu#, nume, prenume, email, newsletter, abonament_activ,
                  id_carte, id_rev, id_spec);
-PUBLIC          (id_pub#, email, pw);
+PUBLIC          (id_pub#, email, pw, wishlist, newsletter);
 CARTE           (id_carte#, autor_n, autor_p, titlu, an, id_spec, stoc);
 REVISTA         (id_rev#, autor_n, autor_p, titlu, numar, id_spec, stoc);
 SPECIALIZARE    (id_spec#, descriere);
 FEEDBACK        (id_fb#, id_bib, id_cit, id_edu, id_spec, rating, text, data);
+BIB_SPEC        (id_bib#, id_spec#);
+BIB_CIT         (id_bib#, id_cit#);
+PUB_CARTE       (id_pub#, id_carte#);
 \end{verbatim}
 
 \todo[inline,noline,backgroundcolor=green!40]{cum țin număr de împrumuturi \& termen?}
@@ -417,11 +423,6 @@ identificați de bibliotecă.
 10000 de conturi Edu, 10000 de conturi de cititori (înregistrați),
 10 conturi de bibliotecar, 1000 conturi de utilizator neabonat
 (\texttt{PUBLIC}).
-
-
-\todo[inline,noline,backgroundcolor=green!40]{diagrame $ \to $ \texttt{tikZ}/GUI}
-\todo[inline,noline,backgroundcolor=green!40]{schema utilizator pe ERD}
-\todo[inline,noline,backgroundcolor=green!40]{verificare diagrame}
 
 %%% Local Variables:
 %%% mode: latex
