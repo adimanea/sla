@@ -1,0 +1,83 @@
+#+TITLE: Implement PSQL Project
+#+AUTHOR: Adrian
+
+* Installation and first setup
+Resource: [[https://wiki.archlinux.org/index.php/PostgreSQL#Create_your_first_database/user][ArchWiki]].
+
+- Install with package manager:
+#+BEGIN_SRC sh
+  $ sudo pacman -S postgresql
+#+END_SRC
+
+The installation with create a user =postgres= with password =postgres=.
+So any operations on the databases, unless changing the defaults, should
+be done as the =postgres= user. Switch to that user (provided your current
+user is in the =sudoers= list) with:
+
+#+BEGIN_SRC sh
+  $ sudo -iu postgress
+
+  # alternative
+  $ su -l postgres
+#+END_SRC
+
+As the =postgres= user, initialize the database cluster:
+
+#+BEGIN_SRC sh
+  # initialize the database cluster,
+  # in the default location
+  [postgres]$ initdb -D /var/lib/postgres/data
+
+  # if you want to specify the locale and not use the default
+  # `$LANG', initialize with
+  [postgres]$ initdb --locale=en_US.UTF-8 -E UTF8 -D /var/lib/postgres/data
+
+  # ... some output ...
+  # should finish with ... ok
+  # Success. You can now start the database server using
+  # pg_ctl -D /var/lib/postgres/ -l logfile start
+#+END_SRC
+
+If using =systemd=, the =postgresql= service should be enabled and started:
+
+#+BEGIN_SRC sh
+  $ sudo systemctl enable postgresql
+  $ sudo systemctl start postgresql
+#+END_SRC
+
+* Create the database and a user
+#+BEGIN_SRC sh
+  $ sudo -iu postgres
+  [postgres]$ createuser --interactive
+  # a prompt should appear to select role and
+  # whether or not use password
+
+  # create a database for that user created above
+  [postgres]$ createdb -O theUser myDatabaseName
+
+  # if the user that was created is not allowed to create a database,
+  # create it as the postgres user, with
+  [postgres]$ createdb -U postgres -O theUser myDatabaseName
+#+END_SRC
+
+* Start the =psql= shell and do whatever
+#+BEGIN_SRC sh
+  $ sudo -iu postgres
+  [postgres]$ psql -d myDatabaseName
+
+  # you're now connected to myDatabaseName
+#+END_SRC
+
+Basic commands:
+#+BEGIN_SRC sh
+  # Meta commands for the PSQL shell
+  => \help			# get help
+  => \c <database>	# connect to <database>
+  => \du				# list users and permissions
+  => \dt				# list tables and permissions
+  => \q				# quit
+  => \?				# see all meta-commands
+#+END_SRC
+
+* Further
+See [[file:///psql-notes.org][PSQL-Notes.org]].
