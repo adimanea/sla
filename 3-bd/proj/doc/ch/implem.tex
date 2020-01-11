@@ -1,0 +1,112 @@
+% !TEX root = ../story.tex
+
+\chapter{Implementare în PostgreSQL}
+
+\section{Instalare și configurare inițială}
+
+Pentru implementare, vom folosi sistemul de baze de date
+\href{https://www.postgresql.org/}{PostgreSQL}, disponibil gratuit și
+open source.
+
+Implementarea se va face pe laptopul personal, folosind:
+\begin{itemize}
+\item OS: Manjaro Linux i3;
+\item Emacs 26 pentru editare text și comenzi shell;
+\item \texttt{st} pentru comenzi avansate de terminal, dacă este necesar.
+\end{itemize}
+
+Programul se instalează folosind managerul de pachete din Manjaro,
+cu comanda:
+{
+  \small
+\begin{verbatim}
+$ sudo pacman -S postgresql
+\end{verbatim}
+}
+
+După instalare, putem consulta consulta detaliile de pe pagina
+\href{https://wiki.archlinux.org/index.php/PostgreSQL\#Create\_your\_first\_database/user}{ArchWiki}.
+
+Pe scurt, PostgreSQL creează automat un utilizator cu numele \texttt{postgres},
+care este proprietarul implicit al bazelor de date. Astfel, pentru a lansa
+aplicația și a face modificări, trebuie să ne identificăm ca utilizatorul \texttt{postgres},
+cu una dintre comenzile:
+
+{
+  \small
+\begin{verbatim}
+$ sudo -iu postgres
+$ su -l postgres
+\end{verbatim}
+}
+
+Inițializarea cluster-ului de baze de date, unde se vor crea bazele și tabelele
+se face în calitatea de utilizator \texttt{postgres}, de exemplu, în locația
+implicită, cu comanda:
+
+{
+  \small
+\begin{verbatim}
+[postgres]$ initdb -D /var/lib/postgres/data
+
+# pentru a forța utilizarea limbii engleze și a codării UTF-8, folosim comanda
+[postgres]$ initdb --locale=en_US.UTF-8 -E UTF8 -D /var/lib/postgres/data
+
+# ... output ...
+# finalizat cu ... ok
+\end{verbatim}
+}
+
+Folosind \texttt{systemd}, trebuie să activăm și să pornim daemon-ul \texttt{postgresql},
+cu comenzile:
+{
+  \small
+\begin{verbatim}
+$ sudo systemctl enable postgresql
+$ sudo systemctl start postgresql
+\end{verbatim}
+}
+
+Pentru început, creăm un utilizator nou, căruia îi putem da ce atribuții dorim,
+precum și o bază de date pe care utilizatorul respectiv să o poată accesa (sau
+administra, în funcție de rolul dat):
+{
+  \small
+\begin{verbatim}
+# devenim utilizatorul postgres mai întîi
+$ sudo -iu postgres
+
+# creăm utilizatorul (e.g. theUser) cu dialog pas cu pas, pentru a alege rolul
+[postgres]$ createuser --interactive
+
+# creăm o bază de date pentru el (e.g. theDatabase)
+[postgres]$ createdb -O theUser theDatabase
+
+# dacă theUser nu are rol de creare, putem crea cu postgres pentru el
+[postgres]$ createdb -U postgres -O theUser theDatabase
+\end{verbatim}
+}
+
+Acum putem porni subshell-ul \texttt{psql} și să ne conectăm la baza de date
+creată mai sus:
+{
+  \small
+\begin{verbatim}
+$ sudo -iu postgres
+[postgres]$ psql -d theDatabase
+
+# cîteva dintre meta-comenzile pentru subshell-ul psql:
+=> \help                    # accesează help
+=> \c <database>            # conectează-te la baza de date <database>
+=> \du                      # afișează utilizatorii și permisiunile
+=> \dt                      # afișează tabelele și permisiunile
+=> \q                       # închide subshell-ul
+=> \?                       # afișează toate meta-comenzile
+\end{verbatim}
+}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../story"
+%%% End:
