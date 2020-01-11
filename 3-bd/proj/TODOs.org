@@ -1,0 +1,34 @@
+#+TITLE: SecBD -- TODOs
+#+AUTHOR: Adrian
+
+* TODO Scheme/Teorie [0/2]
+- [ ] de introdus tabelele asociative în schemele relaționale;
+- [ ] de introdus tabelele asociative în desen (?);
+
+* TODO Implementare/Cod [0/2]
+- [ ] creat tabele;
+- [ ] creat tabelele asociative ([[https://en.wikipedia.org/wiki/Associative_entity][exemplu]]);
+
+** TODO Securitate [0/3]
+- [ ] criptarea ID-urilor (?);
+- [ ] tabelă de privilegii (*management al identităților):
+  + [[https://www.postgresql.org/docs/9.0/sql-grant.html][documentație oficială]];
+  + [[https://www.techonthenet.com/postgresql/grant_revoke.php][tutorial]];
+  + [[https://www.tutorialspoint.com/postgresql/postgresql_privileges.htm][tutorialspoint]];
+- [ ] trigger pentru actualizare împrumuturi:
+  + [[https://www.postgresqltutorial.com/postgresql-triggers/][ultimate guide]];
+  + [[https://www.tutorialspoint.com/postgresql/postgresql_triggers.htm][tutorialspoint]];
+
+** TODO Auditare [0/1]
+- [ ] [[https://github.com/pgaudit/pgaudit/blob/master/README.md][pgaudit]]:
+  + [[https://github.com/pgaudit/pgaudit][github]];
+  + [[https://doublebyteblog.wordpress.com/2014/02/11/quick-guide-to-auditing-a-postgresql-database/][quick guide]];
+
+** TODO Aplicații [0/1]
+- [ ] SQL injection + protection:
+  + [[http://pentestmonkey.net/cheat-sheet/sql-injection/postgres-sql-injection-cheat-sheet][cheat sheet]];
+  + [[https://www.bobby-tables.com/postgresql][guide for prevention]];
+  + [[https://stackoverflow.com/questions/41686393/demonstrate-sql-injection-in-pl-pgsql][demonstrate SQL injection]];
+  + [[https://security.stackexchange.com/questions/153155/postgres-protection-from-sql-injection][general protection]];
+
+* TODO FINAL: Verificare dacă mai sînt tabele sau scheme de actualizat
