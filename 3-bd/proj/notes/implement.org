@@ -80,4 +80,4 @@ Basic commands:
 #+END_SRC
 
 * Further
-See [[file:///psql-notes.org][PSQL-Notes.org]].
+See [[file://psql-notes.org][PSQL-Notes.org]].
