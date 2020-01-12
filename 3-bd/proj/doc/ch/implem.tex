@@ -105,6 +105,155 @@ $ sudo -iu postgres
 \end{verbatim}
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\section{Crearea tabelelor}
+
+În primă fază, devenim utilizatorul \texttt{postgres} și accesăm baza
+de date creată:
+\begin{verbatim}
+[postgres]$ psql biblioteca
+\end{verbatim}
+
+Putem încărca un script \texttt{psql} din fișierul \texttt{tabele.sql}, de
+exemplu după ce ne-am asigurat că fișierul \texttt{tabele.sql} are
+drepturi corespunzătoare, cu meta-comanda:
+
+\begin{verbatim}
+biblioteca# \i /calea/catre/script/tabele.sql
+\end{verbatim}
+
+Apoi creăm tabelele corespunzătoare schemei din \S\ref{sec:scheme-rel}
+folosind scriptul:
+
+\begin{verbatim}
+create table bibliotecar (
+	   id_bib bigserial not null primary key,
+	   -- bigserial = crește singur
+	   nume varchar(20) not null,
+	   prenume varchar(20) not null,
+	   id_spec varchar(20) not null
+)
+
+create table edu (
+	   id_edu bigserial not null primary key,
+	   nume varchar(20) not null,
+	   prenume varchar(20) not null,
+	   email varchar(20),
+	   newsletter boolean,
+	   ab_activ boolean not null,
+	   foreign key (id_carte_edu) references carte(id_carte),
+	   foreign key (id_rev_edu) references revista(id_rev),
+	   foreign key (id_spec_edu) references specializare(id_spec)
+)
+
+create table nedu (
+	   id_cit bigserial not null primary key,
+	   nume varchar(20) not null,
+	   prenume varchar(20) not null,
+	   email varchar(20),
+	   newsletter boolean,
+	   ab_activ boolean not null,
+   foreign key (id_carte_nedu) references carte(id_carte),
+   foreign key (id_spec_nedu) references specializare(id_spec)
+)
+
+create table restul (
+	   id_pub bigserial not null primary key,
+	   email varchar(20),
+	   pw varchar(20),
+	   wishlist text[],		-- vector de cuvinte
+	   newsletter boolean
+)
+
+create table carte (
+	   id_carte bigserial not null primary key,
+	   autor_n varchar(20) not null,
+	   autor_p varchar(20) not null,
+	   titlu varchar(30) not null,
+	   an smallserial,	-- 1 -> 32767
+	   stoc smallint,	-- -32768 -> 
+   foreign key (id_spec_carte) references specializare(id_spec)
+)
+
+create table revista (
+	   id_rev bigserial not null primary key,
+	   autor_n varchar(20) not null,
+	   autor_p varchar(20) not null,
+	   titlu varchar(30) not null,
+	   numar smallserial,
+	   stoc smallint,
+   foreign key (id_spec_rev) references specializare(id_spec)
+)
+
+create table specializare (
+	   id_spec bigserial not null primary key,
+	   descriere text
+)
+
+create table feedback (
+	   id_fb bigserial not null primary key,
+	   rating smallserial,
+	   continut text,
+	   datafb date,
+	   foreign key (id_bib_fb) references bibliotecar(id_bib),
+	   foreign key (id_cit_fb) references nedu(id_cit),
+	   foreign key (id_edu_fb) references edu(id_edu),
+	   foreign key (id_spec_fb) references specializare(id_spec),
+)
+
+create table bib_spec (
+	   foreign key (id_bib_bs) references bibliotecar(id_bib) on delete restrict,
+   -- nu se șterg tabelele cu referințe pînă ce toate referințele s-au șters
+	   foreign key (id_spec_bs) references specializare(id_spec) on delete restrict,
+)
+
+create table bib_cit (
+	   foreign key (id_bib_bc) references bibliotecar(id_bib),
+	   foreign key (id_cit_bc) references nedu(id_cit)
+)
+
+create table pub_carte (
+	   foreign key (id_pub_pc) references restul(id_pub),
+	   foreign key (id_carte_pc) references carte(id_carte)
+)
+\end{verbatim}
+
+Am adăugat deja constrîngeri în scriptul de mai sus, dar cheile străine
+pot fi definite și separat, ca în exemplul de mai jos:
+
+\begin{verbatim}
+-- creăm coloana care va deveni cheie străină:
+biblioteca# alter table bib_cit
+biblioteca# add column id_bib_bc bigint;
+ALTER TABLE
+biblioteca# alter table bib_cit
+biblioteca# add constraint fk_id_bib_bc foreign key (id_bib_bc) 
+biblioteca# references bibliotecar(id_bib);
+ALTER TABLE
+\end{verbatim}
+
+În felul acesta, legăm coloana \texttt{ib\_bib\_bc} de coloana \texttt{bibliotecar(id\_bib)},
+iar constrîngerea o numim \texttt{fk\_id\_bib\_bc}.
+
+După aceea, populăm fiecare dintre tabele cu înregistrări. De exemplu,
+putem începe cu tabelul care nu conține referințe, \texttt{specializare}:
+
+\begin{verbatim}
+biblioteca# insert into specializare values (1, 'matematica'), 
+                                            (DEFAULT, 'literatura'),
+                                            (DEFAULT, 'politica');
+INSERT 0 1
+\end{verbatim}
+
+Valoarea \texttt{DEFAULT} continuă automat numărătoarea, deoarece
+cîmpul respectiv este \texttt{id\_spec}, declarat cu tipul \texttt{bigserial}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\section{Aspecte de securitate}
+
+
 
 %%% Local Variables:
 %%% mode: latex
