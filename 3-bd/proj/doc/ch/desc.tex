@@ -15,7 +15,7 @@ Utilizatorii aplicației, identificați prin IP-uri specifice sînt:
 \item \textbf{Personal educațional} (\texttt{EDU});
 \item \textbf{Cititori} din afara mediului educațional (\texttt{NEDU});
 \item \textbf{Bibliotecari};
-\item \textbf{Cititori înregistrați, dar neabonați} (\texttt{PUBLIC}).
+\item \textbf{Cititori înregistrați, dar neabonați} (\texttt{RESTUL}).
 \end{itemize}
 
 Considerăm că studenții și profesorii fac parte din personalul educațional
@@ -208,7 +208,7 @@ cu \emph{tabelele asociative} \texttt{BIB\_SPEC}, \texttt{BIB\_CIT} și
 %                            +-------------+
 %                             |           |
 %                             |servește   |servește              +--------+ 
-%                             | (M:M)     | (M:M)                | PUBLIC |
+%                             | (M:M)     | (M:M)                | RESTUL |
 %                             |           |                      +--------+
 %   +---------+ se abonează +-----+    +------+                      |
 %   | REVISTĂ |-------------| EDU |    | NEDU |                      |vizualizează
@@ -271,7 +271,7 @@ cu \emph{tabelele asociative} \texttt{BIB\_SPEC}, \texttt{BIB\_CIT} și
         nume\\
         prenume\\
         ...};
-      \node[basic,below=of bib,xshift=25em,yshift=-3em] (pub) {PUBLIC
+      \node[basic,below=of bib,xshift=25em,yshift=-3em] (pub) {RESTUL
         \nodepart{second}
         \underline{id\_pub}\\
         email\\
@@ -330,16 +330,17 @@ cu \emph{tabelele asociative} \texttt{BIB\_SPEC}, \texttt{BIB\_CIT} și
 \label{sec:scheme-rel}
 
 \begin{verbatim}
-BIBLIOTECAR     (id_bib#, nume, prenume, id_specializare);
+BIBLIOTECAR     (id_bib#, nume, prenume, id_spec);
 NEDU            (id_cit#, nume, prenume, email, newsletter, abonament_activ,
                  id_carte, id_spec);
 EDU             (id_edu#, nume, prenume, email, newsletter, abonament_activ,
                  id_carte, id_rev, id_spec);
-PUBLIC          (id_pub#, email, pw, wishlist, newsletter);
+RESTUL          (id_pub#, email, pw, wishlist, newsletter);
 CARTE           (id_carte#, autor_n, autor_p, titlu, an, id_spec, stoc);
 REVISTA         (id_rev#, autor_n, autor_p, titlu, numar, id_spec, stoc);
 SPECIALIZARE    (id_spec#, descriere);
-FEEDBACK        (id_fb#, id_bib, id_cit, id_edu, id_spec, rating, text, data);
+FEEDBACK        (id_fb#, id_bib, id_cit, id_edu, id_spec, rating, 
+                 continut, datafb);
 BIB_SPEC        (id_bib#, id_spec#);
 BIB_CIT         (id_bib#, id_cit#);
 PUB_CARTE       (id_pub#, id_carte#);
@@ -364,7 +365,7 @@ PUB_CARTE       (id_pub#, id_carte#);
     \hline
     \texttt{EDU} & S & S & & & & & & & U & IUD & S & S & & U & U & \\
     \hline
-    \texttt{PUBLIC} & S & & & & & IUD & & & & & & S & & IUD & & \\
+    \texttt{RESTUL} & S & & & & & IUD & & & & & & S & & IUD & & \\
     \hline
     \texttt{CARTE} & S & & IUD & & & & & & & & S & & & & U & \\
     \hline
@@ -388,7 +389,7 @@ PUB_CARTE       (id_pub#, id_carte#);
   \small
   \begin{tabular}{|l|c|c|c|c|c|}
     \hline
-    & Edu & NEdu & Bibliotecar & Admin & Public \\
+    & Edu & NEdu & Bibliotecar & Admin & Restul \\
     \hline\hline
     \texttt{BIBLIOTECAR} & S & S & S & S, I, U, D & \\
     \hline
@@ -396,7 +397,7 @@ PUB_CARTE       (id_pub#, id_carte#);
     \hline
     \texttt{EDU} & & S, I, U, D & S, I, U, D & & \\
     \hline
-    \texttt{PUBLIC} & & & & & \\
+    \texttt{RESTUL} & & & & & \\
     \hline
     \texttt{CARTE} & S & S & S, I, U, D & S, I, U, D & S \\
     \hline
@@ -422,7 +423,7 @@ identificați de bibliotecă.
 În această etapă a dezvoltării aplicației, vor fi disponibile maximum
 10000 de conturi Edu, 10000 de conturi de cititori (înregistrați),
 10 conturi de bibliotecar, 1000 conturi de utilizator neabonat
-(\texttt{PUBLIC}).
+(\texttt{RESTUL}).
 
 %%% Local Variables:
 %%% mode: latex
