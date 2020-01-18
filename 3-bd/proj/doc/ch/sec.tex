@@ -1,0 +1,298 @@
+\chapter{Aspecte de securitate}
+
+\textbf{Observație:} Pentru simplitate, în cele ce urmează, vom omite
+prompt-ul de la subshell-ul \texttt{psql}, precum și indicațiile de
+autentificare ca utilizatorul \texttt{postgres}. Așadar, vom presupune
+că utilizatorul s-a identificat deja și s-a conectat la baza de date
+\texttt{biblioteca}, conform indicațiilor din capitolul anterior,
+pe care le reluăm pentru ultima dată:
+
+{
+  \small
+\begin{verbatim}
+$ sudo -iu postgres
+[postgres@~/]$ psql -d biblioteca
+biblioteca# -- comenzile se vor face de la acest nivel
+\end{verbatim}
+}
+
+Astfel, vom scrie doar \texttt{\#} ca prefix pentru comenzile
+introduse de programator, iar răspunsul programului se va nota fără
+prefix, adică, în general:
+{
+  \small
+\begin{verbatim}
+# comanda psql
+# continuare comanda;
+RĂSPUNS
+continuare răspuns
+\end{verbatim}
+}
+
+\section{Criptarea parolelor cu \texttt{pgcrypto}}
+
+Utilizatorii care au abonament (de tip \texttt{EDU} și \texttt{NEDU}) își
+administrează datele și împrumuturile prin in\-ter\-ac\-ți\-u\-ne directă cu
+bibliotecarii. Dacă vor să lase un feedback, se adresează bibliotecarului,
+care verifică situația și dă un token unic cu care se autentifică pentru
+a lăsa feedback.
+
+În schimb, utilizatorii externi (\texttt{RESTUL}) își pot crea un cont
+și se identifică cu email-ul și parola pentru a consulta baza de cărți
+și stocul. Această parolă va fi stocată în baza de date prin calculul
+hash-ului, folosind extensia \texttt{pgcrypto}. De exemplu, pentru a crea
+un hash salted al parolei \texttt{mypass}, folosind algoritmul blowfish
+cu 4 runde de criptare, se rulează comenzile (în subshell-ul \texttt{psql}):
+
+{
+  \small
+\begin{verbatim}
+# create extension pgcrypto;
+# select crypt('mypass', gen_salt('bf', 4));
+CRYPT
+----------------------------------------------------------
+ $2a$04$1bfMQDOR6aLyD4q3KVb8/ujG7ZAkyie4d/s3ABwuZNbzkFFgXtC76
+\end{verbatim}
+}
+
+Acum putem introduce în baza de date acest hash pentru cîmpul de parolă.
+Mai întîi, adăugăm coloana corespunzătoare parolei criptate:
+
+{
+  \small
+\begin{verbatim}
+# alter table restul
+# add column pw_enc varchar(100);
+ALTER TABLE
+\end{verbatim}
+}
+
+Apoi, introducem parolele criptate pentru utilizatorii respectivi:
+
+{
+  \small
+\begin{verbatim}
+# update restul
+# set pw_enc = '$2a$04$1bfMQDOR6aLyD4q3KVb8/ujG7ZAkyie4d/s3ABwuZNbzkFFgXtC76' 
+# where id_pub = 3;
+\end{verbatim}
+}
+
+Cum criptarea se face cu o cheie simetrică, putem verifica apoi:
+
+{
+  \small
+\begin{verbatim}
+# select * from restul where id_pub = 5 
+# and pw_enc = crypt('mypass', pw_enc);
+
+id_pub  | pw_enc
+--------+--------------------------------------------------------------
+5       | $2a$04$1bfMQDOR6aLyD4q3KVb8/ujG7ZAkyie4d/s3ABwuZNbzkFFgXtC76
+(1 row)
+\end{verbatim}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Trigger pentru actualizare}
+
+Presupunem că bibliotecarul vrea să urmărească actualizarea stocului
+unor cărți și, de asemenea, că administratorul aplicației vrea să facă
+o statistică despre utilizatorii neabonați care urmăresc biblioteca
+(pentru o perioadă fixată de timp, e.g.\ o lună).
+
+Pentru aceste două scopuri, vom crea cîte un trigger. Primul va urmări
+cînd se modifică înregistrările din coloana \texttt{stoc} a tabelei
+\texttt{carte}, iar al doilea va urmări cînd apar înregistrări noi în
+tabela \texttt{restul}.
+
+Înregistrăm diferențele în tabele separate, \texttt{stoc\_mod} și,
+respectiv, \texttt{restul\_mod}, pe care le creăm corespunzător:
+
+{
+  \small
+\begin{verbatim}
+# create table stoc_mod (
+# id_stoc_mod serial primary key,
+# carte_id int not null,
+# autor_n varchar(20) not null,
+# autor_p varchar(20) not null,
+# titlu varchar(30) not null,
+# schimbare_stoc smallint not null,
+# schimbat timestamp(6) not null );
+\end{verbatim}
+}
+
+Apoi se definește funcția corespunzătoare, care urmărește și înregistrează
+schimbările:
+
+{
+  \small
+\begin{verbatim}
+# create or replace function log_stoc()
+# returns trigger as
+# $body$
+# begin
+# if new.stoc <> old.stoc then
+# insert into stoc_mod(id_stoc_mod, carte_id, autor_n,
+#                      autor_p, titlu, schimbare_stoc, schimbat)
+# values(DEFAULT, old.id_carte, old.autor_n, old.autor_p, old.titlu, 
+#        new.stoc - old.stoc, now());
+# end if;
+# return new;
+# end;
+# $body$ language plpgsql;
+CREATE FUNCTION
+\end{verbatim}
+}
+
+Apoi legăm această funcție de un trigger, care să urmărească tabelul
+și coloana de \texttt{stoc}:
+{
+  \small
+\begin{verbatim}
+# create trigger stoc_modificare
+# before update
+# on carte
+# for each row
+# execute procedure log_stoc();
+CREATE TRIGGER
+\end{verbatim}
+}
+
+Modificările pot fi văzute atunci cînd se schimbă o valoare de \texttt{stoc}
+din tabela carte, lucru care poate fi testat astfel:
+{
+  \small
+\begin{verbatim}
+# update carte
+# set stoc=5 where id_carte=7;
+UPDATE 1
+# select * from stoc_mod;
+ id_stoc_mod | carte_id | autor_n | autor_p |  titlu  | schimbare_stoc | schimbat          
+-------------+----------+---------+---------+---------+----------------+-----------------
+           1 |        7 | Allah   | Akbar   | Coranul |              9 | 2020-01-18 10:49
+           2 |        7 | Allah   | Akbar   | Coranul |             -8 | 2020-01-18 10:52
+           3 |        7 | Allah   | Akbar   | Coranul |              4 | 2020-01-18 10:54
+(3 rows)
+\end{verbatim}
+}
+
+Similar, pentru cealaltă situație, creăm un tabel care adaugă noii utilizatori
+neabonați:
+{
+  \small
+\begin{verbatim}
+# create table restul_mod (
+# id_restul_mod serial primary key,
+# email_nab varchar(30) not null,
+# adaugat timestamp(6) not null );
+\end{verbatim}
+}
+
+Apoi funcția care urmărește schimbările:
+{
+  \small
+\begin{verbatim}
+# create or replace function nab_nou()
+# returns trigger as
+# $body$
+# begin
+# insert into restul_mod(id_restul_mod, email_nab, adaugat)
+# values (DEFAULT, new.email, now());
+# end if;
+# return new;
+# end;
+# $body$ language plpgsql;
+CREATE FUNCTION
+\end{verbatim}
+}
+
+În fine, trigger-ul, care de data aceasta se execută atunci cînd
+se adaugă un rînd nou în tabel:
+{
+  \small
+\begin{verbatim}
+# create trigger nab_modificare
+# after insert                  -- declanșează doar după INSERT
+# on restul
+# for each row
+# execute procedure nab_nou();
+CREATE TRIGGER
+\end{verbatim}
+}
+
+Și testăm cu:
+{
+  \small
+\begin{verbatim}
+# insert into restul(id_pub, email, pw, newsletter) 
+# values(DEFAULT, 'newone@y.c', 'IamNewHere', true);
+INSERT 1
+# select * from restul_mod;
+
+ id_restul_mod | email_nab  |          adaugat           
+---------------+------------+----------------------------
+             3 | newone@y.c | 2020-01-18 11:23:41.204905
+(1 row)
+\end{verbatim}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Auditarea modificărilor cu \texttt{pgaudit} -- NU MERGE}
+
+În continuare, putem să activăm funcția de auditare din extensia
+\texttt{pgaudit}, care va afișa într-un log modificările făcute la baza de
+date, filtrate după tipul modificării. De exemplu, se pot înregistra în
+log operații de tipul:
+\begin{itemize}
+\item \texttt{READ}, adică atunci cînd se fac operații de citire de tipul
+  \texttt{SELECT, COPY} sau un query;
+\item \texttt{WRITE}, cînd se introduc, se modifică sau se șterg valori ori
+  alte operații care schimbă conținutul înregistrărilor;
+\item \texttt{FUNCTION}, atunci cînd se execută funcții sau blocuri \texttt{DO};
+\item \texttt{ROLE}, pentru cînd se atribuie, șterg sau modifică roluri și
+  utilizatori noi;
+\item \texttt{MISC}, pentru alte tipuri de operații
+  (\texttt{DISCARD, VACUUM, FETCH} etc.).
+\end{itemize}
+
+Să creăm un tabel care să înregistreze datele pentru audit cînd se citesc valori:
+{
+  \small
+\begin{verbatim}
+# create table pgAuditX( id serial, continut text );
+# insert into pgAuditX(id, continut) values(DEFAULT, 'test audit');
+\end{verbatim}
+}
+
+Acum trebuie să activăm extensia de audit care să urmărească operațiile de tip
+\texttt{READ}:
+{
+  \small
+\begin{verbatim}
+# alter system set pgaudit.log to 'read';
+# select pg_reload_conf();
+# -- test:
+# select continut from pgAuditX;
+\end{verbatim}
+}
+
+Acum verificăm în terminal, în afara bazei de date:
+{
+  \small
+\begin{verbatim}
+$ grep AUDIT postgresql-Sat.log | grep READ
+
+2020-01-18 postgres postgres LOG: 
+AUDIT: SESSION,1,1,READ,SELECT,,,SELECT name FROM pgAuditX;,<none>
+\end{verbatim}
+}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../story"
+%%% End:
