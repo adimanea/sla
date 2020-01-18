@@ -82,9 +82,9 @@ Basic commands:
 * Further
 See [[file://psql-notes.org][PSQL-Notes.org]].
 * TODO Security stuff
-** TODO =pgcrypto= for MD5 hashes
+** DONE =pgcrypto= for MD5 hashes
 - [[https://www.postgresql.fastware.com/blog/further-protect-your-data-with-pgcrypto][tutorial 1]];
-** TODO Triggers for auto updating
+** DONE Triggers for auto updating
 - [[https://www.postgresqltutorial.com/creating-first-trigger-postgresql/][postgresqltutorial]];
 - [[https://www.tutorialspoint.com/postgresql/postgresql_triggers.htm][tutorialspoint]];
 ** TODO =pgaudit= for auditing

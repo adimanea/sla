@@ -29,8 +29,8 @@
 \pagestyle{plain} % restore page numbering
 
 % DE ADĂUGAT
-\addcontentsline{toc}{chapter}{\protect\numberline{}DE ADĂUGAT/CLARIFICAT}
-\listoftodos[DE ADĂUGAT/CLARIFICAT]
+% \addcontentsline{toc}{chapter}{\protect\numberline{}DE ADĂUGAT/CLARIFICAT}
+% \listoftodos[DE ADĂUGAT/CLARIFICAT]
 
 % CHAPTERS
 \pagestyle{fancy}
@@ -39,6 +39,7 @@
 \lhead{\footnotesize{\color{gray}Adrian Manea, 510}}
 \include{ch/desc}
 \include{ch/implem}
+\include{ch/sec}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % INDEX
 \renewcommand{\indexname}{Index}
@@ -47,9 +48,9 @@
 
 % BIBLIOGRAPHY
 % IN ROMANIAN
-% \addcontentsline{toc}{chapter}{\protect\numberline{}Bibliografie}
-% \bibliography{BIBFILE.bib}
-% \bibliographystyle{apalike}
-% \nocite{*} % add all to bibliography, even if not \cited
+\addcontentsline{toc}{chapter}{\protect\numberline{}Bibliografie}
+\bibliography{psql.bib}
+\bibliographystyle{abstract}
+\nocite{*} % add all to bibliography, even if not \cited
 
 \end{document}
