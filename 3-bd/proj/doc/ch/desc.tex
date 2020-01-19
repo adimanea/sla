@@ -8,6 +8,8 @@ oferind roluri speciale pentru clienți din mediul academic.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \section{Utilizatori și atribute}
 \label{sec:util-atr}
+\index{utilizatori}
+\index{atribute}
 
 Utilizatorii aplicației, identificați prin IP-uri specifice sînt:
 \begin{itemize}
@@ -25,6 +27,7 @@ cititor oarecare poate deveni Edu în timp, dacă adaugă verificarea.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \section{Procesele din aplicație}
 \label{sec:procese}
+\index{procese}
 
 \begin{enumerate}[(P1)]
 \item Vizualizarea cărților în stoc;
@@ -45,6 +48,7 @@ cititor oarecare poate deveni Edu în timp, dacă adaugă verificarea.
 \item Feedback bibliotecar.
 \end{enumerate}
 
+\index{procese!descompunere funcțională}
 De exemplu, \textbf{descompunerea funcțională} a procesului (P14),
 de administrare a abonamentului la o revistă, poate fi reprezentat ca în
 figura \ref{fig:proc-abonare-rev}.
@@ -151,6 +155,7 @@ funcțională este prezentată în figura \ref{fig:+fb}.
 
 \section{Matricea proces-utilizator}
 \label{sec:matrice-pu}
+\index{matrice!proces-utilizator}
 
 \begin{center}
   \small
@@ -175,6 +180,8 @@ funcțională este prezentată în figura \ref{fig:+fb}.
 
 \section{Entitățile și modelarea datelor}
 \label{sec:ent-model}
+\index{entități}
+\index{modelarea datelor}
 
 Biblioteca este un centru de împrumut care permite și abonamentul la reviste
 pentru cei din mediul academic.
@@ -328,6 +335,7 @@ cu \emph{tabelele asociative} \texttt{BIB\_SPEC}, \texttt{BIB\_CIT} și
 
 \section{Schemele relaționale}
 \label{sec:scheme-rel}
+\index{schemă!relațională}
 
 \begin{verbatim}
 BIBLIOTECAR     (id_bib#, nume, prenume, id_spec);
@@ -352,6 +360,7 @@ PUB_CARTE       (id_pub#, id_carte#);
 
 \section{Matricea entitate-proces}
 \label{sec:matr-ep}
+\index{matrice!entitate-proces}
 
 \begin{center}
   \footnotesize
@@ -384,6 +393,7 @@ PUB_CARTE       (id_pub#, id_carte#);
 
 \section{Matricea entitate-utilizator}
 \label{sec:matr-eu}
+\index{matrice!entitate-utilizator}
 
 \begin{center}
   \small
@@ -416,6 +426,7 @@ PUB_CARTE       (id_pub#, id_carte#);
 
 \section{Utilizatori și conturi}
 \label{sec:ut-cont}
+\index{utilizatori!conturi}
 
 Conturile utilizatorilor vor fi definite individual pentru utilizatorii
 identificați de bibliotecă.

@@ -3,6 +3,8 @@
 \chapter{Implementare în PostgreSQL}
 
 \section{Instalare și configurare inițială}
+\index{instalare}
+\index{configurare}
 
 Pentru implementare, vom folosi sistemul de baze de date
 \href{https://www.postgresql.org/}{PostgreSQL}, disponibil gratuit și
@@ -87,6 +89,7 @@ $ sudo -iu postgres
 \end{verbatim}
 }
 
+\index{subshell-ul \texttt{psql}}
 Acum putem porni subshell-ul \texttt{psql} și să ne conectăm la baza de date
 creată mai sus:
 {
@@ -108,6 +111,7 @@ $ sudo -iu postgres
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 \section{Crearea tabelelor}
+\index{creare!tabele}
 
 În primă fază, devenim utilizatorul \texttt{postgres} și accesăm baza
 de date creată:
@@ -221,6 +225,8 @@ create table pub_carte (
 
 Am adăugat deja constrîngeri în scriptul de mai sus, dar cheile străine
 pot fi definite și separat, ca în exemplul de mai jos:
+\index{creare!constrîngeri}
+\index{creare!cheie străină}
 
 \begin{verbatim}
 -- creăm coloana care va deveni cheie străină:
@@ -238,6 +244,7 @@ iar constrîngerea o numim \texttt{fk\_id\_bib\_bc}.
 
 După aceea, populăm fiecare dintre tabele cu înregistrări. De exemplu,
 putem începe cu tabelul care nu conține referințe, \texttt{specializare}:
+\index{populare!tabele}
 
 \begin{verbatim}
 biblioteca# insert into specializare values (1, 'matematica'), 
