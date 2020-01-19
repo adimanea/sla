@@ -1,0 +1,166 @@
+\chapter{Alte aspecte și idei}
+
+\section{Auditarea modificărilor cu \texttt{pgaudit}}
+\index{audit (\texttt{pgaudit})}
+
+În continuare, putem să activăm funcția de auditare din extensia
+\texttt{pgaudit}, care va afișa într-un log modificările făcute la baza de
+date, filtrate după tipul modificării. De exemplu, se pot înregistra în
+log operații de tipul:
+\begin{itemize}
+\item \texttt{READ}, adică atunci cînd se fac operații de citire de tipul
+  \texttt{SELECT, COPY} sau un query;
+\item \texttt{WRITE}, cînd se introduc, se modifică sau se șterg valori ori
+  alte operații care schimbă conținutul înregistrărilor;
+\item \texttt{FUNCTION}, atunci cînd se execută funcții sau blocuri \texttt{DO};
+\item \texttt{ROLE}, pentru cînd se atribuie, șterg sau modifică roluri și
+  utilizatori noi;
+\item \texttt{MISC}, pentru alte tipuri de operații
+  (\texttt{DISCARD, VACUUM, FETCH} etc.).
+\end{itemize}
+
+Să creăm un tabel care să înregistreze datele pentru audit cînd se citesc valori:
+{
+  \small
+\begin{verbatim}
+# create table pgAuditX( id serial, continut text );
+# insert into pgAuditX(id, continut) values(DEFAULT, 'test audit');
+\end{verbatim}
+}
+
+Acum trebuie să activăm extensia de audit care să urmărească operațiile de tip
+\texttt{READ}:
+{
+  \small
+\begin{verbatim}
+# alter system set pgaudit.log to 'read';
+# select pg_reload_conf();
+# -- test:
+# select continut from pgAuditX;
+\end{verbatim}
+}
+
+Acum verificăm în terminal, în afara bazei de date:
+{
+  \small
+\begin{verbatim}
+$ grep AUDIT postgresql-Sat.log | grep READ
+
+2020-01-18 postgres postgres LOG: 
+AUDIT: SESSION,1,1,READ,SELECT,,,SELECT name FROM pgAuditX;,<none>
+\end{verbatim}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Mascarea informațiilor cu \texttt{postgresql\_anonymizer}}
+\index{securitate!mascare (anonimizare)}
+
+Extensia \texttt{postgresql\_anonymizer} permite mascarea informațiilor
+sensibile și înlocuirea lor cu unele aleatorii, astfel încît informațiile
+inițiale să poată fi recuperate. Anonimizarea se face pe baza etichetelor
+de securitate din PostgreSQL (\cite{psqlsecl}). Un exemplu de bază este:
+{
+  \small
+\begin{verbatim}
+# CREATE EXTENSION IF NOT EXISTS anon CASCADE;
+# SELECT anon.load();
+# CREATE TABLE player( id SERIAL, name TEXT, points INT);
+# SECURITY LABEL FOR anon ON COLUMN player.name 
+# IS 'MASKED WITH FUNCTION anon.fake_last_name()';
+# SECURITY LABEL FOR anon ON COLUMN player.id
+# IS 'MASKED WITH VALUE NULL';
+\end{verbatim}
+}
+
+Anonimizarea poate fi făcută \texttt{in-place}, fie folosind funcția
+\texttt{anon.anymize\_database()}, care este \emph{destructivă} (i.e.\ înlocuiește
+datele cu cele anonimizate):
+{
+  \small
+\begin{verbatim}
+# SELECT * FROM customer;
+
+ id  |   full_name      |   birth    |    employer   | zipcode | fk_shop
+-----+------------------+------------+---------------+---------+---------
+ 911 | Chuck Norris     | 1940-03-10 | Texas Rangers | 75001   | 12
+ 112 | David Hasselhoff | 1952-07-17 | Baywatch      | 90001   | 423
+
+# CREATE EXTENSION IF NOT EXISTS anon CASCADE;
+# SELECT anon.load();
+# SECURITY LABEL FOR anon ON COLUMN customer.full_name 
+# IS 'MASKED WITH FUNCTION anon.fake_first_name() || '' '' || anon.fake_last_name()';
+# SECURITY LABEL FOR anon ON COLUMN customer.birth   
+# IS 'MASKED WITH FUNCTION anon.random_date_between(''01/01/1920''::DATE,now())';
+# SECURITY LABEL FOR anon ON COLUMN customer.employer
+# IS 'MASKED WITH FUNCTION anon.fake_company()';
+# SECURITY LABEL FOR anon ON COLUMN customer.zipcode
+# IS 'MASKED WITH FUNCTION anon.random_zip()';
+# SELECT anon.anonymize_database();
+# SELECT * FROM customer;
+
+ id  |     full_name     |   birth    |     employer     | zipcode | fk_shop
+-----+-------------------+------------+------------------+---------+---------
+ 911 | michel Duffus     | 1970-03-24 | Body Expressions | 63824   | 12
+ 112 | andromache Tulip  | 1921-03-24 | Dot Darcy        | 38199   | 423
+\end{verbatim}
+}
+
+Sau putem doar să ascundem temporar informațiile, declarîndu-le cu
+eticheta \texttt{MASKED}. Informațiile inițiale sînt:
+{
+  \small
+\begin{verbatim}
+# SELECT * FROM people;
+ id | fistname | lastname |   phone    
+----+----------+----------+------------
+ T1 | Sarah    | Conor    | 0609110911
+(1 row)
+\end{verbatim}
+}
+
+Pentru scopul nostru, mai întîi activăm extensia:
+{
+  \small
+\begin{verbatim}
+# CREATE EXTENSION IF NOT EXISTS anon CASCADE;
+# SELECT anon.start_dynamic_masking();
+\end{verbatim}
+}
+
+Declarăm un utilizator ce va fi mascat:
+{
+  \small
+\begin{verbatim}
+# CREATE ROLE skynet LOGIN;
+# SECURITY LABEL FOR anon ON ROLE skynet IS 'MASKED';
+\end{verbatim}
+}
+
+Apoi regulile de mascare:
+{
+  \small
+\begin{verbatim}
+# SECURITY LABEL FOR anon ON COLUMN people.lastname 
+# IS 'MASKED WITH FUNCTION anon.fake_last_name()';
+# SECURITY LABEL FOR anon ON COLUMN people.phone 
+# IS 'MASKED WITH FUNCTION anon.partial(phone,2,$$******$$,2)';
+\end{verbatim}
+}
+
+În fine, ne conectăm cu utilizatorul mascat și găsim informațiile ascunse:
+{
+  \small
+\begin{verbatim}
+# \! psql peopledb -U skynet -c 'SELECT * FROM people;'
+ id | fistname | lastname  |   phone    
+----+----------+-----------+------------
+ T1 | Sarah    | Stranahan | 06******11
+(1 row)
+\end{verbatim}
+}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../story"
+%%% End:
