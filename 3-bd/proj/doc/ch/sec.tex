@@ -29,7 +29,9 @@ continuare răspuns
 \end{verbatim}
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Criptarea parolelor cu \texttt{pgcrypto}}
+\index{securitate!criptarea \texttt{pgcrypto}}
 
 Utilizatorii care au abonament (de tip \texttt{EDU} și \texttt{NEDU}) își
 administrează datele și împrumuturile prin in\-ter\-ac\-ți\-u\-ne directă cu
@@ -55,6 +57,7 @@ CRYPT
 \end{verbatim}
 }
 
+\index{securitate!hash al parolei}
 Acum putem introduce în baza de date acest hash pentru cîmpul de parolă.
 Mai întîi, adăugăm coloana corespunzătoare parolei criptate:
 
@@ -94,8 +97,8 @@ id_pub  | pw_enc
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \section{Trigger pentru actualizare}
+\index{securitate!trigger actualizare}
 
 Presupunem că bibliotecarul vrea să urmărească actualizarea stocului
 unor cărți și, de asemenea, că administratorul aplicației vrea să facă
@@ -208,6 +211,7 @@ Apoi funcția care urmărește schimbările:
 CREATE FUNCTION
 \end{verbatim}
 }
+\index{securitate!funcție de actualizare}
 
 În fine, trigger-ul, care de data aceasta se execută atunci cînd
 se adaugă un rînd nou în tabel:
@@ -240,57 +244,209 @@ INSERT 1
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Utilizatori și roluri}
+\index{securitate!roluri}
+\index{securitate!permisiuni}
+\index{securitate!atribute (\texttt{GRANT})}
 
-\section{Auditarea modificărilor cu \texttt{pgaudit} -- NU MERGE}
-
-În continuare, putem să activăm funcția de auditare din extensia
-\texttt{pgaudit}, care va afișa într-un log modificările făcute la baza de
-date, filtrate după tipul modificării. De exemplu, se pot înregistra în
-log operații de tipul:
+Utilizatorii pe care îi creăm pot avea mai multe tipuri de privilegii. În ordinea
+descrescătoare a permisiunilor, acestea sînt:
 \begin{itemize}
-\item \texttt{READ}, adică atunci cînd se fac operații de citire de tipul
-  \texttt{SELECT, COPY} sau un query;
-\item \texttt{WRITE}, cînd se introduc, se modifică sau se șterg valori ori
-  alte operații care schimbă conținutul înregistrărilor;
-\item \texttt{FUNCTION}, atunci cînd se execută funcții sau blocuri \texttt{DO};
-\item \texttt{ROLE}, pentru cînd se atribuie, șterg sau modifică roluri și
-  utilizatori noi;
-\item \texttt{MISC}, pentru alte tipuri de operații
-  (\texttt{DISCARD, VACUUM, FETCH} etc.).
+\item \texttt{SUPERUSER}: un astfel de rol are drepturi depline și trece peste
+  orice verificare de securitate. Mai mult decît atît, un utilizator care are
+  acest rol are inclusiv posibilitatea de a mai crea încă unul cu aceleași
+  drepturi. De aceea, rolul \texttt{SUPERUSER} trebuie folosit cu prudență;
+\item \texttt{CREATEDB}: rolul permite creare bazelor de date;
+\item \texttt{CREATEROLE}: putem crea încă un alt rol, mai puțin cel de tip
+  \texttt{SUPERUSER};
+\item \texttt{LOGIN}: permite utilizatorului să se logheze drept client
+  într-o conexiune cu baza de date.
 \end{itemize}
 
-Să creăm un tabel care să înregistreze datele pentru audit cînd se citesc valori:
+Sintaxa pentru crearea rolurilor este simplă:
 {
   \small
 \begin{verbatim}
-# create table pgAuditX( id serial, continut text );
-# insert into pgAuditX(id, continut) values(DEFAULT, 'test audit');
+# -- crearea rolului
+# create role unRol;
+CREATE ROLE
+# -- ștergerea rolului creat;
+# drop role unRol;
+DROP ROLE
 \end{verbatim}
 }
 
-Acum trebuie să activăm extensia de audit care să urmărească operațiile de tip
-\texttt{READ}:
+Implicit, dacă nu se specifică exact rolul pe care să îl aibă utilizatorul,
+el nu va avea niciun drept. Apoi, dacă vrem să creăm utilizatori cu roluri
+anume, se pot atribui explicit sau se pot modifica rolurile existente:
 {
   \small
 \begin{verbatim}
-# alter system set pgaudit.log to 'read';
-# select pg_reload_conf();
-# -- test:
-# select continut from pgAuditX;
+# -- utilizatorul are parolă, dar nu poate face nimic cu ea
+# create role nolog_user with password 'pass1';
+CREATE ROLE
+# -- utilizator cu parolă, cu drepturi de LOGIN
+# create role log_user with login password 'pass2';
+CREATE ROLE
+# -- modificăm rolul și mai adăugăm privilegii
+# alter role log_user createrole createdb;
+ALTER ROLE
 \end{verbatim}
 }
 
-Acum verificăm în terminal, în afara bazei de date:
+Verificarea se poate face în tabela \texttt{pg\_role}, cu sau fără filtrare:
 {
   \small
 \begin{verbatim}
-$ grep AUDIT postgresql-Sat.log | grep READ
+# select rolcreaterole, rolcreatedb from pg_roles where rolname='log_user';
 
-2020-01-18 postgres postgres LOG: 
-AUDIT: SESSION,1,1,READ,SELECT,,,SELECT name FROM pgAuditX;,<none>
+ rolcreaterole | rolcreatedb 
+---------------+-------------
+ t             | t
+(1 row)
 \end{verbatim}
 }
 
+Alternativ, putem verifica toate rolurile folosind meta-comanda \texttt{\textbackslash du},
+care afișează toate rolurile și dacă sînt incluse în grupuri.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Fișierul de configurare \texttt{pg\_hba.conf}}
+\index{securitate!\texttt{pg\_hba.conf}}
+
+Setările privitoare la roluri și modurile de autentificare sînt salvate în fișierul
+\texttt{pg\_hba.conf}, pe care îl putem găsi cu o comandă de forma:
+{
+  \small
+\begin{verbatim}
+# select name, setting from pg_settings where name like '%hba';
+
+ name     | setting 
+----------+-------------------------------------
+ hba_file | /etc/postgresql/10/main/pg_hba.conf
+(1 row)
+\end{verbatim}
+}
+
+Acest fișier specifică rolurile, drepturile și modurile de conectare la bazele
+de date (prin arhitectura client-server sau local). Mai multe detalii pot fi
+găsite în documentația oficială (\cite{pgoff}). Deoarece vom folosi doar o conexiune
+locală, în continuare ne vom concentra pe această modalitate. Pentru aceasta,
+avem sintaxa generală:
+{
+  \small
+\begin{verbatim}
+local      database  user  auth-method  [auth-options]
+\end{verbatim}
+}
+
+Metodele de autentificare (\texttt{auth-method}) sînt multiple, dintre ele menționăm:
+\begin{itemize}
+\item \texttt{trust}: conexiunea se face automat, fără verificare;
+\item \texttt{reject}: conexiunea se respinge automat;
+\item \texttt{password}: se cere clientului o parolă, care se verifică în text clar;
+\item \texttt{md5, scram-sha-256}: se cere clientului o parolă, care se verifică
+  prin metodele de hashing din nume.
+\end{itemize}
+
+Pentru cele două roluri din exemplul de mai sus, în fișierul \texttt{pg\_hba.conf}
+avem intrările:
+{
+  \small
+\begin{verbatim}
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+local   all             nolog_user                              password
+local   all             log_user                                password
+\end{verbatim}
+}
+
+Putem verifica acest lucru dintr-un rol de \texttt{SUPERUSER} cu următorul
+query:
+{
+  \small
+\begin{verbatim}
+# SELECT database, user_name, auth_method
+# FROM pg_hba_file_rules
+# WHERE CAST(user_name AS TEXT) LIKE '%log_user%';
+
+ database | user_name    | auth_method 
+----------+--------------+-------------
+    {all} | {nolog_user} | password
+    {all} | {log_user}   | password
+\end{verbatim}
+}
+
+Apoi, deoarece utilizatorul \texttt{nolog\_user} nu se poate autentifica,
+primim erori, chiar dacă acestuia i-a fost atribuită o parolă:
+{
+  \small
+\begin{verbatim}
+[postgres]$ psql -U nolog_user -W postgres
+Password for user nolog_user: 
+psql: FATAL: role "nolog_user" is not permitted to log in
+[postgres]$ psql -U log_user -W postgres
+Password for user log_user: 
+psql (12.1)
+Type "help" for help.
+postgres=>
+\end{verbatim}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Atribuirea (\texttt{GRANT}) permisiunilor}
+\index{securitate!atribute (\texttt{GRANT})}
+
+Pentru ca rolurile create să poată folosi obiectele din bazele de date
+(tabele, vizualizări, coloane, funcții etc.), trebuie să le fie acordate
+privilegii în acest sens. Acest lucru se face cu comanda \texttt{GRANT}.
+
+De exemplu, putem crea un rol care poate doar să vizualizeze unele
+coloane dintr-un anumit tabel. În cazul nostru, putem permite unui
+bibliotecar să vadă doar numele, prenumele, email-ul și statutul abonamentului
+cititorilor \texttt{EDU} sau \texttt{NEDU}, fără alte informații. De asemenea,
+bibliotecarul respectiv poate modifica doar cîmpul \texttt{ab\_activ} pentru
+fiecare cititor.
+
+Pentru aceasta, creăm utilizatorul corespunzător, cu credențiale și
+drepturi de login:
+{
+  \small
+\begin{verbatim}
+# create role bib1 with login password 'ilovebooks';
+CREATE ROLE
+# grant select (nume, prenume, email, ab_activ) on table edu to bib1;
+GRANT
+# grant select (nume, prenume, email, ab_activ) on table nedu to bib1;
+GRANT
+# grant update (ab_activ) on table edu to bib1;
+GRANT
+# grant update (ab_activ) on table nedu to bib1;
+GRANT
+\end{verbatim}
+}
+
+Ne conectăm apoi cu utilizatorul \texttt{bib1} la baza de date \texttt{biblioteca}
+și testăm:
+{
+  \small
+\begin{verbatim}
+[postgres]$ psql -U bib1 -W biblioteca
+Password:
+psql (12.1)
+# select * from edu;
+ERROR: permission denied for table edu
+# select select nume from edu;
+    nume    
+------------
+ Ionescu
+ Marcelescu
+ Georgescu
+(3 rows)
+# update edu
+# set ab_activ='f' where nume='Ionescu';
+UPDATE 1
+\end{verbatim}
+}
 
 %%% Local Variables:
 %%% mode: latex
