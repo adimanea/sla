@@ -81,22 +81,22 @@ Basic commands:
 
 * Further
 See [[file://psql-notes.org][PSQL-Notes.org]].
-* TODO Security stuff
+* DONE Security stuff
 ** DONE =pgcrypto= for MD5 hashes
 - [[https://www.postgresql.fastware.com/blog/further-protect-your-data-with-pgcrypto][tutorial 1]];
 ** DONE Triggers for auto updating
 - [[https://www.postgresqltutorial.com/creating-first-trigger-postgresql/][postgresqltutorial]];
 - [[https://www.tutorialspoint.com/postgresql/postgresql_triggers.htm][tutorialspoint]];
-** TODO =pgaudit= for auditing
+** DONE =pgaudit= for auditing
 - [[https://info.crunchydata.com/blog/pgaudit-auditing-database-operations-part-1][general description & examples]];
 - [[https://github.com/pgaudit/pgaudit/blob/master/README.md][pgaudit official doc]];
 - [[https://severalnines.com/database-blog/postgresql-audit-logging-best-practices][audit logging best practices]];
 - [[http://www.dbaglobe.com/2017/07/install-and-configure-pgaudit-in.html][install and configure pgaudit]];
 - [[https://blog.dbi-services.com/auditing-in-postgresql/][general info]];
-** TODO Managing users and roles
+** DONE Managing users and roles
 - [[https://aws.amazon.com/blogs/database/managing-postgresql-users-and-roles/][aws tutorial]];
 - [[https://severalnines.com/database-blog/postgresql-privileges-user-management-what-you-should-know][privileges and user management]];
-** TODO Data masking to hide info
+** DONE Data masking to hide info
 - [[https://www.cybertec-postgresql.com/en/products/data-masking-for-postgresql/][general info]];
 - [[https://blog.dbi-services.com/masking-data-with-postgresql/][data masking]];
 - [[https://www.postgresql.eu/events/fosdem2019/sessions/session/2287/slides/151/postgresql_anonymizer.reveal..pdf][slides]];
