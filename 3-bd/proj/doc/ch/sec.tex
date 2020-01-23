@@ -448,6 +448,26 @@ UPDATE 1
 \end{verbatim}
 }
 
+Similar, am mai creat în aplicație două roluri pentru cititori, unul fără cont
+edu care poate doar să vadă cărțile din stoc și unul cu cont edu, care poate să
+vadă și revistele. Ambii au drepturi de login, cu parole asociate:
+
+{
+  \small
+\begin{verbatim}
+# create role cititor with login password 'ilovetoread';
+CREATE ROLE
+# grant select on table carte to cititor;
+GRANT
+# create role cititorEdu with login password 'iloveresearch';
+CREATE ROLE
+# grant select on table carte to cititorEdu;
+GRANT
+# grant select on table revista to cititorEdu;
+GRANT
+\end{verbatim}
+}
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../story"
