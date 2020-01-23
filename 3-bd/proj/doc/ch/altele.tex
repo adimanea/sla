@@ -62,13 +62,13 @@ de securitate din PostgreSQL (\cite{psqlsecl}). Un exemplu de bază este:
 {
   \small
 \begin{verbatim}
-# CREATE EXTENSION IF NOT EXISTS anon CASCADE;
-# SELECT anon.load();
-# CREATE TABLE player( id SERIAL, name TEXT, points INT);
-# SECURITY LABEL FOR anon ON COLUMN player.name 
-# IS 'MASKED WITH FUNCTION anon.fake_last_name()';
-# SECURITY LABEL FOR anon ON COLUMN player.id
-# IS 'MASKED WITH VALUE NULL';
+# create extension if not exists anon cascade;
+# select anon.load();
+# create table player(id serial, name text, points int);
+# security label for anon on column player.name 
+# is 'masked with function anon.fake_last_name()';
+# security label for anon on column player.id
+# is 'masked with value null';
 \end{verbatim}
 }
 
@@ -78,25 +78,25 @@ datele cu cele anonimizate):
 {
   \small
 \begin{verbatim}
-# SELECT * FROM customer;
+# select * from customer;
 
  id  |   full_name      |   birth    |    employer   | zipcode | fk_shop
 -----+------------------+------------+---------------+---------+---------
  911 | Chuck Norris     | 1940-03-10 | Texas Rangers | 75001   | 12
  112 | David Hasselhoff | 1952-07-17 | Baywatch      | 90001   | 423
 
-# CREATE EXTENSION IF NOT EXISTS anon CASCADE;
-# SELECT anon.load();
-# SECURITY LABEL FOR anon ON COLUMN customer.full_name 
-# IS 'MASKED WITH FUNCTION anon.fake_first_name() || '' '' || anon.fake_last_name()';
-# SECURITY LABEL FOR anon ON COLUMN customer.birth   
-# IS 'MASKED WITH FUNCTION anon.random_date_between(''01/01/1920''::DATE,now())';
-# SECURITY LABEL FOR anon ON COLUMN customer.employer
-# IS 'MASKED WITH FUNCTION anon.fake_company()';
-# SECURITY LABEL FOR anon ON COLUMN customer.zipcode
-# IS 'MASKED WITH FUNCTION anon.random_zip()';
-# SELECT anon.anonymize_database();
-# SELECT * FROM customer;
+# create extension if not exists anon cascade;
+# select anon.load();
+# security label for anon on column customer.full_name 
+# is 'masked with function anon.fake_first_name() || '' '' || anon.fake_last_name()';
+# security label for anon on column customer.birth   
+# is 'masked with function anon.random_date_between(''01/01/1920''::DATE,now())';
+# security label for anon on column customer.employer
+# is 'masked with function anon.fake_company()';
+# security label for anon on column customer.zipcode
+# is 'masked with function anon.random_zip()';
+# select anon.anonymize_database();
+# select * FROM customer;
 
  id  |     full_name     |   birth    |     employer     | zipcode | fk_shop
 -----+-------------------+------------+------------------+---------+---------
@@ -110,7 +110,7 @@ eticheta \texttt{MASKED}. Informațiile inițiale sînt:
 {
   \small
 \begin{verbatim}
-# SELECT * FROM people;
+# select * from people;
  id | fistname | lastname |   phone    
 ----+----------+----------+------------
  T1 | Sarah    | Conor    | 0609110911
@@ -122,8 +122,8 @@ Pentru scopul nostru, mai întîi activăm extensia:
 {
   \small
 \begin{verbatim}
-# CREATE EXTENSION IF NOT EXISTS anon CASCADE;
-# SELECT anon.start_dynamic_masking();
+# create extension if not exists anon CASCADE;
+# select anon.start_dynamic_masking();
 \end{verbatim}
 }
 
@@ -131,8 +131,8 @@ Declarăm un utilizator ce va fi mascat:
 {
   \small
 \begin{verbatim}
-# CREATE ROLE skynet LOGIN;
-# SECURITY LABEL FOR anon ON ROLE skynet IS 'MASKED';
+# create role skynet login;
+# security label for anon on role skynet is 'masked';
 \end{verbatim}
 }
 
@@ -140,10 +140,10 @@ Apoi regulile de mascare:
 {
   \small
 \begin{verbatim}
-# SECURITY LABEL FOR anon ON COLUMN people.lastname 
-# IS 'MASKED WITH FUNCTION anon.fake_last_name()';
-# SECURITY LABEL FOR anon ON COLUMN people.phone 
-# IS 'MASKED WITH FUNCTION anon.partial(phone,2,$$******$$,2)';
+# security label for anon on column people.lastname 
+# is 'masked with function anon.fake_last_name()';
+# security label for anon on column people.phone 
+# is 'masked with function anon.partial(phone,2,$$******$$,2)';
 \end{verbatim}
 }
 
@@ -151,7 +151,7 @@ Apoi regulile de mascare:
 {
   \small
 \begin{verbatim}
-# \! psql peopledb -U skynet -c 'SELECT * FROM people;'
+# \! psql peopledb -U skynet -c 'select * from people;'
  id | fistname | lastname  |   phone    
 ----+----------+-----------+------------
  T1 | Sarah    | Stranahan | 06******11
