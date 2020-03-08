@@ -1,4 +1,4 @@
-\documentclass[xcolor=dvipsnames,handout]{beamer}
+\documentclass[xcolor=dvipsnames]{beamer}
 
 % font setup
 \usepackage{libertine}
@@ -85,7 +85,6 @@ functions: mac/2, g/0, shk/0 [private]
   }
 
   \lin{2}{Regula de înregistrare a cheii publice:}{0}
-
   {\footnotesize
 \begin{verbatim}
 rule Register_pk: [ Fr(~ltk) ] --> [ ~Ltk($A, ~ltk), ~Pk($A, pk(~ltk)) ]
@@ -204,7 +203,7 @@ lemma Client_session_key_honest_setup:
         & not(Ex #r. LtkReveal(S) @ r)
     "
 \end{verbatim}
-}
+  }
 \end{frame}
 
 \begin{frame}[fragile]
