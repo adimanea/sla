@@ -9,7 +9,8 @@
 - Boleda, Herbelot - Formal Distributional Semantics 2016 ([[https://www.mitpressjournals.org/doi/pdf/10.1162/COLI_a_00261][link]]);
 - Boleda - Distributional Semantics and Linguistic Theory 2020 ([[https://arxiv.org/pdf/1905.01896.pdf][link]]);
 - Herbelot - The Semantics of Poetry, A Distributional Reading 2014 ([[https://www.cl.cam.ac.uk/~ah433/LLC.pdf][link]]);
-- Popescu, Altmann - Quantitative Analysis of Poetic Texts 2015 ([[https://www.worldcat.org/title/quantitative-analysis-of-poetic-texts/oclc/912235510][link]]).
+- Aggarwal, Tonra, Buitelaar - Using Distributional Semantics to Trace Influence
+and Imitation in Romantic Orientalist Poetry ([[https://aran.library.nuigalway.ie/bitstream/handle/10379/4686/Using_Distributional_Semantics_to_Trace_Influence_and_Imitation_in_Romantic_Orientalist_Poetry-CameraReady.pdf?sequence=1&isAllowed=y][link]]);
 
 * Boleda
 *Ideea:* Articolul este o prezentare de ansamblu asupra semanticii
@@ -131,9 +132,7 @@ același cuvînt apare de fiecare dată cu același înțeles, independent de co
 poetice precum:
 #+BEGIN_QUOTE
 /Music is the exquisite knocking of the blood/ (Brooke)
-
 /Your huge mortgage of hope/ (Hughes)
-
 /Skeleton bells of trees/ (Slater)
 #+END_QUOTE
 au o interpretare folosind teoria mulțimilor.
@@ -150,3 +149,221 @@ definite de contextul poetic. Bruns continuă prin a afirma că, asemenea lui
 Wittgenstein (/meaning is use/), el consideră că extensiunea unui concept nu 
 poate fi închisă de nicio frontieră, lăsînd, astfel, loc pentru utilizări 
 "atipice" ale limbajului, precum poezia.
+
+Aceasta sugerează faptul că semantica, cel puțin în cazul poeziilor, ar trebui
+ancorată în context. Lucrul acesta relaxează frontierele, prin comparație cu
+teoria mulțimilor și afirmă că, de exemplu, sensul cuvîntului "pisică" nu mai
+este legat de pisicile din lume, ci de modul în care oamenii vorbesc despre
+pisici. Regăsim aici primele indicații în direcția semanticii distribuționale:
+"responsabilitatea" sensurilor pică pe context și, indirect, pe oamenii
+care plasează termenul în context.
+
+Teoria distribuțională, însă, nu a prins roade pînă în a doua parte a 
+anilor '50, cînd dezvoltarea puterii de calcul a contat foarte mult pentru
+analiza corpusurilor de text.
+
+Legătura istorică este foarte puternică: o studentă a lui Wittgenstein,
+de exemplu, *Margaret Masterman*, a fondat Cambridge Language Research
+Unit (CLRU), una dintre instituțiile care s-au implicat timpuriu în
+lingvistica computațională în Marea Britanie. Tot ea a fost interesată
+și de aspectele de /generare/ a limbajului, fiind una dintre cei care au
+lucrat la o primă variantă software de generare a poeziilor. În fapt,
+programul dezvoltat de ei nu producea poezie propriu-zis, ci oferea sugestii
+contextuale pentru a umple spațiile dintr-un haiku.
+
+Cum puterea de calcul era încă limitată, comparativ cu zilele noastre, echipa
+lui Masterman nu a putut analiza corpusuri mari de text în sine. Ei au trebuit
+să dezvolte /rețele semantice/, care să le permită "comunicarea" dintre diverse
+seturi, pe baza cărora au extras apoi informații statistice. Aceasta a fost
+una dintre mișcările de bază în direcția teoriei distribuționale.
+
+** Semantica distribuțională
+Ideea de bază conform căreia sensul unui cuvînt poate fi definit prin
+intermediul contextului în care apare a dat naștere la mai multe abordări,
+unele dintre ele cu o componentă vizuală pronunțată. Astfel, se stabilește
+o fereastră de conținut (e.g. 10 cuvinte) în jurul unui cuvînt-cheie și se
+determină o pondere a relevanței cuvintelor vecine (cu o metodă ce se va
+detalia ulterior). De exemplu, dacă luăm cuvîntul-cheie "dragon", putem alcătui
+vectorul său de sens pe baza metodei de mai sus și obținem rezultate de forma:
+- peșteră: 0.8;
+- mănîncă: 0.1;
+- foc: 0.3;
+- cavaler: 0.5;
+- politică: 0.001;
+- solz: 0.08;
+- foarte: 0.0001.
+Interpretarea acestor rezultate este destul de clară. Observăm că există unele 
+cuvinte cu o pondere relativă mare (peșteră, cavaler, foc, mănîncă), de unde
+rezultă că "dragonul" este un "obiect" care apare cel mai des în vecînătatea
+acestor cuvinte și foarte rar în vecinătatea celorlalte. În particular, ponderea
+foarte mică a cuvîntului "foarte" se explică prin faptul că este un cuvînt
+comun, care se întîlnește adesea în multe contexte.
+
+În principiu, putem defini un vector asociat cuvîntului "dragon", care să 
+conțină toate cele 7 cuvinte de mai sus. Obținem astfel un spațiu vectorial
+cu 7 dimensiuni, greu de controlat, din mai multe puncte de vedere. De aceea,
+putem restrînge dimensiunile impunînd un prag de semnificație. În orice caz,
+ceea ce se obține se numește *spațiul semantic* al cuvîntului-cheie.
+
+* Aplicație: Coerența semantică în poezia modernă și contemporană
+** Teoria lucrării
+Pentru a susține teza că poeziile folosesc o structură similară a limbii
+cu limbajul comun atunci cînd produc construcții cu sens, ar trebui să
+arătăm că limbajul poetic este caracterizat de o /coerență a subiectelor/
+(/"topic coherence"/). Ideea de bază a acestei cercetări este să folosească
+metode distribuționale pentru a arăta că, de exemplu, mulțimea de subiecte
+{scaun, masă, birou, echipă} are o coerență mai mare decît {scaun, rece, elefant, nor}.
+
+Poeziile studiate sînt scrise în perioada 1881-2008 și variază, ca stil, de la
+unele considerate dificile, la altele, "transparente".
+
+Se definește (Newman 2010) /coerența unei mulțimi de cuvinte/ w_1, \dots, w_n ca
+fiind media similarităților lor în perechi (două cîte două):
+
+MeanSimScore(w) = mean\{ Sim(w_i, w_j) 1 \leq i < j \leq n \}.
+
+Corpusul folosit face parte din British National Corpus (BNC), care a fost
+lemtaizat și s-au asociate etichete folosind sistemul [[http://ucrel.lancs.ac.uk/claws/][CLAWS]].
+De asemenea, se ignoră punctuația, iar cuvintele-cheie fac parte din 
+categoriile: substantive, verbe, adjective și adverbe. Fiecare poezie
+studiată se convertește în secvențe de cîte 11 cuvinte, iar contextul
+asociat unui cuvînt-cheie înseamnă 5 cuvinte care îl precedă și cele 5
+care îl urmează.
+
+Co-ocurențele se calculează folosind formulele:
+
+\begin{align*}
+freq(c_i) &= \displaystyle\sum_t \freq(c_i, t) \\
+freq(t) &= \sum_{c_i} freq(c_i, t) \\
+freq(\text{total}) &= \sum_{c_i, t} freq(c_i, t),
+\end{align*}
+unde:
+
+- freq(c_i, t) este frecvența cuvîntului c_i, care este context, făcînd parte
+din contextul cuvîntului-țintă t;
+- freq(total) este numărul total de cuvinte;
+- freq(t) este frecvența cuvîntului-țintă t;
+- freq(c_i) este frecvența cuvîntului de context c_i.
+
+Apoi, se calculează ponderea fiecărui termen de context cu formula:
+
+v_i(t) = \dfrac{p(c_i \mid t)}{p(c_i)} = \dfrac{freq(c_i, t) \cdot freq(\text{total})}{freq(t) \cdot freq(c_i)}
+
+Se aleg 2000 dintre cele mai frecvente cuvinte din corpus ca bază a spațiului semantic.
+Numărul ales s-a dovedit a fi relevant și în alte experimente. 
+
+În fine, coeficientul de similaritate se calculează folosind cosinusul:
+
+Sim(A, B) = \dfrac{\sum_{i=1}^n A_i \cdot B_i}{\sqrt{\sum_{i=1}^n A_i^2} \cdot \sqrt{\sum_{i=1}^n B_i^2}},
+
+unde A și B sînt vectori din spațiul vectorial asociat, iar n este dimensiunea
+(2000 în acest caz).
+
+
+
+** Experimentul
+Au fost alese 8 poezii scrise în limba engleză modernă, de diverse grade de
+"dificultate", adică cerînd diferite nivele de profunzime a analizei pentru
+a identifica sensul. Se mai folosesc și două texte "de control": un articol
+din Wikipedia și un text generat aleatoriu, pentru a servi drept margini
+superioare, respectiv inferioare în ce privește structura frazeologică
+și semantică. În fine, s-au atribuit scoruri de "dificultate", de către
+autor și doi referenți independenți, unde scorul de 1 înseamnă foarte ușor
+de înțeles, iar scorul de 5 înseamnă foarte greu de înțeles.
+
+| Autor      | Titlu                           |   An |
+|------------+---------------------------------+------|
+| Brooke     | Day that I loved                | 1911 |
+| Coolidge   | Argument over, Ammounting       | 1990 |
+| Duffy      | Valentine                       | 1993 |
+| Ginsberg   | Five A.M.                       | 1996 |
+| MacCormack | At Issue III                    | 2001 |
+| Slater     | Ithaca, Winter                  | 2008 |
+| Stein      | If I told Him                   | 1924 |
+| Stein      | A Completed Portrait of Picasso | 1924 |
+| Wilde      | In the Gold Room                | 1881 |
+| Wikipedia  | The Language Poets              |    ? |
+| Random     | Psychologist. String            |  N/A |
+
+Scorurile de dificultate au fost:
+| Textul     | Autorul | Ref 1 | Ref 2 | Media |
+|------------+---------+-------+-------+-------|
+| Random     |       5 |     5 |     5 |     5 |
+| MacCormack |       5 |     5 |     5 |     5 |
+| Coolidge   |       4 |     5 |     5 |  4.67 |
+| Ginsberg   |       5 |     4 |     3 |     4 |
+| Stein      |       5 |     3 |     3 |  3.67 |
+| Slater     |       2 |     3 |     4 |     3 |
+| Brooke     |       2 |     4 |     3 |     3 |
+| Wilde      |       1 |     1 |     2 |  1.33 |
+| Duffy      |       1 |     1 |     2 |  1.33 |
+| Wikipedia  |       1 |     1 |     1 |     1 |
+
+Poeziile au fost etichetate POS automat, dar etichetarea a fost apoi verificată
+manual.
+
+S-a calculat coerența pentru poeziile care au o structură frazeologică
+destul de clară (Brooke, Duffy, Slater, Stein, Wilde, Random, Wikipedia), iar
+pentru celelalte, s-a efectuat o împărțire în diviziuni cu același număr de
+cuvinte. De asemenea, în conformitate cu ipotezele de lucru, s-au luat în
+considerare doar părțile relevante de propoziție care au apărut de cel puțin
+50 de ori. În total, s-a folosit aproximativ 72% din conținutul textual, iar
+lungimea medie a frazei a fost de 4 cuvinte relevante.
+
+** Rezultate
+Graficul de la paginile 22-23 (figura 3 și 4).
+
+Ideile de bază care se desprind din aceste rezultate sînt că, pe de o parte,
+poezia produsă de oameni se poate distinge destul de ușor de texte aleatorii,
+dar și că există o diferență semnificativă între textele științifice ori
+factuale (precum articolele de pe Wikipedia) și cele poetice. Totodată,
+coerența poeziilor este mai scăzută decît cea a textelor factuale, rezultat
+care se explică prin creativitatea autorului.
+
+Mai trebuie remarcat și faptul că nu există nicio corelație între dificultatea
+textului, așa cum a fost ea percepută de oameni, și coerența care rezultă
+din calcule. De exemplu, poeziile lui Duffy și Wilde, considerate "ușoare",
+nu au un factor de coerență mare, lucru care este pus pe seama creativității
+autorilor. Rezultă, deci, că semantica nu lipsește cu precădere din textele
+complicate, așa cum afirmă unii critici.
+
+** Concluzii
+- avînd un punct de vedere distribuțional asupra sensului, este posibil să
+se pună în evidență relația dintre limbajul "obișnuit" și cel "neobișnuit",
+al poeziei;
+- modelul distribuțional evidențiază clar distincția între texte umane și
+cele produse aleatoriu, indiferent de transparența sau dificultatea textului;
+- modelul distribuțional prezintă o asociativitate semantică pronunțată
+și în cazul poeziilor, indiferent de complexitate.
+
+
+* Aplicație: Influență și imitație în poezia romantică orientală
+
+
+
+
+* COMMENT Popescu, Altmann
+** Introducere
+Volumul se bazează pe un corpus de 150 de poezii în limba română, de
+Mihai Eminescu, preluate din http://ro.wikisource.org/wiki/Autor:Mihai_Eminescu.
+
+Studiul se concentrează pe aspecte fonice, frecvența formelor cuvintelor,
+lungimea cuvintelor, clasele de cuvinte și structura semantică a poeziilor,
+care să scoată în evidență universul de asocieri ale autorului.
+
+Autorii studiului evidențiază totodată că ceea ce se clasifică drept "poezie"
+constituie o artă literară unde efectele estetice se bazează pe formă, în afară
+de (uneori chiar: în loc de) sens.
+
+Studiul se poate face ținînd seama de mai mulți indicatori, iar în funcție de
+aceasta, să releve diverse lucruri. Cei aleși de autori ar trebui să conțină,
+cel puțin:
+- /sens/, adică indicatorul trebuie să fie suficient de explicit referitor la
+ceea ce arată;
+- /simplitate/, pentru a ușura aparatul matematic și computațional;
+- /interval de variație/, pentru că altfel, relevanța scade, întrucît orice număr
+poate fi considerat mare față de 0 și mic față de infinit;
+- /o anumită distribuție/, conform căreia se pot face analize statistice;
+- /relevanță/, ca măsură a exactității și stabilității, i.e. același indicator trebuie
+să arate aceleași lucruri în toate cazurile;
+- /validitate/, i.e. indicatorul chiar exprimă proprietatea studiată.
