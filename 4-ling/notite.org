@@ -2,3 +2,151 @@
 #+AUTHOR: Adrian Manea
 #+STARTUP: overview
 
+* Referințe
+- Turney, Pantel - From Frequency to Meaning 2010 ([[https://www.aaai.org/Papers/JAIR/Vol37/JAIR-3705.pdf][link]]);
+- Erk - Vector Space Models of Word Meaning and Phrase Meaning 2012 ([[https://onlinelibrary.wiley.com/doi/epdf/10.1002/lnco.362][link]]);
+- Lenci - Distributional Models for Word Meanings 2018 ([[http://colinglab.humnet.unipi.it/wp-content/uploads/2012/12/annurev-linguistics-030514-125254.pdf][link]]);
+- Boleda, Herbelot - Formal Distributional Semantics 2016 ([[https://www.mitpressjournals.org/doi/pdf/10.1162/COLI_a_00261][link]]);
+- Boleda - Distributional Semantics and Linguistic Theory 2020 ([[https://arxiv.org/pdf/1905.01896.pdf][link]]);
+- Herbelot - The Semantics of Poetry, A Distributional Reading 2014 ([[https://www.cl.cam.ac.uk/~ah433/LLC.pdf][link]]);
+- Popescu, Altmann - Quantitative Analysis of Poetic Texts 2015 ([[https://www.worldcat.org/title/quantitative-analysis-of-poetic-texts/oclc/912235510][link]]).
+
+* Boleda
+*Ideea:* Articolul este o prezentare de ansamblu asupra semanticii
+distribuționale (SD), cu accentul pe metodele și rezultatele relevante în
+lingvistica teoretică: schimbări semantice, polisemie și compunere, precum
+și interfața între gramatica și semantică.
+
+SD s-a dovedit a fi foarte utilă în științele cognitive, dar aplicațiile
+la lingvistica teoretică și computațională au fost mai rare.
+
+SD are la bază /ipoteza distribuțională/ (1954), care afirmă că similaritatea
+semantică rezultă în similaritatea distribuției. Spus altfel, cuvintele 
+relaționate semantic apar în contexte similare. Dar SD procedează invers:
+pornește de la corpusuri de text și induce reprezentări semantice pe baza
+distribuțiilor observate.
+
+*Observație:* Merg la o sursă și mai introductivă, pentru fundamente.
+
+* Erk
+** Idei generale
+În multe situații, putem ghici sensul unui cuvînt din contextele în care
+este folosit. Astfel, este ca și cum reprezentăm sensul ca pe o distribuție,
+contexte observate. Ideea poate fi urmărită încă de la Wittgenstein, care
+afirma că /sensul unui cuvînt este utilizarea lui în limbaj/ (Tractatus, 1922).
+
+Partea dificilă este să se explice precis ce se înțelege prin "context". În
+varianta cea mai simplă, contextul înseamnă pur și simplu cuvintele care apar
+în vecinătatea cuvîntului-țintă.
+
+De obicei, modelele distribuționale sînt implementate cu ajutorul spațiilor
+vectoriale. Dimensiunea spațiilor este legată de cuvintele din context, iar
+astfel, coordonatele depind de cuvintele co-curente. Rezultă că vecinătatea
+în context devine vecinătate în spațiu.
+
+Modelele distribuționale pot fi învățate dintr-un corpus într-o manieră
+nesupervizată.
+
+*Observație:* Lucrare mai tehnică în partea de spații vectoriale și IA:
+/Turney, Pantel - From Frequency to Meaning: Vector Space Models of Semantics/,
+2010
+
+** Construcția spațiului vectorial
+Se dă un corpus și un cuvînt-țintă. Apoi, se înregistrează co-ocurențele relativ
+la cuvîntul-țintă și se păstrează într-un vector, sortat descrescător, care dă
+coordonatele cuvîntului-țintă (v. exemplul de la pagina 3)
+
+Relativ la acest spațiu vectorial, se pot folosi mai mulți parametri, dar
+un model des întîlnit foloseste un 4-tuplu <A, S, B, M>, unde:
+- A este o funcție care asociază ponderi mai relevante co-ocurențelor (depinde de la caz la caz);
+- S este un coeficient de similaritate, de obicei calculat drept cosinusul unghiului dintre vectori;
+- B sînt elementele din bază (sau dimensiunea);
+- M este o transformare a spațiului, de obicei una care poate reduce dimensiunea.
+
+Un exemplu des utilizat este *Latent Semantic Analysis* (LSA, 1997), unde:
+- B = vectorii din bază;
+- A = [[https://en.wikipedia.org/wiki/Tf%E2%80%93idf][tf-idf]] (/term frequency-inverse distribution frequency/);
+- M = [[https://en.wikipedia.org/wiki/Singular_value_decomposition][SVD]] (/singular value decomposition/);
+- S = cosinusul unghiului dintre vectori.
+
+Alte abordări mai complexe folosesc matrice multidimensionale (tensori) și
+analiză bayesiană, care calculează distribuții și pot extrage subiectul despre
+care se vorbește în text.
+
+* Herbelot
+** Aspecte introductive
+În general, poezia este greu de studiat folosind tehnici de lingvistică,
+deoarece o bună parte a poeziilor (în special cele moderne și contemporane)
+nu respectă regulile stricte de sintaxă și semantică.
+
+Totuși, semantica distribuțională se poate dovedi o unealtă foarte puternică
+în acest sens, deoarece tiparele de distribuție care se remarcă pot fi relevante
+și în cazul textelor poetice. Ideea din spatele acestei încrederi este că,
+deși în multe situații, limbajul poeziilor nu este reprezentativ pentru limbajul
+comun, anumite tipare pe care le distingem în poezii sînt, într-un fel,
+latente în limbajul nostru fundamental. De exemplu, sînt multe cuvinte al căror
+sens este neschimbat în poezii: cuvîntul "copac", cel mai probabil (deși nu cert)
+apare în poezii cu același sens cu care îl găsim și în limbajul comun.
+Aceasta ne arată că, deși limbajul poetic poate fi considerat unul special,
+el cu siguranță nu este /complet disociat/ de acesta, în sensul că orice text
+poetic, oricît de dificil, poate fi recunoscut ca fiind alcătuit din elemente
+de limbaj natural și în multe cazuri, se poate identifica faptul că este alcătuit
+din construcții cu sens.
+
+** Semantica (generală a) poeziilor
+Înainte de a ajunge la elementele specifice poeziilor și mai ales studiul lor
+în contextul semanticii distribuționale, este potrivit să discutăm pe scurt
+despre semantică, în sens logic și filosofic general. Începînd cu lucrările lui
+Frege (1892) și Tarski (1944), semantica formală s-a plasat în contextul teoriei
+mulțimilor. În acest sens, de exemplu, cuvintele sînt gîndite precum /concepte/,
+care au /extensiune/. De pildă, cuvîntul "pisică" este un concept, în a cărui
+extensiune intră toate pisicile din lume, adică identificăm extensiunea conceptului
+cu mulțimea tuturor pisicilor.
+
+Prin această abordare, se poate vorbi ușor despre adevăr și falsitate, în sensul
+că o propoziție care enunță o proprietate a unui obiect (concept) este luată ca
+adevărată numai atunci cînd extensiunea conceptului respectiv conține
+extensiunea proprietății, la nivel de incluziune între mulțimi. De exemplu,
+afirmația "Toți caii sînt albi" este adevărată dacă întreaga mulțime a cailor
+(i.e. extensiunea cuvîntului/conceptului "cal") este inclusă în mulțimea
+obiectelor albe (i.e. extensiunea conceptului/cuvîntului "alb").
+
+Mai mult, această abordare ne permite să facem distincția semantică între
+construcții precum "soarele amiezii" și "soarele apusului", chiar dacă, de fapt,
+este vorba despre același obiect.
+
+Semantica poeziilor și, de fapt, întreaga întrebare /dacă/ poeziile au semantică
+sau sens, în general, a fost una îndelung dezbătută. Un exemplu de schimb de
+idei se găsește în corespondența dintre filosoful *Philip Wheelwright* și
+poeta *Josephine Miles* (1940). Conform lui Wheelwright (/On the Semantics of Poetry/),
+limbajul poeziilor este complet diferit de cel al științei. El considera
+că sensul cuvintelor folosite în teorii științifice se bazează pe concepte,
+în vreme ce cuvintele din poezii au ceea ce el a numit /înțeles metalogic/,
+adică dat de o semantică nebazată pe logică. Miles a replicat afirmînd că
+ambiguitate există în tot limbajul comun și că nu este specific poeziilor ca
+apariția unui cuvînt să depindă de context (spre deosebire de știință, unde
+același cuvînt apare de fiecare dată cu același înțeles, independent de context).
+
+În favoarea lui Wheelwright, este, într-adevăr, greu de susținut că expresii
+poetice precum:
+#+BEGIN_QUOTE
+/Music is the exquisite knocking of the blood/ (Brooke)
+
+/Your huge mortgage of hope/ (Hughes)
+
+/Skeleton bells of trees/ (Slater)
+#+END_QUOTE
+au o interpretare folosind teoria mulțimilor.
+
+Dar în același timp, este greu și să combatem teza lui Miles, conform căreia
+semantica poeziilor își are rădăcinile în semantica limbajului comun. Într-adevăr,
+fără cunoașterea acesteia din urmă, construcțiile poetice sînt lipsite de
+orice fel de semantică.
+
+O poziție care iese din această dezbatere este aceea a lui *Gerald Bruns* (2005),
+care afirma că /poezia este alcătuită din limbaj, dar nu este o utilizare a acestuia/,
+în sensul că acele cuvinte care apar în poezii nu trebuie privite ca fiind
+definite de contextul poetic. Bruns continuă prin a afirma că, asemenea lui
+Wittgenstein (/meaning is use/), el consideră că extensiunea unui concept nu 
+poate fi închisă de nicio frontieră, lăsînd, astfel, loc pentru utilizări 
+"atipice" ale limbajului, precum poezia.
