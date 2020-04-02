@@ -1,0 +1,16 @@
+#+TITLE: Lingvistică Matematică și Computațională (Opțional)
+
+- Profesor: Liviu Dinu.
+
+Materia se va finaliza cu un proiect.
+
+Tema aleasă este [[https://en.wikipedia.org/wiki/Distributional_semantics][semantica distribuțională]],
+cu aplicație în [[https://www.overdrive.com/media/2468526/quantitative-analysis-of-poetic-texts][analiza poeziilor]].
+
+** Bibliografie
+- Turney, Pantel - From Frequency to Meaning 2012 ([[https://www.aaai.org/Papers/JAIR/Vol37/JAIR-3705.pdf][link]]);
+- Erk - Vector Space Models of Word Meaning and Phrase Meaning 2012 ([[https://onlinelibrary.wiley.com/doi/epdf/10.1002/lnco.362][link]]);
+- Lenci - Distributional Models for Word Meanings 2018 ([[http://colinglab.humnet.unipi.it/wp-content/uploads/2012/12/annurev-linguistics-030514-125254.pdf][link]]);
+- Boleda, Herbelot - Formal Distributional Semantics 2016 ([[https://www.mitpressjournals.org/doi/pdf/10.1162/COLI_a_00261][link]]);
+- Herbelot - The Semantics of Poetry, A Distributional Reading 2014 ([[https://www.cl.cam.ac.uk/~ah433/LLC.pdf][link]]);
+- Popescu, Altmann - Quantitative Analysis of Poetic Texts 2015 ([[https://www.worldcat.org/title/quantitative-analysis-of-poetic-texts/oclc/912235510][link]]).

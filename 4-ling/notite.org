@@ -1,0 +1,4 @@
+#+TITLE: Semantica distribuțională pentru studiul poeziilor
+#+AUTHOR: Adrian Manea
+#+STARTUP: overview
+
