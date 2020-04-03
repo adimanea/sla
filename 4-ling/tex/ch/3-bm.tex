@@ -1,0 +1,91 @@
+% ! TEX root = ../semdis.tex
+
+\chapter{Aplicație: Legăturile între \\ Lord Byron și Thomas Moore}
+
+\section{Introducere și motivație}
+
+Ideea articolului \cite{agg}, din care preluăm aplicația de față, este să
+utilizeze un model de semantică distribuțională pentru a verifica dacă
+poetul Lord Byron a fost imitat de Thomas Moore, așa cum consideră unii
+critici sau, de fapt, este vorba despre o caracteristică generală a
+vocabularului poeziilor din secolul al XIX-lea (sau, mai precis, vocabularul
+specific sub-genului literar în care s-au încadrat cei doi),
+caracteristică pe care nu puteau să nu o aibă și poeziile lui Byron și Moore.
+
+În perioada 1813-1817, poeții prieteni Lord Byron și Thomas Moore au
+scris o serie de poezii care sînt privite astăzi drept reprezentative
+pentru \emph{orientalismul romantic}, o subcategorie a literaturii romantice,
+caracterizată prin temele și plasarea în contexte orientale și din
+Orientul Mijlociu. Printre poeziile publicate de cei doi, s-au descoperit
+foarte multe coincidențe, precum desfășurări similare de acțiuni, decoruri și
+nume de personaje similare.
+
+Articolul \cite{agg} își propune să folosească o metodă empirică nouă
+pentru a încerca să clarifice aceste coincidențe. De exemplu, ar putea
+răspunde la întrebarea dacă cumva orientalismul romantic este, în sine,
+un gen de poezie care folosește un vocabular limitat și atunci, similaritățile
+sînt inevitabile. Totodată, întrebarea mai generală poate fi și dacă se poate
+caracteriza un gen literar prin tocmai vocabularul său.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Metodologia și experimentul}
+
+Autorii au utilizat o metodă de semantică distribuțională prin \emph{analiză %
+  semantică explicită} (ESA), ca alternativă la analiza latentă, prezentată
+în prima parte a lucrării. ESA a fost introdusă în \cite{esa}. În varianta
+originală, metoda folosește texte din Wikipedia pentru a stabili unele sensuri,
+iar apoi, textul dat este interpretat prin intermediul conexiunilor deja
+stabilite cu ajutorul Wikipedia. Informal, este ca și cum clasificatorul
+semantic se \qq{antrenează} cu Wikipedia, pentru ca apoi să rezolve problema
+textului dat.
+
+ESA permite reprezentarea unor vectori de sens într-un spațiu vectorial cu
+un număr foarte mare de dimensiuni, dată fiind complexitatea și diversitatea
+articolelor din Wikipedia, iar coeficientul de relaționare semantică se
+calculează din nou folosind cosinusul unghiului celor doi vectori care
+reprezintă cuvintele analizate.
+
+Experimentul a constat prin alegerea a 4 poezii lungi (poeme narative, în fapt,
+de cîteva mii de versuri) publicate de Byron între 1813 și 1814 și 4 poezii lungi
+publicate de Moore în 1817. Aceste poezii au fost împărțite în grupuri de cîte
+227 versuri în cazul lui Byron și 246 de versuri în cazul lui Moore. După aceea,
+s-a calculat scorul ESA pentru grupurile din poeziile lui Byron și același
+lucru pentru operele lui Moore.
+
+Însă abordarea a fost ceva mai complexă decît în modelul original ESA. S-au
+folosit, de fapt, 2 modele: unul care folosește Wikipedia, ca în articolul
+original, iar altul a folosit un corpus dat de 892 de poezii lungi (poeme
+narative) din secolele XVIII și XIX. Pentru ambele corpusuri s-a folosit
+ponderea tf-idf, pe care am introdus-o în primul capitol.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Rezultate si concluzii}
+
+Rezultatele, sortate după coeficienții de relaționare, au fost clasificate
+în \qq{foarte legate}, \qq{posibil legate} și \qq{nelegate}. În prima
+categorie au intrat aproximativ 1000 de perechi de versuri. S-au analizat
+(manual, uman) 15 perechi obținute cu metoda Wikipedia și 15 perechi
+obținute cu cealaltă metodă.
+
+Drept concluzii, autorii remarcă faptul că, pe de o parte, este surprinzător
+că această metodă de analiză automată a găsit similarități exact în ce
+privește conceptele așteptate. Este vorba exact despre elementele remarcate
+de critici, specifice curentului literar: personaje și decoruri. Astfel,
+s-a constatat că perechile de versuri care au intrat în categoria
+\qq{foarte legate}, atît în clasificarea folosind Wikipedia, cît și cu
+cealaltă metodă, sînt legate de sentimente și de cadre naturale.
+Ambele concepte caracterizează într-o măsură destul de mare curentul
+orientalismului romantic și se poate deduce de aici că, într-adevăr,
+inspirația dintre cei doi, dacă a existat, s-a manifestat exact unde se
+bănuiește.
+
+Pe de altă parte, atît corpusul de texte analizate, cît și rezultatele sînt,
+din punct de vedere cantitativ, nu foarte reprezentative. Pentru o concluzie
+mai precisă, idei de îmbunătățire pot privi atît rafinarea modelelor ESA,
+cît și îmbogățirea corpusului de texte studiate.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../semdis"
+%%% End:

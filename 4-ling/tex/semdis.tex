@@ -1,0 +1,53 @@
+\documentclass[12pt, a4paper]{report}
+
+\input{in/packages}
+\input{in/macros}
+\input{in/thms}
+\input{in/formatting}
+
+\begin{document}
+
+\thispagestyle{empty}
+\pagestyle{plain} % fix for page numbers
+
+\title{\huge\textbf{Semantică distribuțională \\ pentru analiza poeziilor}}
+\vspace{1cm}
+\author{\Large\textsc{Adrian Manea, 510 SLA}}
+
+\maketitle
+
+\pagenumbering{gobble}
+\tableofcontents
+
+\setcounter{page}{1} % page 1 after TOC
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MAIN CONTENT
+\pagenumbering{arabic}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\footnotesize{\color{gray}\thechapter}}
+\lhead{\footnotesize{\color{gray}Adrian Manea}}
+
+\pagestyle{plain} % restore page numbering
+
+% CHAPTERS
+\addcontentsline{toc}{chapter}{\protect\numberline{}Introducere}
+\include{ch/0-intro}
+\include{ch/1-teorie}
+\include{ch/2-coerenta}
+\include{ch/3-bm}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% INDEX
+\renewcommand{\indexname}{Index}
+\addcontentsline{toc}{chapter}{\protect\numberline{}Index}
+\printindex
+
+% BIBLIOGRAPHY
+% IN ROMANIAN
+\addcontentsline{toc}{chapter}{\protect\numberline{}Bibliografie}
+\bibliography{semdis.bib}
+\bibliographystyle{apalike-ro}
+\nocite{*} % add all to bibliography, even if not \cited
+
+\end{document}

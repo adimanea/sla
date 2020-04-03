@@ -1,0 +1,255 @@
+% ! TEX root = ../semdis.tex
+\chapter{Aspecte teoretice}
+
+\section{Premisele semanticii distribuționale}
+
+Așa cum se explică în \cite{boleda} și \cite{boledaherbelot}, semantica
+distribuțională (SD) s-a dovedit a fi foarte utilă în științele cognitive,
+în cercetări privitoare la asimilarea și atribuirea sensurilor unor cuvinte
+din limbajul comun, însă aplicațiile la lingvistica teoretică și computațională
+au fost, comparativ, mai rare.
+
+Această ramură a lingvisticii se bazează pe \emph{ipoteza distribuțională},
+care afirmă că similaritatea semantică rezultă în similarități ale unor
+distribuții statistice. Spus altfel, cuvintele relaționate semantic apar
+în contexte similare. Însă SD procedează invers: pornește de la corpusuri de
+text și induce reprezentări semantice pe baza distribuțiilor observate.
+
+O remarcă istorică relevantă este că această metodă a apărut în anii 1950 în
+Statele Unite, încadrată într-un curent mai general al lingvisticii,
+\emph{distribuționalismul}, care urmărea să folosească metode de teoria
+distribuțiilor pentru diverse studii cantitative și calitative ale limbajului.
+Părinții curentului au fost Leonard Bloomfield și Zellig S.\ Harris, iar teoria
+gramaticilor generative formulată de Noam Chomsky este considerat a fi puternic
+influențată de aceasta. Totodată, metodele distribuționaliste specifice și-au
+adus contribuția inclusiv în didactica limbilor străine.
+
+Intuitiv, ideile SD sînt foarte simple: în multe situații, putem ghici sensul
+unui cuvînt din contextele în care acesta este folosit. Astfel, este ca
+și cum reprezentăm si interpretăm sensul ca pe o distribuție în fundalul
+contextelor lingvistice în care se observă utilizarea cuvintelor-cheie.
+Ideea poate fi trasată încă de la filosoful Ludwig Wittgenstein, care
+afirma în \emph{Tractatus Logico-Philosophicus} (1922) că \qq{sensul %
+  unui cuvînt este utilizarea lui în limbaj}.
+
+Partea dificilă în acest studiu este, însă, să se explice precis ce se
+înțelege prin \qq{context}. În varianta naivă (și chiar utilizată în multe
+studii), contextul înseamnă pur și simplu vecinătatea cuvîntului-țintă,
+implementată cu ajutorul unei ferestre de conținut, i.e.\ un interval de
+lungime fixată, centrat în cuvîntul căruia dorim să îi analizăm semantica.
+
+De obicei, metodele matematice cu ajutorul cărora se implementează modelele
+dis\-tri\-bu\-ți\-o\-na\-le sînt, oarecum surprinzător, \emph{spațiile vectoriale.}
+Dimensiunea spațiilor este legată de cuvintele din context, într-un mod pe
+care îl detaliem mai jos, iar astfel, coordonatele depind de cuvintele
+co-ocurente. Rezultă că, prin această abordare, vecinătatea în context devine
+vecinătate în spațiu, într-un mod cît se poate de concret.
+
+Din punctul de vedere al implementării informatice, modelele distribuționale
+pot fi învățate dintr-un corpus într-o manieră nesupervizată.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Construcția spațiului vectorial semantic}
+
+Vom prezenta foarte pe scurt modul în care se construiește spațiul vectorial
+cu ajutorul căruia se poate face studiul semantic. Mai multe detalii se pot
+găsi într-un articol mult mai tehnic pe care îl recomandăm, \cite{turney}.
+
+Concret, se dă un corpus de cuvinte, de exemplu cîteva cărți sau pagini
+de Internet din care se poate extrage informație text suficient de multă.
+Se dă, de asemenea, un cuvînt-țintă căruia se dorește să i se stabilească
+sensul, în cazul acestei abordări. Cuvîntul-țintă se poate schimba pe parcursul
+analizei, bineînțeles, însă acum presupunem că avem un cuvînt-țintă fixat la
+care ne referim. Se înregistrează co-ocurențele relativ la acest cuvînt-țintă,
+adică ce alte cuvinte apar în vecinătatea lui, de exemplu, într-o fereastră
+de conținut de 10 cuvinte. Mai precis, pentru fiecare apariție a
+cuvîntului-țintă în corpusul folosit, se iau în considerare 5 cuvinte care
+urmează după el și 5 cuvinte care-l preced. În majoritatea situațiilor, în
+funcție de partea de vorbire care este cuvîntul-țintă, se pot lua în considerare
+doar părți de vorbire relevante. De exemplu, dacă vrem să studiem un
+cuvînt-țintă care este un substantiv, am putea ignora prepozițiile, punctuația,
+pronumele și numele proprii și vom păstra verbele, adjectivele, adverbele.
+
+Odată stabilite și filtrate aceste co-ocurențe, se construiește un vector
+asociat cuvîntului-țintă, sortat descrescător după numărul de apariții.
+De exemplu, dacă corpusul este, să zicem, Enciclopedia Britannica, iar
+cuvîntul-țintă este \qq{coleopter}, vectorul său asociat poate fi de forma:
+\[
+  v = \begin{pmatrix}
+    244 & 111 & 35 & 21 & 5 & 2 & 2 & 1 & 1 & 1 & 1
+  \end{pmatrix}^t,
+\]
+corespunzător co-ocurențelor \emph{aripă, larvă, copac, floare, cîmpie, %
+  cald, roșu, frumos, reprezentant, trifoi}. Deducem că cel mai adesea,
+cuvîntul \qq{coleopter} a apărut în vecinătatea (contextul) cuvintelor
+\emph{aripă, larvă, copac, floare}, celelalte co-ocurențe fiind semnificativ
+mai rare.
+
+Atunci, spațiul vectorial (numit și \emph{spațiu semantic}) asociat acestui
+cuvînt are dimensiune 10 (dată de fereastra de conținut, de fapt). Evident,
+se pot face unele optimizări, precum ignorarea frecvențelor sub un anumit
+prag (în cazul nostru, frecvențele $ \leq 5 $ am putea spune că sînt irelevante,
+dată fiind mărimea corpusului). O altă optimizare este să se ignore cuvintele
+prea generale. De exemplu, dacă întîlnim în preajma cuvîntului-cheie și cuvinte
+precum \emph{foarte, mare, mic}, acestea pot fi ignorate, pentru că se potrivesc
+în prea multe contexte pentru a fi specifice cuvîntului-cheie.
+
+Odată construit, spațiul semantic poate fi folosit în mai multe moduri. În cele
+mai multe cazuri, se asociază spațiului un cvadruplu $ \langle A, S, B, M \rangle $,
+unde:
+\begin{itemize}
+\item $ A $ este o funcție care asociază ponderi relevante co-ocurențelor
+  (depinde de la caz la caz);
+\item $ S $ este un coeficient de similaritate, de obicei calculat drept
+  cosinusul unghiului dintre vectorii asociați cuvintelor, folosind
+  produsul scalar euclidian;
+\item $ B $ sînt elementele din bază (sau dimensiunea);
+\item $ M $ este o transformare a spațiului, de obicei una care poate
+  reduce dimensiunea, pentru a face calculele mai relevante.
+\end{itemize}
+
+Un exemplu des întîlnit este \emph{analiza semantică latentă} (LSA) , introdusă
+în 1997, care folosește:
+\begin{itemize}
+\item $ A $ --- un indicator numit tf-idf, acronim provenit de la denumirea
+  în engleză, \emph{term freq\-uency-inverse distribution frequency}, care
+  produce rezultate mai relevante decît numărul de co-ocurențe;
+\item $ S $ este cosinusul dintre vectori;
+\item $ B $ este o bază spațiului semantic;
+\item $ M $ este o descompunere folosind valori singulare, notată folosind
+  acronimul englezesc SVD (\emph{singular value decomposition}).
+\end{itemize}
+
+Nu insistăm, însă, pe această metodă, deoarece vom întîlni o îmbunătățire
+a acesteia într-o secțiune ulterioară, sub forma \emph{analizei semantice %
+  explicite}, ESA. Indicăm doar ca referință pentru studiu suplimentar
+articolul relevant din
+\href{http://www.scholarpedia.org/article/Latent_semantic_analysis}{Scholarpedia}.
+
+Alte abordări mai sofisticate înlocuiesc vectorii cu matrice multidimensionale
+(numite și \emph{tensori}), precum și metode complexe de analiza bayesiană,
+care calculează funcții de distribuție și pot extrage subiectul despre care
+se vorbește în text (eng.\ \emph{topic}).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Problema semanticii}
+
+Înainte de a merge mai departe cu metodele distribuționale specifice, împreună
+cu studiile de caz, ne oprim pentru o vreme asupra problemei semanticii în sine.
+Prezentăm cîteva aspecte istorice și filosofice, dar și literare care arată
+de ce semantica limbajului natural este o problemă, care au fost abordările
+cele mai cunoscute pentru rezolvarea acestei probleme și de ce, în particular,
+cazul poeziilor necesită atenție deosebită.\footnote{Aplicațiile pe care le vom
+  prezenta au în vedere poezii scrise în limba engleză. De aceea, vom da
+  titlurile și citatele în original, fără a încerca o traducere.}
+
+Începînd cu lucrările lui Gottlob Frege (\emph{Sens și referință}, 1892) și
+Alfred Tarski (\emph{Conceptul semantic de adevăr și fundamentele semanticii}, 1944),
+semantica formală s-a plasat în contextul teoriei mulțimilor. În acest sens,
+cuvintele sînt gîndite precum \emph{concepte}, care au \emph{extensiune}.
+De pildă, cuvîntul \qq{pisică} este un concept, în a cărui extensiune
+intră toate pisicile din lume, adică identificăm extensiunea conceptului
+cu mulțimea tuturor obiectelor care îl instanțiază.
+
+Prin această abordare, se poate vorbi ușor despre adevăr și falsitate, în sensul
+că o propoziție care enunță o proprietate a unui obiect (concept) este luată
+ca adevărată numai atunci cînd extensiunea conceptului respectiv conține
+extensiunea proprietății \emph{la nivel de incluziune între mulțimi}.
+De exemplu, propoziția \qq{Toți caii sînt albi} este adevărată dacă întreaga
+mulțime a cailor (i.e.\ extensiunea cuvîntului [conceptului] \qq{cal}) este
+inclusă în mulțimea obiectelor albe (i.e.\ extensiunea cuvîntului [conceptului]
+\qq{alb}).
+
+Mai mult, această abordare ne permite să facem distincția semantică între
+construcții precum \qq{soarele amiezii} și \qq{soarele apusului}, chiar dacă,
+de fapt, este vorba despre același obiect fizic.
+
+Semantica poeziilor și, de fapt, întreaga întrebare \emph{dacă} poeziile
+au semantică sau sens, în general, a fost una îndelung dezbătută. Poeziile
+sînt greu de studiat folosind tehnici de lingvistică, deoarece o bună parte
+a poeziilor, în special cele moderne și contemporane sau cele foarte vechi,
+nu respectă regulile stricte de sintaxă și semantică.
+
+Totuși, semantica distribuțională se poate dovedi o unealtă foarte puternică în
+acest sens, deoarece tiparele de distribuție care se remarcă pot fi relevante
+și în cazul textelor poetice. Ideea din spatele acestei încrederi este că,
+deși în multe situații, limbajul poeziilor nu este reprezentativ pentru
+limbajul comun, anumite tipare pe care le distingem în poezii sînt, într-un fel,
+latente în limbajul nostru fundamental. De exemplu, sînt multe cuvinte al
+căror sens este neschimbat în poezii: cuvîntul \qq{copac}, cel mai probabil
+(deși nu cert) apare în poezii cu același sens cu care îl găsim și în
+limbajul comun. Aceasta ne arată că, deși limbajul poetic poate fi considerat
+unul special, el cu siguranță \emph{nu este complet disociat} de acesta, în
+sensul că orice text poetic, oricît de dificil, poate fi recunoscut ca fiind
+alcătuit din elemente de limbaj natural și mai mult, în majoritatea cazurilor,
+se poate identifica faptul că este alcătuit din construcții cu sens.
+
+Un exemplu (preluat din \cite{herbelot}) de schimb de idei privitor la semantica
+poeziilor, prin comparație cu cea a limbajului natural este corespondența
+între filosoful Philip Wheelwright (1901-1970) și poeta și criticul literar
+Josephine Miles (1911-1985), din anii 1940. Conform lui Wheelwright, în lucrarea
+\emph{On the Semantics of Poetry}, limbajul poeziilor este complet diferit de
+cel al științei. El consideră că sensul cuvintelor folosite în teorii științifice
+se bazează pe concepte, în vreme ce cuvintele din poezii au ceea ce el a numit
+\emph{înțeles metalogic}, adică dat de o semantică nebazată pe logică.
+Miles a replicat afirmînd că ambiguitate există și în limbajul comun și că nu
+este specific poeziilor ca apariția unui cuvînt să depindă de context (spre
+deosebire de știință, unde același cuvînt apare de fiecare dată cu același
+înțeles, independent de context).
+
+În favoarea lui Wheelwright este, într-adevăr, greu de susținut că expresii
+poetice precum:
+\begin{itemize}
+\item ``{\emph{Music is the exquisite knocking of the blood}'' (Rupert Brooke);
+\item ``\emph{Your huge mortgage of hope}'' (Ted Hughes);
+\item ``\emph{Skeleton bells of trees}'' (Avery Slater)
+\end{itemize}
+au o interpretare folosind teoria mulțimilor.
+
+Dar în același timp, este greu și să combatem teza lui Miles, conform căreia
+semantica poeziilor își are rădăcinile în semantica limbajului comun. Într-adevăr,
+fără cunoașterea acesteia din urmă, construcțiile poetice sînt lipsite de
+orice fel de semantică, iar orice încercare de descifrare este sortită eșecului.
+
+O poziție care iese din această dezbatere este aceea a lui Gerald Bruns,
+de la Universitatea Notre Dame din Indiana, SUA. În cartea \cite{bruns},
+el afirmă că \emph{poezia este alcătuită din limbaj, dar nu este o utilizare %
+  a acestuia}, în sensul că acele cuvinte care apar în poezii nu ar trebui să
+fie privite ca fiind definite de contextul poetic. Bruns continuă prin a afirma
+că, asemenea lui Wittgenstein (\emph{înțelesul este utilizarea}, eng.\
+\emph{meaning is use}), el consideră că extensiunea unui concept nu poate fi
+închisă de nicio frontieră, lăsînd, astfel, loc pentru utilizări atipice ale
+limbajului, precum poezia.
+
+Aceasta sugerează că semantica, cel puțin în cazul poeziilor, ar trebui ancorată
+în context. Acest lucru relaxează frontierele, prin comparație cu teoria
+mulțimilor și afirmă că, de exemplu, sensul cuvîntului \qq{pisică} nu mai este
+legat de pisicile din lume, ci de modul în care oamenii vorbesc despre pisici.
+Regăsim aici primele indicații în direcția semanticii distribuționale:
+\qq{responsabilitatea} sensurilor pică pe context și, indirect, pe vorbitorii care
+plasează termenul în context.
+
+Teoria distribuțională, însă, nu a prins roade pînă în a doua parte a anilor
+1950, cînd dezvoltarea puterii de calcul a contat foarte mult pentru analiza
+corpusurilor de text.
+
+Legătura istorică este una foarte puternică: o studentă a lui Wittgenstein,
+Margaret Masterman, a fondat Cambridge Language Research Unit (CLRU), una dintre
+instituțiile care s-au implicat timpuriu în lingvistica computațională în Marea
+Britanie. Tot ea a fost interesată si de aspectele de generare a limbajului, fiind
+una dintre cei care au lucrat la o primă variantă software de generare a poeziilor.
+În fapt, programul dezvoltat de ei nu producea poezie propriu-zisă, ci oferea
+sugestii contextuale pentru a umple spațiile dintr-un haiku (lucrare publicată,
+de exemplu, sub forma \cite{masterman}).
+
+Cum puterea de calcul era încă limitată, comparativ cu zilele noastre, echipa
+lui Masterman nu a putut analiza corpusuri mari de text în sine. Ei au trebuit
+să dezvolte rețele semantice, care să le permită \qq{comunicarea} dintre
+diverse seturi, pe baza cărora au extras apoi informații statistice.
+Aceasta a fost una dintre mișcările de bază în direcția teoriei distribuționale.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../semdis"
+%%% End:
