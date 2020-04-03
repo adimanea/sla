@@ -336,9 +336,73 @@ cele produse aleatoriu, indiferent de transparența sau dificultatea textului;
 - modelul distribuțional prezintă o asociativitate semantică pronunțată
 și în cazul poeziilor, indiferent de complexitate.
 
-
 * Aplicație: Influență și imitație în poezia romantică orientală
+*Ideea* articolului este să utilizeze un model de semantică distribuțională
+pentru a verifica dacă Lord Byron a fost imitat de Thomas Moore, așa cum
+consideră unii autori, sau, de fapt, este vorba despre o caracteristică
+generală a vocabularului poeziilor din secolul 19, caracteristică pe care
+o au poeziile lui Moore și Byron.
 
+În perioada 1813-1817, poeții prieteni Lord Byron și Thomas Moore au scris o 
+serie de poezii care sînt privite astăzi drept reprezentative pentru
+orientalismul romantic (o subcategorie a literaturii romantice, caracterizată
+prin temele și plasarea în contexte orientale și din Orientul Mijlociu).
+Printre poeziile publicate de cei doi s-au descoperit foarte multe coincidențe,
+precum desfășurări similare de actiuni, decoruri și nume de personaje
+similare.
+
+Articolul își propune să folosească o metodă empirică nouă pentru a încerca
+să clarifice aceste coincidențe. De exemplu, ar putea răspunde la întrebarea
+dacă cumva orientalismul romantic este, în sine, un gen de poezie care
+folosește un vocabular limitat și atunci, similaritățile sînt inevitabile.
+Totodată, întrebarea mai generală poate fi și dacă se poate caracteriza
+un gen literar prin tocmai vocabularul său.
+
+** Metodologia
+Se va utiliza o metodă de semantică distribuțională prin *analiza semantică*
+*explicită* (ESA), dezvoltată de Gabrilovich și Markovitch în 2007.
+Această metodă folosește texte din Wikipedia pentru a stabili unele sensuri,
+iar apoi, textul dat este interpretat prin intermediul conexiunilor deja
+stabilite cu ajutorul Wikipedia.
+
+ESA permite reprezentarea unor vectori de sens într-un spațiu vectorial
+cu un număr foarte mare de dimensiuni, dată fiind complexitatea și diversitatea
+articolelor de pe Wikipedia, iar coeficientul de relaționare semantică se
+calculează din nou folosind cosinusul unghiului celor doi vectori care
+reprezintă cuvintele analizate.
+
+** Experimentul
+S-au luat 4 poezii lungi publicate de Byron între 1813 și 1814 și 4 poezii
+lungi publicate de Moore în 1817. Aceste poezii au fost împărțite în grupuri
+de cîte 227 versuri în cazul lui Byron și 246 versuri, în cazul lui Moore.
+După aceea, s-a calculat scorul ESA pentru grupurile din poeziile lui Byron
+și același lucru pentru Moore.
+
+Însă abordarea a fost ceva mai complexă, deoarece s-au construit 2 modele ESA:
+unul care folosește Wikipedia, ca în articolul original, iar altul, a folosit
+un corpus dat de 892 poezii lungi din secolele 18 și 19. Pentru ambele corpusuri
+s-a folosit ponderea tf-idf.
+
+Rezultatele, sortate după coeficienții de relaționare, au fost clasificate
+în "foarte legate", "posibil legate" și "nelegate". În prima categorie au
+aproximativ 1000 de perechi de grupuri de versuri. S-au analizat (manual, uman)
+aleatoriu 15 perechi obținute cu metoda Wikipedia și 15 perechi obținute cu 
+cealaltă metodă.
+
+** Concluzii
+Pe de o parte, este remarcabil faptul că această analiză automată a găsit
+similarități exact în ce privește conceptele așteptate, specifice curentului
+literar. Astfel, s-a constatat că perechile de versuri care au intrat în
+categoria "foarte legate", atît prin clasificarea folosind Wikipedia, cît
+și cu cealaltă metodă, sînt legate de sentimente și de cadre naturale.
+Ambele concepte caracterizează orientalismul romantic și se poate deduce de
+aici că într-adevăr, inspirația dintre cei doi, dacă a existat, s-a manifestat
+exact unde se bănuiește. 
+
+Pe de altă parte, atît corpusul de texte analizate, cît și rezultatele sînt, 
+din punct de vedere cantitativ, nu foarte reprezentative. Pentru o concluzie
+mai precisă, idei de îmbunătățire pot privi atît rafinarea modelelor ESA,
+cît și îmbogățirea corpusului de texte studiate.
 
 
 
