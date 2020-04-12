@@ -7,6 +7,11 @@ Materia se va finaliza cu un proiect.
 Tema aleasă este [[https://en.wikipedia.org/wiki/Distributional_semantics][semantica distribuțională]],
 cu aplicație în [[https://www.overdrive.com/media/2468526/quantitative-analysis-of-poetic-texts][analiza poeziilor]].
 
+Acces direct la lucrare:
+- [[https://github.com/adimanea/sla/blob/master/4-ling/tex/semdis.pdf][Textul lung]];
+- [[https://github.com/adimanea/sla/blob/master/4-ling/tex/scurt.pdf][Textul scurt]];
+- [[https://github.com/adimanea/sla/blob/master/4-ling/beamer/compling-HANDOUT.pdf][Prezentare handout]].
+
 ** Bibliografie
 - Turney, Pantel - From Frequency to Meaning 2012 ([[https://www.aaai.org/Papers/JAIR/Vol37/JAIR-3705.pdf][link]]);
 - Erk - Vector Space Models of Word Meaning and Phrase Meaning 2012 ([[https://onlinelibrary.wiley.com/doi/epdf/10.1002/lnco.362][link]]);
