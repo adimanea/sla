@@ -8,4 +8,4 @@ Am ales varianta de evaluare cu o prezentare, bazată pe articolul
 [[https://net.cs.uni-bonn.de/fileadmin/ag/martini/Staff/yakdan/dream_ndss2015.pdf][acesta]], care prezintă DREAM, o unealtă de decompilare care elimină
 instrucțiunile de tip =goto=.
 
-Acces direct la prezentarea mea [[file:/beamer/dream-handout.pdf][aici]].
+Acces direct la prezentarea mea [[file:beamer/dream-handout.pdf][aici]].
